@@ -1,0 +1,14 @@
+{
+  "name": "forth-standard.org",
+  "version": "0.12.1",
+  "description": "official forth standard website",
+  "author": "Gerald Wodni <gerald@wodni.at>",
+  "license": "GPLv3",
+  "dependencies": {
+    "async": "^1.4.2",
+    "colors": "^1.1.2",
+    "jquery": "^2.1.4",
+    "jsdom": "^3.1.2",
+    "underscore": "^1.8.3"
+  }
+}
