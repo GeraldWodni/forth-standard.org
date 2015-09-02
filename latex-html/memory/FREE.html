@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: FREE</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="memory:FREE">
+  <div class="wordNumber">14.6.1.1605</div>
+  <div class="wordName">FREE</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">MEMORY</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>a-addr</em> -- <em>ior</em> )
+      <p />
+      Return the contiguous region of data space indicated by
+      <em>a-addr</em> to the system for later allocation. <em>a-addr</em>
+      shall indicate a region of data space that was previously
+      obtained by <a href="../memory/ALLOCATE.html">ALLOCATE</a> or <a href="../memory/RESIZE.html">RESIZE</a>. The data-space
+      pointer is unaffected by this operation.
+      <p />
+      If the operation succeeds, <em>ior</em> is zero. If the operation
+      fails, <em>ior</em> is the implementation-defined I/O result code.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../core/HERE.html">6.1.1650 HERE</a>,
+      <a href="../memory/ALLOCATE.html">14.6.1.0707 ALLOCATE</a>,
+      <a href="../memory/RESIZE.html">14.6.1.2145 RESIZE</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+
+      <span class="rm">See <a href="../testsuite.html#test:memory:ALLOCATE">F.14.6.1.0707 ALLOCATE</a></span>
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Memory-Allocation word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html" class="current">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../memory.html#section.14.1">Introduction</a></li>
+        <li role="menuitem"><a href="../memory.html#section.14.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../memory.html#section.14.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../memory.html#section.14.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../memory.html#section.14.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../memory.html#section.14.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">FREE</span>
+      <div class="menu">
+        <ul id="menu-word" style="width: 202px;">
+        <li role="menuitem"><a href="ALLOCATE.html">ALLOCATE</a></li>
+        <li role="menuitem"><a href="FREE.html" class="current">FREE</a></li>
+        <li role="menuitem"><a href="RESIZE.html">RESIZE</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

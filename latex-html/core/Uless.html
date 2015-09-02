@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: U</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="core:Uless">
+  <div class="wordNumber">6.1.2340</div>
+  <div class="wordName">U&lt;</div>
+  <div class="wordEnglish">u-less-than</div>
+  <div class="wordList">CORE</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>u<sub>1</sub> u<sub>2</sub></em> -- <em>flag</em> )
+      <p />
+      <em>flag</em> is true if and only if <em>u<sub>1</sub></em> is less than
+      <em>u<sub>2</sub></em>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../core/less.html">6.1.0480 &lt;</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+ <!-- T.6.1.2340 U< -->
+      <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;<strong>U&lt;</strong> -&gt; &lt;TRUE&gt;&nbsp; }T</span> <br />
+      <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;<strong>U&lt;</strong> -&gt; &lt;TRUE&gt;&nbsp; }T</span> <br />
+      <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;MID-UINT&nbsp;<strong>U&lt;</strong> -&gt; &lt;TRUE&gt;&nbsp; }T</span> <br />
+      <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;MAX-UINT&nbsp;<strong>U&lt;</strong> -&gt; &lt;TRUE&gt;&nbsp; }T</span> <br />
+      <span class="tt">T{ MID-UINT&nbsp;MAX-UINT&nbsp;<strong>U&lt;</strong> -&gt; &lt;TRUE&gt;&nbsp; }T</span> <br />
+      <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;<strong>U&lt;</strong> -&gt; &lt;FALSE&gt; }T</span> <br />
+      <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;<strong>U&lt;</strong> -&gt; &lt;FALSE&gt; }T</span> <br />
+      <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;<strong>U&lt;</strong> -&gt; &lt;FALSE&gt; }T</span> <br />
+      <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;<strong>U&lt;</strong> -&gt; &lt;FALSE&gt; }T</span> <br />
+      <span class="tt">T{ MID-UINT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;<strong>U&lt;</strong> -&gt; &lt;FALSE&gt; }T</span> <br />
+      <span class="tt">T{ MAX-UINT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;<strong>U&lt;</strong> -&gt; &lt;FALSE&gt; }T</span> <br />
+      <span class="tt">T{ MAX-UINT&nbsp;MID-UINT&nbsp;<strong>U&lt;</strong> -&gt; &lt;FALSE&gt; }T</span>
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html" class="current">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">U&lt;</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="Store.html">!</a></li>
+        <li role="menuitem"><a href="num.html">#</a></li>
+        <li role="menuitem"><a href="num-end.html">#&gt;</a></li>
+        <li role="menuitem"><a href="numS.html">#S</a></li>
+        <li role="menuitem"><a href="Tick.html">'</a></li>
+        <li role="menuitem"><a href="p.html">(</a></li>
+        <li role="menuitem"><a href="Times.html">*</a></li>
+        <li role="menuitem"><a href="TimesDiv.html">*/</a></li>
+        <li role="menuitem"><a href="TimesDivMOD.html">*/MOD</a></li>
+        <li role="menuitem"><a href="Plus.html">+</a></li>
+        <li role="menuitem"><a href="PlusStore.html">+!</a></li>
+        <li role="menuitem"><a href="PlusLOOP.html">+LOOP</a></li>
+        <li role="menuitem"><a href="Comma.html">,</a></li>
+        <li role="menuitem"><a href="Minus.html">-</a></li>
+        <li role="menuitem"><a href="d.html">.</a></li>
+        <li role="menuitem"><a href="Dotq.html">.&quot;</a></li>
+        <li role="menuitem"><a href="Div.html">/</a></li>
+        <li role="menuitem"><a href="DivMOD.html">/MOD</a></li>
+        <li role="menuitem"><a href="Zeroless.html">0&lt;</a></li>
+        <li role="menuitem"><a href="ZeroEqual.html">0=</a></li>
+        <li role="menuitem"><a href="OnePlus.html">1+</a></li>
+        <li role="menuitem"><a href="OneMinus.html">1-</a></li>
+        <li role="menuitem"><a href="TwoStore.html">2!</a></li>
+        <li role="menuitem"><a href="TwoTimes.html">2*</a></li>
+        <li role="menuitem"><a href="TwoDiv.html">2/</a></li>
+        <li role="menuitem"><a href="TwoFetch.html">2@</a></li>
+        <li role="menuitem"><a href="TwoDROP.html">2DROP</a></li>
+        <li role="menuitem"><a href="TwoDUP.html">2DUP</a></li>
+        <li role="menuitem"><a href="TwoOVER.html">2OVER</a></li>
+        <li role="menuitem"><a href="TwoSWAP.html">2SWAP</a></li>
+        <li role="menuitem"><a href="Colon.html">:</a></li>
+        <li role="menuitem"><a href="Semi.html">;</a></li>
+        <li role="menuitem"><a href="less.html">&lt;</a></li>
+        <li role="menuitem"><a href="num-start.html">&lt;#</a></li>
+        <li role="menuitem"><a href="Equal.html">=</a></li>
+        <li role="menuitem"><a href="more.html">&gt;</a></li>
+        <li role="menuitem"><a href="toBODY.html">&gt;BODY</a></li>
+        <li role="menuitem"><a href="toIN.html">&gt;IN</a></li>
+        <li role="menuitem"><a href="toNUMBER.html">&gt;NUMBER</a></li>
+        <li role="menuitem"><a href="toR.html">&gt;R</a></li>
+        <li role="menuitem"><a href="qDUP.html">?DUP</a></li>
+        <li role="menuitem"><a href="Fetch.html">@</a></li>
+        <li role="menuitem"><a href="ABORT.html">ABORT</a></li>
+        <li role="menuitem"><a href="ABORTq.html">ABORT&quot;</a></li>
+        <li role="menuitem"><a href="ABS.html">ABS</a></li>
+        <li role="menuitem"><a href="ACCEPT.html">ACCEPT</a></li>
+        <li role="menuitem"><a href="ALIGN.html">ALIGN</a></li>
+        <li role="menuitem"><a href="ALIGNED.html">ALIGNED</a></li>
+        <li role="menuitem"><a href="ALLOT.html">ALLOT</a></li>
+        <li role="menuitem"><a href="AND.html">AND</a></li>
+        <li role="menuitem"><a href="BASE.html">BASE</a></li>
+        <li role="menuitem"><a href="BEGIN.html">BEGIN</a></li>
+        <li role="menuitem"><a href="BL.html">BL</a></li>
+        <li role="menuitem"><a href="CStore.html">C!</a></li>
+        <li role="menuitem"><a href="CComma.html">C,</a></li>
+        <li role="menuitem"><a href="CFetch.html">C@</a></li>
+        <li role="menuitem"><a href="CELLPlus.html">CELL+</a></li>
+        <li role="menuitem"><a href="CELLS.html">CELLS</a></li>
+        <li role="menuitem"><a href="CHAR.html">CHAR</a></li>
+        <li role="menuitem"><a href="CHARPlus.html">CHAR+</a></li>
+        <li role="menuitem"><a href="CHARS.html">CHARS</a></li>
+        <li role="menuitem"><a href="CONSTANT.html">CONSTANT</a></li>
+        <li role="menuitem"><a href="COUNT.html">COUNT</a></li>
+        <li role="menuitem"><a href="CR.html">CR</a></li>
+        <li role="menuitem"><a href="CREATE.html">CREATE</a></li>
+        <li role="menuitem"><a href="DECIMAL.html">DECIMAL</a></li>
+        <li role="menuitem"><a href="DEPTH.html">DEPTH</a></li>
+        <li role="menuitem"><a href="DO.html">DO</a></li>
+        <li role="menuitem"><a href="DOES.html">DOES&gt;</a></li>
+        <li role="menuitem"><a href="DROP.html">DROP</a></li>
+        <li role="menuitem"><a href="DUP.html">DUP</a></li>
+        <li role="menuitem"><a href="ELSE.html">ELSE</a></li>
+        <li role="menuitem"><a href="EMIT.html">EMIT</a></li>
+        <li role="menuitem"><a href="ENVIRONMENTq.html">ENVIRONMENT?</a></li>
+        <li role="menuitem"><a href="EVALUATE.html">EVALUATE</a></li>
+        <li role="menuitem"><a href="EXECUTE.html">EXECUTE</a></li>
+        <li role="menuitem"><a href="EXIT.html">EXIT</a></li>
+        <li role="menuitem"><a href="FILL.html">FILL</a></li>
+        <li role="menuitem"><a href="FIND.html">FIND</a></li>
+        <li role="menuitem"><a href="FMDivMOD.html">FM/MOD</a></li>
+        <li role="menuitem"><a href="HERE.html">HERE</a></li>
+        <li role="menuitem"><a href="HOLD.html">HOLD</a></li>
+        <li role="menuitem"><a href="I.html">I</a></li>
+        <li role="menuitem"><a href="IF.html">IF</a></li>
+        <li role="menuitem"><a href="IMMEDIATE.html">IMMEDIATE</a></li>
+        <li role="menuitem"><a href="INVERT.html">INVERT</a></li>
+        <li role="menuitem"><a href="J.html">J</a></li>
+        <li role="menuitem"><a href="KEY.html">KEY</a></li>
+        <li role="menuitem"><a href="LEAVE.html">LEAVE</a></li>
+        <li role="menuitem"><a href="LITERAL.html">LITERAL</a></li>
+        <li role="menuitem"><a href="LOOP.html">LOOP</a></li>
+        <li role="menuitem"><a href="LSHIFT.html">LSHIFT</a></li>
+        <li role="menuitem"><a href="MTimes.html">M*</a></li>
+        <li role="menuitem"><a href="MAX.html">MAX</a></li>
+        <li role="menuitem"><a href="MIN.html">MIN</a></li>
+        <li role="menuitem"><a href="MOD.html">MOD</a></li>
+        <li role="menuitem"><a href="MOVE.html">MOVE</a></li>
+        <li role="menuitem"><a href="NEGATE.html">NEGATE</a></li>
+        <li role="menuitem"><a href="OR.html">OR</a></li>
+        <li role="menuitem"><a href="OVER.html">OVER</a></li>
+        <li role="menuitem"><a href="POSTPONE.html">POSTPONE</a></li>
+        <li role="menuitem"><a href="QUIT.html">QUIT</a></li>
+        <li role="menuitem"><a href="Rfrom.html">R&gt;</a></li>
+        <li role="menuitem"><a href="RFetch.html">R@</a></li>
+        <li role="menuitem"><a href="RECURSE.html">RECURSE</a></li>
+        <li role="menuitem"><a href="REPEAT.html">REPEAT</a></li>
+        <li role="menuitem"><a href="ROT.html">ROT</a></li>
+        <li role="menuitem"><a href="RSHIFT.html">RSHIFT</a></li>
+        <li role="menuitem"><a href="Sq.html">S&quot;</a></li>
+        <li role="menuitem"><a href="StoD.html">S&gt;D</a></li>
+        <li role="menuitem"><a href="SIGN.html">SIGN</a></li>
+        <li role="menuitem"><a href="SMDivREM.html">SM/REM</a></li>
+        <li role="menuitem"><a href="SOURCE.html">SOURCE</a></li>
+        <li role="menuitem"><a href="SPACE.html">SPACE</a></li>
+        <li role="menuitem"><a href="SPACES.html">SPACES</a></li>
+        <li role="menuitem"><a href="STATE.html">STATE</a></li>
+        <li role="menuitem"><a href="SWAP.html">SWAP</a></li>
+        <li role="menuitem"><a href="THEN.html">THEN</a></li>
+        <li role="menuitem"><a href="TYPE.html">TYPE</a></li>
+        <li role="menuitem"><a href="Ud.html">U.</a></li>
+        <li role="menuitem"><a href="Uless.html" class="current">U&lt;</a></li>
+        <li role="menuitem"><a href="UMTimes.html">UM*</a></li>
+        <li role="menuitem"><a href="UMDivMOD.html">UM/MOD</a></li>
+        <li role="menuitem"><a href="UNLOOP.html">UNLOOP</a></li>
+        <li role="menuitem"><a href="UNTIL.html">UNTIL</a></li>
+        <li role="menuitem"><a href="VARIABLE.html">VARIABLE</a></li>
+        <li role="menuitem"><a href="WHILE.html">WHILE</a></li>
+        <li role="menuitem"><a href="WORD.html">WORD</a></li>
+        <li role="menuitem"><a href="XOR.html">XOR</a></li>
+        <li role="menuitem"><a href="Bracket.html">[</a></li>
+        <li role="menuitem"><a href="BracketTick.html">[']</a></li>
+        <li role="menuitem"><a href="BracketCHAR.html">[CHAR]</a></li>
+        <li role="menuitem"><a href="right-bracket.html">]</a></li>
+        <li role="menuitem"><a href="Dotp.html">.(</a></li>
+        <li role="menuitem"><a href="DotR.html">.R</a></li>
+        <li role="menuitem"><a href="Zerone.html">0&lt;&gt;</a></li>
+        <li role="menuitem"><a href="Zeromore.html">0&gt;</a></li>
+        <li role="menuitem"><a href="TwotoR.html">2&gt;R</a></li>
+        <li role="menuitem"><a href="TwoRfrom.html">2R&gt;</a></li>
+        <li role="menuitem"><a href="TwoRFetch.html">2R@</a></li>
+        <li role="menuitem"><a href="ColonNONAME.html">:NONAME</a></li>
+        <li role="menuitem"><a href="ne.html">&lt;&gt;</a></li>
+        <li role="menuitem"><a href="qDO.html">?DO</a></li>
+        <li role="menuitem"><a href="ACTION-OF.html">ACTION-OF</a></li>
+        <li role="menuitem"><a href="AGAIN.html">AGAIN</a></li>
+        <li role="menuitem"><a href="BUFFERColon.html">BUFFER:</a></li>
+        <li role="menuitem"><a href="Cq.html">C&quot;</a></li>
+        <li role="menuitem"><a href="CASE.html">CASE</a></li>
+        <li role="menuitem"><a href="COMPILEComma.html">COMPILE,</a></li>
+        <li role="menuitem"><a href="DEFER.html">DEFER</a></li>
+        <li role="menuitem"><a href="DEFERStore.html">DEFER!</a></li>
+        <li role="menuitem"><a href="DEFERFetch.html">DEFER@</a></li>
+        <li role="menuitem"><a href="ENDCASE.html">ENDCASE</a></li>
+        <li role="menuitem"><a href="ENDOF.html">ENDOF</a></li>
+        <li role="menuitem"><a href="ERASE.html">ERASE</a></li>
+        <li role="menuitem"><a href="FALSE.html">FALSE</a></li>
+        <li role="menuitem"><a href="HEX.html">HEX</a></li>
+        <li role="menuitem"><a href="HOLDS.html">HOLDS</a></li>
+        <li role="menuitem"><a href="IS.html">IS</a></li>
+        <li role="menuitem"><a href="MARKER.html">MARKER</a></li>
+        <li role="menuitem"><a href="NIP.html">NIP</a></li>
+        <li role="menuitem"><a href="OF.html">OF</a></li>
+        <li role="menuitem"><a href="PAD.html">PAD</a></li>
+        <li role="menuitem"><a href="PARSE.html">PARSE</a></li>
+        <li role="menuitem"><a href="PARSE-NAME.html">PARSE-NAME</a></li>
+        <li role="menuitem"><a href="PICK.html">PICK</a></li>
+        <li role="menuitem"><a href="REFILL.html">REFILL</a></li>
+        <li role="menuitem"><a href="RESTORE-INPUT.html">RESTORE-INPUT</a></li>
+        <li role="menuitem"><a href="ROLL.html">ROLL</a></li>
+        <li role="menuitem"><a href="Seq.html">S\&quot;</a></li>
+        <li role="menuitem"><a href="SAVE-INPUT.html">SAVE-INPUT</a></li>
+        <li role="menuitem"><a href="SOURCE-ID.html">SOURCE-ID</a></li>
+        <li role="menuitem"><a href="TO.html">TO</a></li>
+        <li role="menuitem"><a href="TRUE.html">TRUE</a></li>
+        <li role="menuitem"><a href="TUCK.html">TUCK</a></li>
+        <li role="menuitem"><a href="UDotR.html">U.R</a></li>
+        <li role="menuitem"><a href="Umore.html">U&gt;</a></li>
+        <li role="menuitem"><a href="UNUSED.html">UNUSED</a></li>
+        <li role="menuitem"><a href="VALUE.html">VALUE</a></li>
+        <li role="menuitem"><a href="WITHIN.html">WITHIN</a></li>
+        <li role="menuitem"><a href="BracketCOMPILE.html">[COMPILE]</a></li>
+        <li role="menuitem"><a href="bs.html">\</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

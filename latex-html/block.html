@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: The optional Block word set</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.7">7 The optional Block word set</h1> <!-- 7 -->
+<h2 id="section.7.1">7.1 Introduction</h2> <!-- 7.1 -->
+<h2 id="section.7.2">7.2 Additional terms</h2> <!-- 7.2 -->
+<dl class="desc">
+<dt>block:</dt><dd>
+1024 characters of data on mass storage,
+designated by a block number.
+<p />
+</dd>
+<dt>block buffer:</dt><dd>
+A block-sized region of data space where a block is made
+temporarily available for use. The current block buffer
+is the block buffer most recently accessed by
+<a href="block/BLOCK.html">BLOCK</a>, <a href="block/BUFFER.html">BUFFER</a>, <a href="block/LOAD.html">LOAD</a>, <a href="block/LIST.html">LIST</a>, or
+<a href="block/THRU.html">THRU</a>.
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h2 id="section.7.3">7.3 Additional usage requirements</h2> <!-- 7.3 -->
+<h3 id="subsection.7.3.1">7.3.1 Data space</h3> <!-- 7.3.2 -->
+A program may access memory within a valid block buffer.
+<p />
+See: <strong><a href="usage.html#usage:dataspace">3.3.3 Data space</a></strong>.
+<p />
+<h3 id="subsection.7.3.2">7.3.2 Block buffer regions</h3> <!-- 7.3.3 -->
+<a name="block:buffers"></a>
+<p />
+The address of a block buffer returned by <a href="block/BLOCK.html">BLOCK</a> or
+<a href="block/BUFFER.html">BUFFER</a> is transient. A call to <a href="block/BLOCK.html">BLOCK</a> or <a href="block/BUFFER.html">BUFFER</a>
+may render a previously-obtained block-buffer address invalid, as
+may a call to any word that:
+<ul>
+<li> parses:
+</li>
+<li> displays characters on the user output device, such as
+<a href="core/TYPE.html">TYPE</a> or <a href="core/EMIT.html">EMIT</a>;
+</li>
+<li> controls the user output device, such as <a href="core/CR.html">CR</a> or
+<a href="facility/AT-XY.html">AT-XY</a>;
+</li>
+<li> receives or tests for the presence of characters from the
+user input device such as <a href="core/ACCEPT.html">ACCEPT</a> or
+<a href="core/KEY.html">KEY</a>;
+</li>
+<li> waits for a condition or event, such as <a href="facility/MS.html">MS</a>
+or <a href="facility/EKEY.html">EKEY</a>;
+</li>
+<li> manages the block buffers, such as <a href="block/FLUSH.html">FLUSH</a>,
+<a href="block/SAVE-BUFFERS.html">SAVE-BUFFERS</a>, or <a href="block/EMPTY-BUFFERS.html">EMPTY-BUFFERS</a>;
+</li>
+<li> performs any operation on a file or file-name directory
+that implies I/O, such as <a href="block/REFILL.html">REFILL</a> or any word that
+returns an <em>ior</em>;
+</li>
+<li> implicitly performs I/O, such as text interpreter nesting
+and un-nesting when files are being used (including un-nesting
+implied by <a href="exception/THROW.html">THROW</a>).
+</li>
+</ul>
+<p />
+If the input source is a block, these restrictions also apply to
+the address returned by <a href="core/SOURCE.html">SOURCE</a>. Block buffers are
+uniquely assigned to blocks.
+<p />
+See <strong><a href="rationale.html#rat:block:buffers">A.7.3.2 Block buffer regions</a></strong>.
+<h3 id="subsection.7.3.3">7.3.3 Parsing</h3> <!-- 7.3.4 -->
+The Block word set implements an alternative input source for the
+text interpreter. When the input source is a block, <a href="block/BLK.html">BLK</a> shall
+contain the non-zero block number and the input buffer is the
+1024-character buffer containing that block.
+<p />
+A block is conventionally displayed as 16 lines of 64 characters.
+<p />
+A program may switch the input source to a block by using
+<a href="block/LOAD.html">LOAD</a> or <a href="block/THRU.html">THRU</a>. Input sources may be nested using
+<a href="block/LOAD.html">LOAD</a> and <a href="block/EVALUATE.html">EVALUATE</a> in any order.
+<p />
+A program may reposition the parse area within a block by
+manipulating <a href="core/toIN.html">&gt;IN</a>. More extensive repositioning can be
+accomplished using <a href="core/SAVE-INPUT.html">SAVE-INPUT</a> and
+<a href="core/RESTORE-INPUT.html">RESTORE-INPUT</a>.
+<p />
+See: <strong><a href="usage.html#usage:parsing">3.4.1 Parsing</a></strong>.
+<p />
+<h3 id="subsection.7.3.4">7.3.4 Possible action on an ambiguous condition</h3> <!-- 7.3.5 -->
+See: <strong><a href="usage.html#usage:ambiguous">3.4.4 Possible actions on an ambiguous condition</a></strong>.
+<p />
+<ul>
+<li> A system with the Block word set may set interpretation state
+and interpret a block.
+</li>
+</ul>
+<p />
+<h2 id="section.7.4">7.4 Additional documentation requirements</h2> <!-- 7.4 -->
+<h3 id="subsection.7.4.1">7.4.1 System documentation</h3> <!-- 7.4.1 -->
+<h4 id="subsubsection.7.4.1.1">7.4.1.1 Implementation-defined options</h4> <!-- 7.4.1.1 -->
+<ul>
+<li> the format used for display by <a href="block/LIST.html">7.6.2.1770 LIST</a>
+(if implemented);
+</li>
+<li> the length of a line affected by <a href="block/bs.html">7.6.2.2535 \</a>
+(if implemented).
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.7.4.1.2">7.4.1.2 Ambiguous conditions</h4> <!-- 7.4.1.2 -->
+<ul>
+<li> Correct block read was not possible;
+</li>
+<li> I/O exception in block transfer;
+</li>
+<li> Invalid block number (<a href="block/BLOCK.html">7.6.1.0800 BLOCK</a>,
+<a href="block/BUFFER.html">7.6.1.0820 BUFFER</a>, <a href="block/LOAD.html">7.6.1.1790 LOAD</a>);
+</li>
+<li> A program directly alters the contents of
+<a href="block/BLK.html">7.6.1.0790 BLK</a>;
+</li>
+<li> No current block buffer for <a href="block/UPDATE.html">7.6.1.2400 UPDATE</a>.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.7.4.1.3">7.4.1.3 Other system documentation</h4> <!-- 7.4.1.3 -->
+<ul>
+<li> any restrictions a multiprogramming system places on the use
+of buffer addresses;
+</li>
+<li> the number of blocks available for source text and data.
+</li>
+</ul>
+<p />
+<h3 id="subsection.7.4.2">7.4.2 Program documentation</h3> <!-- 7.4.2 -->
+<ul>
+<li> the number of blocks required by the program.
+</li>
+</ul>
+<p />
+<h2 id="section.7.5">7.5 Compliance and labeling</h2> <!-- 7.5 -->
+<h3 id="subsection.7.5.1">7.5.1 Forth-2012 systems</h3> <!-- 7.5.1 -->
+The phrase &quot;Providing the Block word set&quot; shall be appended to
+the label of any Standard System that provides all of the Block
+word set.
+<p />
+The phrase &quot;Providing <em>name(s)</em> from the Block Extensions
+word set&quot; shall be appended to the label of any Standard System
+that provides portions of the Block Extensions word set.
+<p />
+The phrase &quot;Providing the Block Extensions word set&quot; shall be
+appended to the label of any Standard System that provides all of
+the Block and Block Extensions word sets.
+<p />
+<h3 id="subsection.7.5.2">7.5.2 Forth-2012 programs</h3> <!-- 7.5.2 -->
+The phrase &quot;Requiring the Block word set&quot; shall be appended to
+the label of Standard Programs that require the system to provide
+the Block word set.
+<p />
+The phrase &quot;Requiring <em>name(s)</em> from the Block Extensions
+word set&quot; shall be appended to the label of Standard Programs
+that require the system to provide portions of the Block Extensions
+word set.
+<p />
+The phrase &quot;Requiring the Block Extensions word set&quot; shall be
+appended to the label of Standard Programs that require the system
+to provide all of the Block and Block Extensions word sets.
+<p />
+<h2 id="section.7.6">7.6 Glossary</h2> <!-- 7.6 -->
+<h3 id="subsection.7.6.1">7.6.1 Block words</h3> <!-- 7.6.1 -->
+<ul>
+<li><a href="block/BLK.html">7.6.1.0790 BLK</a></li>
+<li><a href="block/BLOCK.html">7.6.1.0800 BLOCK</a></li>
+<li><a href="block/BUFFER.html">7.6.1.0820 BUFFER</a></li>
+<li><a href="block/EVALUATE.html">7.6.1.1360 EVALUATE</a></li>
+<li><a href="block/FLUSH.html">7.6.1.1559 FLUSH</a></li>
+<li><a href="block/LOAD.html">7.6.1.1790 LOAD</a></li>
+
+<li><a href="block/SAVE-BUFFERS.html">7.6.1.2180 SAVE-BUFFERS</a></li>
+<li><a href="block/UPDATE.html">7.6.1.2400 UPDATE</a></li>
+</ul>
+<h3 id="subsection.7.6.2">7.6.2 Block extension words</h3> <!-- 7.6.2 -->
+<ul>
+<li><a href="block/EMPTY-BUFFERS.html">7.6.2.1330 EMPTY-BUFFERS</a></li>
+<li><a href="block/LIST.html">7.6.2.1770 LIST</a></li>
+<li><a href="block/REFILL.html">7.6.2.2125 REFILL</a></li>
+<li><a href="block/SCR.html">7.6.2.2190 SCR</a></li>
+<li><a href="block/THRU.html">7.6.2.2280 THRU</a></li>
+<li><a href="block/bs.html">7.6.2.2535 \</a></li>
+</ul>
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Block word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html" class="current">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.7.1" class="current">Introduction</a></li>
+        <li role="menuitem"><a href="#section.7.2">Additional terms</a></li>
+        <li role="menuitem"><a href="#section.7.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="#section.7.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="#section.7.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="#section.7.6">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">BLK</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="block/BLK.html">BLK</a></li>
+        <li role="menuitem"><a href="block/BLOCK.html">BLOCK</a></li>
+        <li role="menuitem"><a href="block/BUFFER.html">BUFFER</a></li>
+        <li role="menuitem"><a href="block/EVALUATE.html">EVALUATE</a></li>
+        <li role="menuitem"><a href="block/FLUSH.html">FLUSH</a></li>
+        <li role="menuitem"><a href="block/LOAD.html">LOAD</a></li>
+        <li role="menuitem"><a href="block/SAVE-BUFFERS.html">SAVE-BUFFERS</a></li>
+        <li role="menuitem"><a href="block/UPDATE.html">UPDATE</a></li>
+        <li role="menuitem"><a href="block/EMPTY-BUFFERS.html">EMPTY-BUFFERS</a></li>
+        <li role="menuitem"><a href="block/LIST.html">LIST</a></li>
+        <li role="menuitem"><a href="block/REFILL.html">REFILL</a></li>
+        <li role="menuitem"><a href="block/SCR.html">SCR</a></li>
+        <li role="menuitem"><a href="block/THRU.html">THRU</a></li>
+        <li role="menuitem"><a href="block/bs.html">\</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: (LOCAL)</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="local:LOCAL">
+  <div class="wordNumber">13.6.1.0086</div>
+  <div class="wordName">(LOCAL)</div>
+  <div class="wordEnglish">paren-local-paren</div>
+  <div class="wordList">LOCAL</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">Interpretation:</div>
+    <div class="sec">
+
+
+      Interpretation semantics for this word are undefined.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Execution:</div>
+    <div class="sec">
+
+
+      ( <em>c-addr u</em> -- )
+      <p />
+      When executed during compilation, <strong>(LOCAL)</strong> passes a
+      message to the system that has one of two meanings. If <em>u</em>
+      is non-zero, the message identifies a new <em>local</em> whose
+      definition name is given by the string of characters identified
+      by <em>c-addr u</em>. If <em>u</em> is zero, the message is &quot;last
+      local&quot; and <em>c-addr</em> has no significance.
+      <p />
+      The result of executing <strong>(LOCAL)</strong> during compilation of a
+      definition is to create a set of named local identifiers, each
+      of which is a definition name, that only have execution
+      semantics within the scope of that definition's source.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname"><em>local</em> Execution:</div>
+    <div class="sec">
+
+
+      ( -- <em>x</em> )
+      <p />
+      Push the local's value, <em>x</em>, onto the stack. The local's
+      value is initialized as described in <strong><a href="../locals.html#local:locals">13.3.3 Processing locals</a></strong> and may be changed by preceding the local's
+      name with <a href="../core/TO.html">TO</a>. An ambiguous condition exists when local is
+      executed while in interpretation state.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname"><a href="../core/TO.html">TO</a> <em>local</em> Run-time:</div>
+    <div class="sec">
+
+ ( <em>x</em> -- )
+      <p />
+      Assign the value <em>x</em> to the local value <em>local</em>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Note:</div>
+    <div class="sec">
+
+
+      This word does not have special compilation semantics in the
+      usual sense because it provides access to a system capability
+      for use by other user-defined words that do have them. However,
+      the locals facility as a whole and the sequence of messages
+      passed defines specific usage rules with semantic implications
+      that are described in detail in section
+      <strong><a href="../locals.html#local:locals">13.3.3 Processing locals</a></strong>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Note:</div>
+    <div class="sec">
+
+
+      This word is not intended for direct use in a definition to
+      declare that definition's locals. It is instead used by system
+      or user compiling words. These compiling words in turn define
+      their own syntax, and may be used directly in definitions to
+      declare locals. In this context, the syntax for <strong>(LOCAL)</strong>
+      is defined in terms of a sequence of compile-time messages and
+      is described in detail in section <strong><a href="../locals.html#local:locals">13.3.3 Processing locals</a></strong>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <strong><a href="../usage.html#usage:command">3.4 The Forth text interpreter</a></strong> and
+      <a href="../core/TO.html">6.2.2295 TO</a>.
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Locals word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html" class="current">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../locals.html#section.13.1">Introduction</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">(LOCAL)</span>
+      <div class="menu">
+        <ul id="menu-word" style="width: 202px;">
+        <li role="menuitem"><a href="LOCAL.html" class="current">(LOCAL)</a></li>
+        <li role="menuitem"><a href="LOCALS.html">LOCALS|</a></li>
+        <li role="menuitem"><a href="bColon.html">{:</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

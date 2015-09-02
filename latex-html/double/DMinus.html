@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: D-</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="double:D-">
+  <div class="wordNumber">8.6.1.1050</div>
+  <div class="wordName">D-</div>
+  <div class="wordEnglish">d-minus</div>
+  <div class="wordList">DOUBLE</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>d<sub>1</sub> | ud<sub>1</sub> d<sub>2</sub> | ud<sub>2</sub></em> -- <em>d<sub>3</sub> | ud<sub>3</sub></em> )
+      <p />
+      Subtract <em>d<sub>2</sub> | ud<sub>2</sub></em> from <em>d<sub>1</sub> | ud<sub>1</sub></em>, giving the
+      difference <em>d<sub>3</sub> | ud<sub>3</sub></em>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+
+      <span class="tt">T{ &nbsp;0.&nbsp;&nbsp;5.&nbsp;<strong>D-</strong> -&gt; -5. }T</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> small integers <br />
+      <span class="tt">T{ &nbsp;5.&nbsp;&nbsp;0.&nbsp;<strong>D-</strong> -&gt; &nbsp;5. }T</span> <br />
+      <span class="tt">T{ &nbsp;0.&nbsp;-5.&nbsp;<strong>D-</strong> -&gt; &nbsp;5. }T</span> <br />
+      <span class="tt">T{ &nbsp;1.&nbsp;&nbsp;2.&nbsp;<strong>D-</strong> -&gt; -1. }T</span> <br />
+      <span class="tt">T{ &nbsp;1.&nbsp;-2.&nbsp;<strong>D-</strong> -&gt; &nbsp;3. }T</span> <br />
+      <span class="tt">T{ -1.&nbsp;&nbsp;2.&nbsp;<strong>D-</strong> -&gt; -3. }T</span> <br />
+      <span class="tt">T{ -1.&nbsp;-2.&nbsp;<strong>D-</strong> -&gt; &nbsp;1. }T</span> <br />
+      <span class="tt">T{ -1.&nbsp;-1.&nbsp;<strong>D-</strong> -&gt; &nbsp;0. }T</span> <br />
+      <span class="tt">T{ &nbsp;0&nbsp;&nbsp;0&nbsp;&nbsp;0&nbsp;&nbsp;5&nbsp;<strong>D-</strong> -&gt; &nbsp;0&nbsp;-5 }T</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> mid-range integers <br />
+      <span class="tt">T{ -1&nbsp;&nbsp;5&nbsp;&nbsp;0&nbsp;&nbsp;0&nbsp;<strong>D-</strong> -&gt; -1&nbsp;&nbsp;5 }T</span> <br />
+      <span class="tt">T{ &nbsp;0&nbsp;&nbsp;0&nbsp;-1&nbsp;-5&nbsp;<strong>D-</strong> -&gt; &nbsp;1&nbsp;&nbsp;4 }T</span> <br />
+      <span class="tt">T{ &nbsp;0&nbsp;-5&nbsp;&nbsp;0&nbsp;&nbsp;0&nbsp;<strong>D-</strong> -&gt; &nbsp;0&nbsp;-5 }T</span> <br />
+      <span class="tt">T{ -1&nbsp;&nbsp;1&nbsp;&nbsp;0&nbsp;&nbsp;2&nbsp;<strong>D-</strong> -&gt; -1&nbsp;-1 }T</span> <br />
+      <span class="tt">T{ &nbsp;0&nbsp;&nbsp;1&nbsp;-1&nbsp;-2&nbsp;<strong>D-</strong> -&gt; &nbsp;1&nbsp;&nbsp;2 }T</span> <br />
+      <span class="tt">T{ &nbsp;0&nbsp;-1&nbsp;&nbsp;0&nbsp;&nbsp;2&nbsp;<strong>D-</strong> -&gt; &nbsp;0&nbsp;-3 }T</span> <br />
+      <span class="tt">T{ &nbsp;0&nbsp;-1&nbsp;&nbsp;0&nbsp;-2&nbsp;<strong>D-</strong> -&gt; &nbsp;0&nbsp;&nbsp;1 }T</span> <br />
+      <span class="tt">T{ &nbsp;0&nbsp;&nbsp;0&nbsp;&nbsp;0&nbsp;&nbsp;1&nbsp;<strong>D-</strong> -&gt; &nbsp;0&nbsp;-1 }T</span>
+      <p />
+      <span class="tt">T{ MIN-INT&nbsp;0&nbsp;<a href="../core/TwoDUP.html">2DUP</a>&nbsp;<strong>D-</strong> -&gt; 0. }T</span> <br />
+      <span class="tt">T{ MIN-INT&nbsp;<a href="../core/StoD.html">S&gt;D</a>&nbsp;MAX-INT&nbsp;0<strong>D-</strong> -&gt; 1&nbsp;1s }T</span> <br />
+      <span class="tt">T{ MAX-2INT&nbsp;max-2INT&nbsp;<strong>D-</strong> -&gt; 0. }T</span> &nbsp;&nbsp; <a href="../core/bs.html">\</a> large integers <br />
+      <span class="tt">T{ MIN-2INT&nbsp;min-2INT&nbsp;<strong>D-</strong> -&gt; 0. }T</span> <br />
+      <span class="tt">T{ MAX-2INT&nbsp;&nbsp;hi-2INT&nbsp;<strong>D-</strong> -&gt; lo-2INT&nbsp;<a href="../double/DNEGATE.html">DNEGATE</a> }T</span> <br />
+      <span class="tt">T{ &nbsp;HI-2INT&nbsp;&nbsp;lo-2INT&nbsp;<strong>D-</strong> -&gt; max-2INT }T</span> <br />
+      <span class="tt">T{ &nbsp;LO-2INT&nbsp;&nbsp;hi-2INT&nbsp;<strong>D-</strong> -&gt; min-2INT&nbsp;1.&nbsp;<a href="../double/DPlus.html">D+</a> }T</span> <br />
+      <span class="tt">T{ MIN-2INT&nbsp;min-2INT&nbsp;<strong>D-</strong> -&gt; 0. }T</span> <br />
+      <span class="tt">T{ MIN-2INT&nbsp;&nbsp;lo-2INT&nbsp;<strong>D-</strong> -&gt; lo-2INT }T</span>
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Double-Number word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html" class="current">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../double.html#section.8.1">Introduction</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">D-</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="TwoCONSTANT.html">2CONSTANT</a></li>
+        <li role="menuitem"><a href="TwoLITERAL.html">2LITERAL</a></li>
+        <li role="menuitem"><a href="TwoVARIABLE.html">2VARIABLE</a></li>
+        <li role="menuitem"><a href="DPlus.html">D+</a></li>
+        <li role="menuitem"><a href="DMinus.html" class="current">D-</a></li>
+        <li role="menuitem"><a href="Dd.html">D.</a></li>
+        <li role="menuitem"><a href="DDotR.html">D.R</a></li>
+        <li role="menuitem"><a href="DZeroless.html">D0&lt;</a></li>
+        <li role="menuitem"><a href="DZeroEqual.html">D0=</a></li>
+        <li role="menuitem"><a href="DTwoTimes.html">D2*</a></li>
+        <li role="menuitem"><a href="DTwoDiv.html">D2/</a></li>
+        <li role="menuitem"><a href="Dless.html">D&lt;</a></li>
+        <li role="menuitem"><a href="DEqual.html">D=</a></li>
+        <li role="menuitem"><a href="DtoS.html">D&gt;S</a></li>
+        <li role="menuitem"><a href="DABS.html">DABS</a></li>
+        <li role="menuitem"><a href="DMAX.html">DMAX</a></li>
+        <li role="menuitem"><a href="DMIN.html">DMIN</a></li>
+        <li role="menuitem"><a href="DNEGATE.html">DNEGATE</a></li>
+        <li role="menuitem"><a href="MTimesDiv.html">M*/</a></li>
+        <li role="menuitem"><a href="MPlus.html">M+</a></li>
+        <li role="menuitem"><a href="TwoROT.html">2ROT</a></li>
+        <li role="menuitem"><a href="TwoVALUE.html">2VALUE</a></li>
+        <li role="menuitem"><a href="DUless.html">DU&lt;</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

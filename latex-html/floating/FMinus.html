@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: F-</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="floating:F-">
+  <div class="wordNumber">12.6.1.1425</div>
+  <div class="wordName">F-</div>
+  <div class="wordEnglish">f-minus</div>
+  <div class="wordList">FLOATING</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( F: <em>r<sub>1</sub> r<sub>2</sub></em> -- <em>r<sub>3</sub></em> ) or
+      ( <em>r<sub>1</sub> r<sub>2</sub></em> -- <em>r<sub>3</sub></em> )
+      <p />
+      Subtract <em>r<sub>2</sub></em> from <em>r<sub>1</sub></em>, giving <em>r<sub>3</sub></em>.
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Floating-Point word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html" class="current">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../float.html#section.12.1">Introduction</a></li>
+        <li role="menuitem"><a href="../float.html#section.12.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../float.html#section.12.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../float.html#section.12.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../float.html#section.12.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../float.html#section.12.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">F-</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="toFLOAT.html">&gt;FLOAT</a></li>
+        <li role="menuitem"><a href="DtoF.html">D&gt;F</a></li>
+        <li role="menuitem"><a href="FStore.html">F!</a></li>
+        <li role="menuitem"><a href="FTimes.html">F*</a></li>
+        <li role="menuitem"><a href="FPlus.html">F+</a></li>
+        <li role="menuitem"><a href="FMinus.html" class="current">F-</a></li>
+        <li role="menuitem"><a href="FDiv.html">F/</a></li>
+        <li role="menuitem"><a href="FZeroless.html">F0&lt;</a></li>
+        <li role="menuitem"><a href="FZeroEqual.html">F0=</a></li>
+        <li role="menuitem"><a href="Fless.html">F&lt;</a></li>
+        <li role="menuitem"><a href="FtoD.html">F&gt;D</a></li>
+        <li role="menuitem"><a href="FFetch.html">F@</a></li>
+        <li role="menuitem"><a href="FALIGN.html">FALIGN</a></li>
+        <li role="menuitem"><a href="FALIGNED.html">FALIGNED</a></li>
+        <li role="menuitem"><a href="FCONSTANT.html">FCONSTANT</a></li>
+        <li role="menuitem"><a href="FDEPTH.html">FDEPTH</a></li>
+        <li role="menuitem"><a href="FDROP.html">FDROP</a></li>
+        <li role="menuitem"><a href="FDUP.html">FDUP</a></li>
+        <li role="menuitem"><a href="FLITERAL.html">FLITERAL</a></li>
+        <li role="menuitem"><a href="FLOATPlus.html">FLOAT+</a></li>
+        <li role="menuitem"><a href="FLOATS.html">FLOATS</a></li>
+        <li role="menuitem"><a href="FLOOR.html">FLOOR</a></li>
+        <li role="menuitem"><a href="FMAX.html">FMAX</a></li>
+        <li role="menuitem"><a href="FMIN.html">FMIN</a></li>
+        <li role="menuitem"><a href="FNEGATE.html">FNEGATE</a></li>
+        <li role="menuitem"><a href="FOVER.html">FOVER</a></li>
+        <li role="menuitem"><a href="FROT.html">FROT</a></li>
+        <li role="menuitem"><a href="FROUND.html">FROUND</a></li>
+        <li role="menuitem"><a href="FSWAP.html">FSWAP</a></li>
+        <li role="menuitem"><a href="FVARIABLE.html">FVARIABLE</a></li>
+        <li role="menuitem"><a href="REPRESENT.html">REPRESENT</a></li>
+        <li role="menuitem"><a href="DFStore.html">DF!</a></li>
+        <li role="menuitem"><a href="DFFetch.html">DF@</a></li>
+        <li role="menuitem"><a href="DFALIGN.html">DFALIGN</a></li>
+        <li role="menuitem"><a href="DFALIGNED.html">DFALIGNED</a></li>
+        <li role="menuitem"><a href="DFFIELDColon.html">DFFIELD:</a></li>
+        <li role="menuitem"><a href="DFLOATPlus.html">DFLOAT+</a></li>
+        <li role="menuitem"><a href="DFLOATS.html">DFLOATS</a></li>
+        <li role="menuitem"><a href="FTimesTimes.html">F**</a></li>
+        <li role="menuitem"><a href="Fd.html">F.</a></li>
+        <li role="menuitem"><a href="FtoS.html">F&gt;S</a></li>
+        <li role="menuitem"><a href="FABS.html">FABS</a></li>
+        <li role="menuitem"><a href="FACOS.html">FACOS</a></li>
+        <li role="menuitem"><a href="FACOSH.html">FACOSH</a></li>
+        <li role="menuitem"><a href="FALOG.html">FALOG</a></li>
+        <li role="menuitem"><a href="FASIN.html">FASIN</a></li>
+        <li role="menuitem"><a href="FASINH.html">FASINH</a></li>
+        <li role="menuitem"><a href="FATAN.html">FATAN</a></li>
+        <li role="menuitem"><a href="FATANTwo.html">FATAN2</a></li>
+        <li role="menuitem"><a href="FATANH.html">FATANH</a></li>
+        <li role="menuitem"><a href="FCOS.html">FCOS</a></li>
+        <li role="menuitem"><a href="FCOSH.html">FCOSH</a></li>
+        <li role="menuitem"><a href="FEd.html">FE.</a></li>
+        <li role="menuitem"><a href="FEXP.html">FEXP</a></li>
+        <li role="menuitem"><a href="FEXPMOne.html">FEXPM1</a></li>
+        <li role="menuitem"><a href="FFIELDColon.html">FFIELD:</a></li>
+        <li role="menuitem"><a href="FLN.html">FLN</a></li>
+        <li role="menuitem"><a href="FLNPOne.html">FLNP1</a></li>
+        <li role="menuitem"><a href="FLOG.html">FLOG</a></li>
+        <li role="menuitem"><a href="FSd.html">FS.</a></li>
+        <li role="menuitem"><a href="FSIN.html">FSIN</a></li>
+        <li role="menuitem"><a href="FSINCOS.html">FSINCOS</a></li>
+        <li role="menuitem"><a href="FSINH.html">FSINH</a></li>
+        <li role="menuitem"><a href="FSQRT.html">FSQRT</a></li>
+        <li role="menuitem"><a href="FTAN.html">FTAN</a></li>
+        <li role="menuitem"><a href="FTANH.html">FTANH</a></li>
+        <li role="menuitem"><a href="FTRUNC.html">FTRUNC</a></li>
+        <li role="menuitem"><a href="FVALUE.html">FVALUE</a></li>
+        <li role="menuitem"><a href="Ftilde.html">F~</a></li>
+        <li role="menuitem"><a href="PRECISION.html">PRECISION</a></li>
+        <li role="menuitem"><a href="StoF.html">S&gt;F</a></li>
+        <li role="menuitem"><a href="SET-PRECISION.html">SET-PRECISION</a></li>
+        <li role="menuitem"><a href="SFStore.html">SF!</a></li>
+        <li role="menuitem"><a href="SFFetch.html">SF@</a></li>
+        <li role="menuitem"><a href="SFALIGN.html">SFALIGN</a></li>
+        <li role="menuitem"><a href="SFALIGNED.html">SFALIGNED</a></li>
+        <li role="menuitem"><a href="SFFIELDColon.html">SFFIELD:</a></li>
+        <li role="menuitem"><a href="SFLOATPlus.html">SFLOAT+</a></li>
+        <li role="menuitem"><a href="SFLOATS.html">SFLOATS</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

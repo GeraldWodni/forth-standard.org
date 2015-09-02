@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: BLANK</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="string:BLANK">
+  <div class="wordNumber">17.6.1.0780</div>
+  <div class="wordName">BLANK</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">STRING</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>c-addr u</em> -- )
+      <p />
+      If <em>u</em> is greater than zero, store the character value for
+      space in <em>u</em> consecutive character positions beginning at
+      <em>c-addr</em>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+       <div class="tt">
+<a href="../core/Colon.html">:</a> s13 <a href="../core/Sq.html">S&quot;</a> aaaaa      a&quot; <a href="../core/Semi.html">;</a>						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Six spaces</span>
+        <p />
+        <span class="tt">T{ <a href="../core/PAD.html">PAD</a>&nbsp;25&nbsp;<a href="../core/CHAR.html">CHAR</a>&nbsp;a&nbsp;<a href="../core/FILL.html">FILL</a> -&gt;  }T</span>					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Fill PAD with 25 'a's</span> <br />
+        <span class="tt">T{ <a href="../core/PAD.html">PAD</a>&nbsp;5&nbsp;<a href="../core/CHARS.html">CHARS</a>&nbsp;<a href="../core/Plus.html">+</a>&nbsp;6&nbsp;<strong>BLANK</strong> -&gt;  }T</span>	&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Put 6 spaced from character 5</span> <br />
+        <span class="tt">T{ <a href="../core/PAD.html">PAD</a>&nbsp;12&nbsp;s13&nbsp;<a href="../string/COMPARE.html">COMPARE</a> -&gt; 0 }T</span>							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">PAD Should now be same as s13</span>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">String word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html" class="current">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../string.html#section.17.1">Introduction</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">BLANK</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="MinusTRAILING.html">-TRAILING</a></li>
+        <li role="menuitem"><a href="DivSTRING.html">/STRING</a></li>
+        <li role="menuitem"><a href="BLANK.html" class="current">BLANK</a></li>
+        <li role="menuitem"><a href="CMOVE.html">CMOVE</a></li>
+        <li role="menuitem"><a href="CMOVEtop.html">CMOVE&gt;</a></li>
+        <li role="menuitem"><a href="COMPARE.html">COMPARE</a></li>
+        <li role="menuitem"><a href="SEARCH.html">SEARCH</a></li>
+        <li role="menuitem"><a href="SLITERAL.html">SLITERAL</a></li>
+        <li role="menuitem"><a href="REPLACES.html">REPLACES</a></li>
+        <li role="menuitem"><a href="SUBSTITUTE.html">SUBSTITUTE</a></li>
+        <li role="menuitem"><a href="UNESCAPE.html">UNESCAPE</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

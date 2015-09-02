@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: The optional Search-Order word set</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.16">16 The optional Search-Order word set</h1> <!-- 16 -->
+<h2 id="section.16.1">16.1 Introduction</h2> <!-- 16.1 -->
+<h2 id="section.16.2">16.2 Additional terms and notation</h2> <!-- 16.2 -->
+<dl class="desc">
+<dt>compilation word list:</dt><dd>
+The word list into which new definition names are placed.
+<p />
+</dd>
+<dt>search order:</dt><dd>
+A list of word lists specifying the order in which the
+dictionary will be searched.
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h2 id="section.16.3">16.3 Additional usage requirements</h2> <!-- 16.3 -->
+<h3 id="subsection.16.3.1">16.3.1 Data types</h3> <!-- 16.3.1 -->
+Word list identifiers are implementation-dependent single-cell
+values that identify word lists.
+<p />
+Append table <a href="search.html#search:types">16.1</a> to table <a href="usage.html#table:datatypes">3.1</a>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 16.1: Data types</div>
+  <a name="search:types"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>Symbol</em> </td><td><em>Data type</em> </td><td class="r"><em>Size on stack</em> </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>wid</em>		</td><td>word list identifiers	</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td></td></tr>
+  </table>
+  
+  </div>
+See: <strong><a href="usage.html#usage:data">3.1 Data types</a></strong>,
+<strong><a href="usage.html#usage:find">3.4.2 Finding definition names</a></strong>,
+<strong><a href="usage.html#usage:command">3.4 The Forth text interpreter</a></strong>.
+<p />
+<h3 id="subsection.16.3.2">16.3.2 Environmental queries</h3> <!-- 16.3.2 -->
+Append table <a href="search.html#search:env">16.2</a> to table <a href="usage.html#table:env">3.4</a>.
+<p />
+See: <strong><a href="usage.html#usage:env">3.2.6 Environmental queries</a></strong>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 16.2: Environmental Query Strings</div>
+  <a name="search:env"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td colspan="2">String  Value data type </td><td class="c">Constant? </td><td style="width: 21em">Meaning </td></tr>
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td style="width: 10em"><code>WORDLISTS</code>			</td><td class="r"><em>n</em>		</td><td class="c">yes	</td><td style="width: 21em">maximum number of word lists usable in the search order</td></tr>
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td style="width: 10em"></td></tr>
+  </table>
+  
+  </div>
+<h3 id="subsection.16.3.3">16.3.3 Finding definition names</h3> <!-- 16.3.3 -->
+<a name="search:find"></a>
+<p />
+When searching a word list for a definition name, the system shall
+search each word list from its last definition to its first. The
+search may encompass only a single word list, as with
+<a href="search/SEARCH-WORDLIST.html">SEARCH-WORDLIST</a>, or all the word lists in the search order,
+as with the text interpreter and <a href="search/FIND.html">FIND</a>.
+<p />
+Changing the search order shall only affect the subsequent finding
+of definition names in the dictionary. A system with the Search-Order
+word set shall allow at least eight word lists in the search order.
+<p />
+An ambiguous condition exists if a program changes the compilation
+word list during the compilation of a definition or before
+modification of the behavior of the most recently compiled definition
+with <a href="tools/SemiCODE.html">;CODE</a>, <a href="core/DOES.html">DOES&gt;</a>, or
+<a href="core/IMMEDIATE.html">IMMEDIATE</a>.
+<p />
+A program that requires more than eight word lists in the search
+order has an environmental dependency.
+<p />
+See: <strong><a href="usage.html#usage:find">3.4.2 Finding definition names</a></strong>.
+<p />
+<h3 id="subsection.16.3.4">16.3.4 Contiguous regions</h3> <!-- 16.3.4 -->
+The regions of data space produced by the operations described in
+<strong><a href="usage.html#usage:contiguous">3.3.3.2 Contiguous regions</a></strong> may be
+non-contiguous if <a href="search/WORDLIST.html">WORDLIST</a> is executed between allocations.
+<p />
+<h2 id="section.16.4">16.4 Additional documentation requirements</h2> <!-- 16.4 -->
+<h3 id="subsection.16.4.1">16.4.1 System documentation</h3> <!-- 16.4.1 -->
+<h4 id="subsubsection.16.4.1.1">16.4.1.1 Implementation-defined options</h4> <!-- 16.4.1.1 -->
+<ul>
+<li> maximum number of word lists in the search order
+(<strong><a href="search.html#search:find">16.3.3 Finding definition names</a></strong>,
+<a href="search/SET-ORDER.html">16.6.1.2197 SET-ORDER</a>);
+</li>
+<li> minimum search order
+(<a href="search/SET-ORDER.html">16.6.1.2197 SET-ORDER</a>,
+<a href="search/ONLY.html">16.6.2.1965 ONLY</a>).
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.16.4.1.2">16.4.1.2 Ambiguous conditions</h4> <!-- 16.4.1.2 -->
+<ul>
+<li> changing the compilation word list
+(<strong><a href="search.html#search:find">16.3.3 Finding definition names</a></strong>);
+</li>
+<li> search order empty
+(<a href="search/PREVIOUS.html">16.6.2.2037 PREVIOUS</a>);
+</li>
+<li> too many word lists in search order
+(<a href="search/ALSO.html">16.6.2.0715 ALSO</a>).
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.16.4.1.3">16.4.1.3 Other system documentation</h4> <!-- 16.4.1.3 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h3 id="subsection.16.4.2">16.4.2 Program documentation</h3> <!-- 16.4.2 -->
+<h4 id="subsubsection.16.4.2.1">16.4.2.1 Environmental dependencies</h4> <!-- 16.4.2.1 -->
+<ul>
+<li> requiring more than eight word-lists in the search order
+(<strong><a href="search.html#search:find">16.3.3 Finding definition names</a></strong>).
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.16.4.2.2">16.4.2.2 Other program documentation</h4> <!-- 16.4.2.2 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h2 id="section.16.5">16.5 Compliance and labeling</h2> <!-- 16.5 -->
+<h3 id="subsection.16.5.1">16.5.1 Forth-2012 systems</h3> <!-- 16.5.1 -->
+The phrase &quot;Providing the Search-Order word set&quot; shall be
+appended to the label of any Standard System that provides all of
+the Search-Order word set.
+<p />
+The phrase &quot;Providing <em>name(s)</em> from the Search-Order
+Extensions word set&quot; shall be appended to the label of any
+Standard System that provides portions of the Search-Order
+Extensions word set.
+<p />
+The phrase &quot;Providing the Search-Order Extensions word set&quot; shall
+be appended to the label of any Standard System that provides all of
+the Search-Order and Search-Order Extensions word sets.
+<p />
+<h3 id="subsection.16.5.2">16.5.2 Forth-2012 programs</h3> <!-- 16.5.2 -->
+The phrase &quot;Requiring the Search-Order word set&quot; shall be appended
+to the label of Standard Programs that require the system to provide
+the Search-Order word set.
+<p />
+The phrase &quot;Requiring <em>name(s)</em> from the Search-Order
+Extensions word set&quot; shall be appended to the label of Standard
+Programs that require the system to provide portions of the
+Search-Order Extensions word set.
+<p />
+The phrase &quot;Requiring the Search-Order Extensions word set&quot; shall
+be appended to the label of Standard Programs that require the system
+to provide all of the Search-Order and Search-Order Extensions word
+sets.
+<p />
+<h2 id="section.16.6">16.6 Glossary</h2> <!-- 16.6 -->
+<h3 id="subsection.16.6.1">16.6.1 Search-Order words</h3> <!-- 16.6.1 -->
+<ul>
+<li><a href="search/DEFINITIONS.html">16.6.1.1180 DEFINITIONS</a></li>
+<li><a href="search/FIND.html">16.6.1.1550 FIND</a></li>
+<li><a href="search/FORTH-WORDLIST.html">16.6.1.1595 FORTH-WORDLIST</a></li>
+<li><a href="search/GET-CURRENT.html">16.6.1.1643 GET-CURRENT</a></li>
+<li><a href="search/GET-ORDER.html">16.6.1.1647 GET-ORDER</a></li>
+<li><a href="search/SEARCH-WORDLIST.html">16.6.1.2192 SEARCH-WORDLIST</a></li>
+<li><a href="search/SET-CURRENT.html">16.6.1.2195 SET-CURRENT</a></li>
+<li><a href="search/SET-ORDER.html">16.6.1.2197 SET-ORDER</a></li>
+
+<li><a href="search/WORDLIST.html">16.6.1.2460 WORDLIST</a></li>
+</ul>
+<h3 id="subsection.16.6.2">16.6.2 Search-Order extension words</h3> <!-- 16.6.2 -->
+<ul>
+<li><a href="search/ALSO.html">16.6.2.0715 ALSO</a></li>
+<li><a href="search/FORTH.html">16.6.2.1590 FORTH</a></li>
+<li><a href="search/ONLY.html">16.6.2.1965 ONLY</a></li>
+<li><a href="search/ORDER.html">16.6.2.1985 ORDER</a></li>
+<li><a href="search/PREVIOUS.html">16.6.2.2037 PREVIOUS</a></li>
+</ul>
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Search-Order word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html" class="current">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.16.1" class="current">Introduction</a></li>
+        <li role="menuitem"><a href="#section.16.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="#section.16.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="#section.16.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="#section.16.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="#section.16.6">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">DEFINITIONS</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="search/DEFINITIONS.html">DEFINITIONS</a></li>
+        <li role="menuitem"><a href="search/FIND.html">FIND</a></li>
+        <li role="menuitem"><a href="search/FORTH-WORDLIST.html">FORTH-WORDLIST</a></li>
+        <li role="menuitem"><a href="search/GET-CURRENT.html">GET-CURRENT</a></li>
+        <li role="menuitem"><a href="search/GET-ORDER.html">GET-ORDER</a></li>
+        <li role="menuitem"><a href="search/SEARCH-WORDLIST.html">SEARCH-WORDLIST</a></li>
+        <li role="menuitem"><a href="search/SET-CURRENT.html">SET-CURRENT</a></li>
+        <li role="menuitem"><a href="search/SET-ORDER.html">SET-ORDER</a></li>
+        <li role="menuitem"><a href="search/WORDLIST.html">WORDLIST</a></li>
+        <li role="menuitem"><a href="search/ALSO.html">ALSO</a></li>
+        <li role="menuitem"><a href="search/FORTH.html">FORTH</a></li>
+        <li role="menuitem"><a href="search/ONLY.html">ONLY</a></li>
+        <li role="menuitem"><a href="search/ORDER.html">ORDER</a></li>
+        <li role="menuitem"><a href="search/PREVIOUS.html">PREVIOUS</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: The optional Floating-Point word set</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.12">12 The optional Floating-Point word set</h1> <!-- 12 -->
+<h2 id="section.12.1">12.1 Introduction</h2> <!-- 12.1 -->
+<h2 id="section.12.2">12.2 Additional terms and notation</h2> <!-- 12.2 -->
+<h3 id="subsection.12.2.1">12.2.1 Definition of terms</h3> <!-- 12.2.1 -->
+<a name="float:terms"></a>
+<p />
+<dl class="desc">
+<dt>float-aligned address:</dt><dd>
+The address of a memory location at which a floating-point
+number can be accessed.
+<p />
+</dd>
+<dt>double-float-aligned address:</dt><dd>
+The address of a memory location at which a 64-bit IEEE
+double-precision floating-point number can be accessed.
+<p />
+</dd>
+<dt>single-float-aligned address:</dt><dd>
+The address of a memory location at which a 32-bit IEEE
+single-precision floating-point number can be accessed.
+<p />
+</dd>
+<dt>IEEE floating-point number:</dt><dd>
+A single- or double-precision floating-point number as defined
+in  <strong>ANSI/IEEE 754-1985</strong>.
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h3 id="subsection.12.2.2">12.2.2 Notation</h3> <!-- 12.2.2 -->
+<a name="float:notation"></a>
+<p />
+
+<h4 id="subsubsection.12.2.2.2">12.2.2.2 Stack notation</h4> <!-- 12.2.2.2 -->
+Floating-point stack notation is:
+<div class="quote">
+
+  ( F: <em>before</em> -- <em>after</em> )
+  
+  </div>
+<p />
+A unified stack notation is provided for systems with the environmental
+restriction that the floating-point numbers are kept on the data stack.
+<p />
+<h2 id="section.12.3">12.3 Additional usage requirements</h2> <!-- 12.3 -->
+<h3 id="subsection.12.3.1">12.3.1 Data types</h3> <!-- 12.3.1 -->
+<a name="float:datatypes"></a>
+<p />
+Append table <a href="float.html#float:types">12.1</a> to table <a href="usage.html#table:datatypes">3.1</a>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 12.1: Data Types</div>
+  <a name="float:types"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>Symbol</em> </td><td><em>Data type</em> </td><td class="r"><em>Size on stack</em> </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>df-addr</em>	</td><td>double-float-aligned address	</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>f-addr</em>	</td><td>float-aligned address			</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>r</em>		</td><td>floating-point number			</td><td class="r">implementation-defined </td></tr>
+  <tr valign="top"><td><em>sf-addr</em>	</td><td>single-float-aligned address	</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td></td></tr>
+  </table>
+  
+  </div>
+<h4 id="subsubsection.12.3.1.1">12.3.1.1 Addresses</h4> <!-- 12.3.1.1 -->
+<a name="float:addr"></a>
+<p />
+The set of float-aligned addresses is an implementation-defined
+subset of the set of aligned addresses. Adding the size of a
+floating-point number to a float-aligned address shall produce
+a float-aligned address.
+<p />
+The set of double-float-aligned addresses is an implementation-defined
+subset of the set of aligned addresses. Adding the size of a 64-bit
+IEEE double-precision floating-point number to a double-float-aligned
+address shall produce a double-float-aligned address.
+<p />
+The set of single-float-aligned addresses is an implementation-defined
+subset of the set of aligned addresses. Adding the size of a 32-bit
+IEEE single-precision floating-point number to a single-float-aligned
+address shall produce a single-float-aligned address.
+<p />
+<h4 id="subsubsection.12.3.1.2">12.3.1.2 Floating-point numbers</h4> <!-- 12.3.1.2 -->
+<a name="float:num"></a>
+<p />
+The internal representation of a floating-point number, including the
+format and precision of the significand and the format and range of
+the exponent, is implementation defined.
+<p />
+Any rounding or truncation of floating-point numbers is implementation
+defined.
+<p />
+<h3 id="subsection.12.3.2">12.3.2 Floating-point operations</h3> <!-- 12.3.2 -->
+<a name="float:ops"></a>
+<p />
+&quot;Round to nearest&quot; means round the result of a floating-point
+operation to the representable value nearest the result. If the two
+nearest representable values are equally near the result, the one
+having zero as its least significant bit shall be delivered.
+<p />
+&quot;Round toward negative infinity&quot; means round the result of a
+floating-point operation to the representable value nearest to and
+no greater than the result.
+<p />
+&quot;Round toward zero&quot; means round the result of a floating-point
+operation to the representable value nearest to zero, frequently
+referred to as &quot;truncation&quot;.
+<p />
+<h3 id="subsection.12.3.3">12.3.3 Floating-point stack</h3> <!-- 12.3.3 -->
+<a name="float:stack"></a>
+<p />
+A last in, first out list that shall be used by all floating-point
+operators.
+<p />
+The width of the floating-point stack is implementation-defined.
+The floating-point stack shall be separate from the data and return
+stacks.
+<p />
+The size of a floating-point stack shall be at least 6 items.
+<p />
+A program that depends on the floating-point stack being larger than
+six items has an environmental dependency.
+<p />
+<h3 id="subsection.12.3.4">12.3.4 Environmental queries</h3> <!-- 12.3.4 -->
+Append table <a href="float.html#float:env">12.2</a> to table <a href="usage.html#table:env">3.4</a>.
+<p />
+See: <strong><a href="usage.html#usage:env">3.2.6 Environmental queries</a></strong>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 12.2: Environmental Query Strings</div>
+  <a name="float:env"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td colspan="2">String  Value data type </td><td class="c">Constant? </td><td style="width: 21em">Meaning </td></tr>
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td style="width: 9em"><code>FLOATING-STACK</code> </td><td class="r"><em>n</em> </td><td class="c">yes </td><td style="width: 21em">the maximum depth of the separate floating-point stack.
+  On systems with the environmental restriction of keeping
+  floating-point items on the data stack, <em>n</em> = 0. </td></tr>
+  <tr valign="top"><td style="width: 9em"><code>MAX-FLOAT</code>		</td><td class="r"><em>r</em>			</td><td class="c">yes	</td><td style="width: 21em">largest usable floating-point number </td></tr>
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td style="width: 9em"></td></tr>
+  </table>
+  
+  </div>
+<h3 id="subsection.12.3.5">12.3.5 Address alignment</h3> <!-- 12.3.5 -->
+Since the address returned by a <a href="core/CREATE.html">CREATE</a>d word is not
+necessarily aligned for any particular class of floating-point
+data, a program shall align the address (to be float aligned,
+single-float aligned, or double-float aligned) before accessing
+floating-point data at the address.
+<p />
+See: <strong><a href="usage.html#usage:aaddr">3.3.3.1 Address alignment</a></strong>,
+<strong><a href="float.html#float:addr">12.3.1.1 Addresses</a></strong>.
+<p />
+<h3 id="subsection.12.3.6">12.3.6 Variables</h3> <!-- 12.3.6 -->
+A program may address memory in data space regions made available
+by <a href="floating/FVARIABLE.html">FVARIABLE</a>. These regions may be non-contiguous with
+regions subsequently allocated with <a href="core/Comma.html">,</a> (comma) or
+<a href="core/ALLOT.html">ALLOT</a>. See: <strong><a href="usage.html#usage:var">3.3.3.3 Variables</a></strong>.
+<p />
+<h3 id="subsection.12.3.7">12.3.7 Text interpreter input number conversion</h3> <!-- 12.3.7 -->
+<a name="float:conv"></a>
+<p />
+If the Floating-Point word set is present in the dictionary and
+the current base is <a href="core/DECIMAL.html">DECIMAL</a>, the input number-conversion
+algorithm shall be extended to recognize floating-point numbers in
+this form:
+<p />
+<div class="center">
+
+  <table class="center">
+  <tr valign="top"><td class="r">Convertible string  </td><td> <span style="font-family: sans-serif">:=</span> </td><td>&lt;<em>significand</em>&gt;&lt;<em>exponent</em>&gt; </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>significand</em>&gt; </td><td> <span style="font-family: sans-serif">:=</span> </td><td>[&lt;<em>sign</em>&gt;]&lt;<em>digits</em>&gt;[<strong>.</strong>&lt;<em>digits0</em>&gt;] </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>exponent</em>&gt; </td><td> <span style="font-family: sans-serif">:=</span> </td><td><strong>E</strong>[&lt;<em>sign</em>&gt;]&lt;<em>digits0</em>&gt; </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>sign</em>&gt; </td><td> <span style="font-family: sans-serif">:=</span> </td><td>{ <strong>+</strong> | <strong>-</strong> } </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>digits</em>&gt; </td><td> <span style="font-family: sans-serif">:=</span> </td><td>&lt;<em>digit</em>&gt;&lt;<em>digits0</em>&gt; </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>digits0</em>&gt; </td><td> <span style="font-family: sans-serif">:=</span> </td><td>&lt;<em>digit</em>&gt;* </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>digit</em>&gt; </td><td> <span style="font-family: sans-serif">:=</span> </td><td>{ <strong>0</strong> | <strong>1</strong> |
+  <strong>2</strong> | <strong>3</strong> |
+  <strong>4</strong> | <strong>5</strong> |
+  <strong>6</strong> | <strong>7</strong> |
+  <strong>8</strong> | <strong>9</strong> } </td></tr>
+  <tr valign="top"><td class="r"></td></tr>
+  </table>
+  
+  </div>
+<p />
+These are examples of valid representations of floating-point numbers
+in program source:
+<p />
+<div class="center">
+
+  <code>1E &nbsp;&nbsp;&nbsp;&nbsp; 1.E &nbsp;&nbsp;&nbsp;&nbsp; 1.E0 &nbsp;&nbsp;&nbsp;&nbsp; +1.23E-1 &nbsp;&nbsp;&nbsp;&nbsp; -1.23E+1</code>
+  
+  </div>
+<p />
+See:
+<strong><a href="usage.html#usage:numbers">3.4.1.3 Text interpreter input number conversion</a></strong>,
+<a href="floating/toFLOAT.html">12.6.1.0558 &gt;FLOAT</a>.
+<p />
+<h2 id="section.12.4">12.4 Additional documentation requirements</h2> <!-- 12.4 -->
+<h3 id="subsection.12.4.1">12.4.1 System documentation</h3> <!-- 12.4.1 -->
+<h4 id="subsubsection.12.4.1.1">12.4.1.1 Implementation-defined options</h4> <!-- 12.4.1.1 -->
+<ul>
+<li> format and range of floating-point numbers
+(<strong><a href="float.html#float:datatypes">12.3.1 Data types</a></strong>,
+<a href="floating/REPRESENT.html">12.6.1.2143 REPRESENT</a>);
+</li>
+<li> results of <a href="floating/REPRESENT.html">12.6.1.2143 REPRESENT</a> when
+<em>float</em> is out of range;
+</li>
+<li> rounding or truncation of floating-point numbers
+(<strong><a href="float.html#float:num">12.3.1.2 Floating-point numbers</a></strong>);
+</li>
+<li> size of floating-point stack
+(<strong><a href="float.html#float:stack">12.3.3 Floating-point stack</a></strong>);
+</li>
+<li> width of floating-point stack
+(<strong><a href="float.html#float:stack">12.3.3 Floating-point stack</a></strong>).
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.12.4.1.2">12.4.1.2 Ambiguous conditions</h4> <!-- 12.4.1.2 -->
+<a name="float:ambiguous"></a>
+<ul>
+<li> <a href="floating/DFFetch.html">DF@</a> or <a href="floating/DFStore.html">DF!</a> is used with an address that is not
+double-float aligned;
+</li>
+<li> <a href="floating/FFetch.html">F@</a> or <a href="floating/FStore.html">F!</a> is used with an address that is not
+float aligned;
+</li>
+<li> floating point result out of range
+(e.g., in <a href="floating/FDiv.html">12.6.1.1430 F/</a>);
+</li>
+<li> <a href="floating/SFFetch.html">SF@</a> or <a href="floating/SFStore.html">SF!</a> is used with an address that is not
+single-float aligned;
+</li>
+<li> <a href="core/BASE.html">BASE</a> is not decimal
+(<a href="floating/REPRESENT.html">12.6.1.2143 REPRESENT</a>,
+<a href="floating/Fd.html">12.6.2.1427 F.</a>,
+<a href="floating/FEd.html">12.6.2.1513 FE.</a>,
+<a href="floating/FSd.html">12.6.2.1613 FS.</a>);
+</li>
+<li> both arguments equal zero (<a href="floating/FATANTwo.html">12.6.2.1489 FATAN2</a>);
+</li>
+<li> cosine of argument is zero for <a href="floating/FTAN.html">12.6.2.1625 FTAN</a>;
+</li>
+<li> <em>d</em> can't be precisely represented as <em>float</em> in
+<a href="floating/DtoF.html">12.6.1.1130 D&gt;F</a>;
+</li>
+<li> dividing by zero (<a href="floating/FDiv.html">12.6.1.1430 F/</a>);
+</li>
+<li> exponent too big for conversion
+(<a href="floating/DFStore.html">12.6.2.1203 DF!</a>,
+<a href="floating/DFFetch.html">12.6.2.1204 DF@</a>,
+<a href="floating/SFStore.html">12.6.2.2202 SF!</a>,
+<a href="floating/SFFetch.html">12.6.2.2203 SF@</a>);
+</li>
+<li> <em>float</em> less than one (<a href="floating/FACOSH.html">12.6.2.1477 FACOSH</a>);
+</li>
+<li> <em>float</em> less than or equal to minus-one
+(<a href="floating/FLNPOne.html">12.6.2.1554 FLNP1</a>);
+</li>
+<li> <em>float</em> less than or equal to zero
+(<a href="floating/FLN.html">12.6.2.1553 FLN</a>,
+<a href="floating/FLOG.html">12.6.2.1557 FLOG</a>);
+</li>
+<li> <em>float</em> less than zero
+(<a href="floating/FSQRT.html">12.6.2.1618 FSQRT</a>);
+</li>
+<li> <em>float</em> magnitude greater than one
+(<a href="floating/FACOS.html">12.6.2.1476 FACOS</a>,
+<a href="floating/FASIN.html">12.6.2.1486 FASIN</a>,
+<a href="floating/FATANH.html">12.6.2.1491 FATANH</a>);
+</li>
+<li> integer part of <em>float</em> can't be represented by <em>d</em> in
+<a href="floating/FtoD.html">12.6.1.1470 F&gt;D</a>;
+</li>
+<li> string larger than pictured-numeric output area
+(<a href="floating/Fd.html">12.6.2.1427 F.</a>,
+<a href="floating/FEd.html">12.6.2.1513 FE.</a>,
+<a href="floating/FSd.html">12.6.2.1613 FS.</a>);
+</li>
+<li> <em>n</em> can't be precisely represented as
+<em>float</em> in <a href="floating/StoF.html">12.6.2.2175 S&gt;F</a>;
+</li>
+<li> integer part of <em>float</em> can't be represented
+by <em>n</em> in <a href="floating/FtoS.html">12.6.2.1471 F&gt;S</a>.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.12.4.1.3">12.4.1.3 Other system documentation</h4> <!-- 12.4.1.3 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.12.4.1.4">12.4.1.4 Environmental restrictions</h4> <!-- 12.4.1.4 -->
+<a name="float:restrictions"></a>
+<p />
+<ul>
+<li> Keeping floating-point numbers on the data stack.
+</li>
+</ul>
+<p />
+<h3 id="subsection.12.4.2">12.4.2 Program documentation</h3> <!-- 12.4.2 -->
+<h4 id="subsubsection.12.4.2.1">12.4.2.1 Environmental dependencies</h4> <!-- 12.4.2.1 -->
+<a name="float:dependencies"></a>
+<p />
+<ul>
+<li> requiring the floating-point stack to be larger than six items
+(<strong><a href="float.html#float:stack">12.3.3 Floating-point stack</a></strong>);
+</li>
+<li> requiring floating-point numbers to be kept on the data stack,
+with <em>n</em> cells per floating point number.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.12.4.2.2">12.4.2.2 Other program documentation</h4> <!-- 12.4.2.2 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h2 id="section.12.5">12.5 Compliance and labeling</h2> <!-- 12.5 -->
+<h3 id="subsection.12.5.1">12.5.1 Forth-2012 systems</h3> <!-- 12.5.1 -->
+The phrase &quot;Providing the Floating-Point word set&quot; shall be
+appended to the label of any Standard System that provides all of
+the Floating-Point word set.
+<p />
+The phrase &quot;Providing <em>name(s)</em> from the Floating-Point
+Extensions word set&quot; shall be appended to the label of any Standard
+System that provides portions of the Floating-Point Extensions word
+set.
+<p />
+The phrase &quot;Providing the Floating-Point Extensions word set&quot; shall
+be appended to the label of any Standard System that provides all of
+the Floating-Point and Floating-Point Extensions word sets.
+<p />
+<h3 id="subsection.12.5.2">12.5.2 Forth-2012 programs</h3> <!-- 12.5.2 -->
+The phrase &quot;Requiring the Floating-Point word set&quot; shall be
+appended to the label of Standard Programs that require the system
+to provide the Floating-Point word set.
+<p />
+The phrase &quot;Requiring <em>name(s)</em> from the Floating-Point
+Extensions word set&quot; shall be appended to the label of Standard
+Programs that require the system to provide portions of the
+Floating-Point Extensions word set.
+<p />
+The phrase &quot;Requiring the Floating-Point Extensions word set&quot; shall
+be appended to the label of Standard Programs that require the system
+to provide all of the Floating-Point and Floating-Point Extensions
+word sets.
+<p />
+<h2 id="section.12.6">12.6 Glossary</h2> <!-- 12.6 -->
+<h3 id="subsection.12.6.1">12.6.1 Floating-Point words</h3> <!-- 12.6.1 -->
+
+<ul>
+<li><a href="floating/toFLOAT.html">12.6.1.0558 &gt;FLOAT</a></li>
+<li><a href="floating/DtoF.html">12.6.1.1130 D&gt;F</a></li>
+<li><a href="floating/FStore.html">12.6.1.1400 F!</a></li>
+<li><a href="floating/FTimes.html">12.6.1.1410 F*</a></li>
+<li><a href="floating/FPlus.html">12.6.1.1420 F+</a></li>
+<li><a href="floating/FMinus.html">12.6.1.1425 F-</a></li>
+<li><a href="floating/FDiv.html">12.6.1.1430 F/</a></li>
+<li><a href="floating/FZeroless.html">12.6.1.1440 F0&lt;</a></li>
+<li><a href="floating/FZeroEqual.html">12.6.1.1450 F0=</a></li>
+<li><a href="floating/Fless.html">12.6.1.1460 F&lt;</a></li>
+<li><a href="floating/FtoD.html">12.6.1.1470 F&gt;D</a></li>
+<li><a href="floating/FFetch.html">12.6.1.1472 F@</a></li>
+<li><a href="floating/FALIGN.html">12.6.1.1479 FALIGN</a></li>
+<li><a href="floating/FALIGNED.html">12.6.1.1483 FALIGNED</a></li>
+<li><a href="floating/FCONSTANT.html">12.6.1.1492 FCONSTANT</a></li>
+<li><a href="floating/FDEPTH.html">12.6.1.1497 FDEPTH</a></li>
+<li><a href="floating/FDROP.html">12.6.1.1500 FDROP</a></li>
+<li><a href="floating/FDUP.html">12.6.1.1510 FDUP</a></li>
+<li><a href="floating/FLITERAL.html">12.6.1.1552 FLITERAL</a></li>
+<li><a href="floating/FLOATPlus.html">12.6.1.1555 FLOAT+</a></li>
+<li><a href="floating/FLOATS.html">12.6.1.1556 FLOATS</a></li>
+<li><a href="floating/FLOOR.html">12.6.1.1558 FLOOR</a></li>
+<li><a href="floating/FMAX.html">12.6.1.1562 FMAX</a></li>
+<li><a href="floating/FMIN.html">12.6.1.1565 FMIN</a></li>
+<li><a href="floating/FNEGATE.html">12.6.1.1567 FNEGATE</a></li>
+<li><a href="floating/FOVER.html">12.6.1.1600 FOVER</a></li>
+<li><a href="floating/FROT.html">12.6.1.1610 FROT</a></li>
+<li><a href="floating/FROUND.html">12.6.1.1612 FROUND</a></li>
+
+<li><a href="floating/FSWAP.html">12.6.1.1620 FSWAP</a></li>
+
+<li><a href="floating/FVARIABLE.html">12.6.1.1630 FVARIABLE</a></li>
+
+<li><a href="floating/REPRESENT.html">12.6.1.2143 REPRESENT</a></li>
+</ul>
+<h3 id="subsection.12.6.2">12.6.2 Floating-Point extension words</h3> <!-- 12.6.2 -->
+<ul>
+<li><a href="floating/DFStore.html">12.6.2.1203 DF!</a></li>
+<li><a href="floating/DFFetch.html">12.6.2.1204 DF@</a></li>
+<li><a href="floating/DFALIGN.html">12.6.2.1205 DFALIGN</a></li>
+<li><a href="floating/DFALIGNED.html">12.6.2.1207 DFALIGNED</a></li>
+
+<li><a href="floating/DFFIELDColon.html">12.6.2.1207.40 DFFIELD:</a></li>
+<li><a href="floating/DFLOATPlus.html">12.6.2.1208 DFLOAT+</a></li>
+<li><a href="floating/DFLOATS.html">12.6.2.1209 DFLOATS</a></li>
+<li><a href="floating/FTimesTimes.html">12.6.2.1415 F**</a></li>
+
+<li><a href="floating/Fd.html">12.6.2.1427 F.</a></li>
+<li><a href="floating/FtoS.html">12.6.2.1471 F&gt;S</a></li>
+<li><a href="floating/FABS.html">12.6.2.1474 FABS</a></li>
+<li><a href="floating/FACOS.html">12.6.2.1476 FACOS</a></li>
+<li><a href="floating/FACOSH.html">12.6.2.1477 FACOSH</a></li>
+<li><a href="floating/FALOG.html">12.6.2.1484 FALOG</a></li>
+<li><a href="floating/FASIN.html">12.6.2.1486 FASIN</a></li>
+<li><a href="floating/FASINH.html">12.6.2.1487 FASINH</a></li>
+
+<li><a href="floating/FATAN.html">12.6.2.1488 FATAN</a></li>
+<li><a href="floating/FATANTwo.html">12.6.2.1489 FATAN2</a></li>
+<li><a href="floating/FATANH.html">12.6.2.1491 FATANH</a></li>
+<li><a href="floating/FCOS.html">12.6.2.1493 FCOS</a></li>
+<li><a href="floating/FCOSH.html">12.6.2.1494 FCOSH</a></li>
+
+<li><a href="floating/FEd.html">12.6.2.1513 FE.</a></li>
+<li><a href="floating/FEXP.html">12.6.2.1515 FEXP</a></li>
+<li><a href="floating/FEXPMOne.html">12.6.2.1516 FEXPM1</a></li>
+<li><a href="floating/FFIELDColon.html">12.6.2.1517 FFIELD:</a></li>
+<li><a href="floating/FLN.html">12.6.2.1553 FLN</a></li>
+<li><a href="floating/FLNPOne.html">12.6.2.1554 FLNP1</a></li>
+<li><a href="floating/FLOG.html">12.6.2.1557 FLOG</a></li>
+<li><a href="floating/FSd.html">12.6.2.1613 FS.</a></li>
+<li><a href="floating/FSIN.html">12.6.2.1614 FSIN</a></li>
+<li><a href="floating/FSINCOS.html">12.6.2.1616 FSINCOS</a></li>
+
+<li><a href="floating/FSINH.html">12.6.2.1617 FSINH</a></li>
+
+<li><a href="floating/FSQRT.html">12.6.2.1618 FSQRT</a></li>
+
+<li><a href="floating/FTAN.html">12.6.2.1625 FTAN</a></li>
+<li><a href="floating/FTANH.html">12.6.2.1626 FTANH</a></li>
+
+<li><a href="floating/FTRUNC.html">12.6.2.1627 FTRUNC</a></li>
+
+<li><a href="floating/FVALUE.html">12.6.2.1628 FVALUE</a></li>
+<li><a href="floating/Ftilde.html">12.6.2.1640 F~</a></li>
+<li><a href="floating/PRECISION.html">12.6.2.2035 PRECISION</a></li>
+<li><a href="floating/StoF.html">12.6.2.2175 S&gt;F</a></li>
+<li><a href="floating/SET-PRECISION.html">12.6.2.2200 SET-PRECISION</a></li>
+<li><a href="floating/SFStore.html">12.6.2.2202 SF!</a></li>
+<li><a href="floating/SFFetch.html">12.6.2.2203 SF@</a></li>
+<li><a href="floating/SFALIGN.html">12.6.2.2204 SFALIGN</a></li>
+<li><a href="floating/SFALIGNED.html">12.6.2.2206 SFALIGNED</a></li>
+<li><a href="floating/SFFIELDColon.html">12.6.2.2206.40 SFFIELD:</a></li>
+<li><a href="floating/SFLOATPlus.html">12.6.2.2207 SFLOAT+</a></li>
+<li><a href="floating/SFLOATS.html">12.6.2.2208 SFLOATS</a></li>
+</ul>
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Floating-Point word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html" class="current">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.12.1" class="current">Introduction</a></li>
+        <li role="menuitem"><a href="#section.12.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="#section.12.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="#section.12.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="#section.12.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="#section.12.6">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">&gt;FLOAT</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="floating/toFLOAT.html">&gt;FLOAT</a></li>
+        <li role="menuitem"><a href="floating/DtoF.html">D&gt;F</a></li>
+        <li role="menuitem"><a href="floating/FStore.html">F!</a></li>
+        <li role="menuitem"><a href="floating/FTimes.html">F*</a></li>
+        <li role="menuitem"><a href="floating/FPlus.html">F+</a></li>
+        <li role="menuitem"><a href="floating/FMinus.html">F-</a></li>
+        <li role="menuitem"><a href="floating/FDiv.html">F/</a></li>
+        <li role="menuitem"><a href="floating/FZeroless.html">F0&lt;</a></li>
+        <li role="menuitem"><a href="floating/FZeroEqual.html">F0=</a></li>
+        <li role="menuitem"><a href="floating/Fless.html">F&lt;</a></li>
+        <li role="menuitem"><a href="floating/FtoD.html">F&gt;D</a></li>
+        <li role="menuitem"><a href="floating/FFetch.html">F@</a></li>
+        <li role="menuitem"><a href="floating/FALIGN.html">FALIGN</a></li>
+        <li role="menuitem"><a href="floating/FALIGNED.html">FALIGNED</a></li>
+        <li role="menuitem"><a href="floating/FCONSTANT.html">FCONSTANT</a></li>
+        <li role="menuitem"><a href="floating/FDEPTH.html">FDEPTH</a></li>
+        <li role="menuitem"><a href="floating/FDROP.html">FDROP</a></li>
+        <li role="menuitem"><a href="floating/FDUP.html">FDUP</a></li>
+        <li role="menuitem"><a href="floating/FLITERAL.html">FLITERAL</a></li>
+        <li role="menuitem"><a href="floating/FLOATPlus.html">FLOAT+</a></li>
+        <li role="menuitem"><a href="floating/FLOATS.html">FLOATS</a></li>
+        <li role="menuitem"><a href="floating/FLOOR.html">FLOOR</a></li>
+        <li role="menuitem"><a href="floating/FMAX.html">FMAX</a></li>
+        <li role="menuitem"><a href="floating/FMIN.html">FMIN</a></li>
+        <li role="menuitem"><a href="floating/FNEGATE.html">FNEGATE</a></li>
+        <li role="menuitem"><a href="floating/FOVER.html">FOVER</a></li>
+        <li role="menuitem"><a href="floating/FROT.html">FROT</a></li>
+        <li role="menuitem"><a href="floating/FROUND.html">FROUND</a></li>
+        <li role="menuitem"><a href="floating/FSWAP.html">FSWAP</a></li>
+        <li role="menuitem"><a href="floating/FVARIABLE.html">FVARIABLE</a></li>
+        <li role="menuitem"><a href="floating/REPRESENT.html">REPRESENT</a></li>
+        <li role="menuitem"><a href="floating/DFStore.html">DF!</a></li>
+        <li role="menuitem"><a href="floating/DFFetch.html">DF@</a></li>
+        <li role="menuitem"><a href="floating/DFALIGN.html">DFALIGN</a></li>
+        <li role="menuitem"><a href="floating/DFALIGNED.html">DFALIGNED</a></li>
+        <li role="menuitem"><a href="floating/DFFIELDColon.html">DFFIELD:</a></li>
+        <li role="menuitem"><a href="floating/DFLOATPlus.html">DFLOAT+</a></li>
+        <li role="menuitem"><a href="floating/DFLOATS.html">DFLOATS</a></li>
+        <li role="menuitem"><a href="floating/FTimesTimes.html">F**</a></li>
+        <li role="menuitem"><a href="floating/Fd.html">F.</a></li>
+        <li role="menuitem"><a href="floating/FtoS.html">F&gt;S</a></li>
+        <li role="menuitem"><a href="floating/FABS.html">FABS</a></li>
+        <li role="menuitem"><a href="floating/FACOS.html">FACOS</a></li>
+        <li role="menuitem"><a href="floating/FACOSH.html">FACOSH</a></li>
+        <li role="menuitem"><a href="floating/FALOG.html">FALOG</a></li>
+        <li role="menuitem"><a href="floating/FASIN.html">FASIN</a></li>
+        <li role="menuitem"><a href="floating/FASINH.html">FASINH</a></li>
+        <li role="menuitem"><a href="floating/FATAN.html">FATAN</a></li>
+        <li role="menuitem"><a href="floating/FATANTwo.html">FATAN2</a></li>
+        <li role="menuitem"><a href="floating/FATANH.html">FATANH</a></li>
+        <li role="menuitem"><a href="floating/FCOS.html">FCOS</a></li>
+        <li role="menuitem"><a href="floating/FCOSH.html">FCOSH</a></li>
+        <li role="menuitem"><a href="floating/FEd.html">FE.</a></li>
+        <li role="menuitem"><a href="floating/FEXP.html">FEXP</a></li>
+        <li role="menuitem"><a href="floating/FEXPMOne.html">FEXPM1</a></li>
+        <li role="menuitem"><a href="floating/FFIELDColon.html">FFIELD:</a></li>
+        <li role="menuitem"><a href="floating/FLN.html">FLN</a></li>
+        <li role="menuitem"><a href="floating/FLNPOne.html">FLNP1</a></li>
+        <li role="menuitem"><a href="floating/FLOG.html">FLOG</a></li>
+        <li role="menuitem"><a href="floating/FSd.html">FS.</a></li>
+        <li role="menuitem"><a href="floating/FSIN.html">FSIN</a></li>
+        <li role="menuitem"><a href="floating/FSINCOS.html">FSINCOS</a></li>
+        <li role="menuitem"><a href="floating/FSINH.html">FSINH</a></li>
+        <li role="menuitem"><a href="floating/FSQRT.html">FSQRT</a></li>
+        <li role="menuitem"><a href="floating/FTAN.html">FTAN</a></li>
+        <li role="menuitem"><a href="floating/FTANH.html">FTANH</a></li>
+        <li role="menuitem"><a href="floating/FTRUNC.html">FTRUNC</a></li>
+        <li role="menuitem"><a href="floating/FVALUE.html">FVALUE</a></li>
+        <li role="menuitem"><a href="floating/Ftilde.html">F~</a></li>
+        <li role="menuitem"><a href="floating/PRECISION.html">PRECISION</a></li>
+        <li role="menuitem"><a href="floating/StoF.html">S&gt;F</a></li>
+        <li role="menuitem"><a href="floating/SET-PRECISION.html">SET-PRECISION</a></li>
+        <li role="menuitem"><a href="floating/SFStore.html">SF!</a></li>
+        <li role="menuitem"><a href="floating/SFFetch.html">SF@</a></li>
+        <li role="menuitem"><a href="floating/SFALIGN.html">SFALIGN</a></li>
+        <li role="menuitem"><a href="floating/SFALIGNED.html">SFALIGNED</a></li>
+        <li role="menuitem"><a href="floating/SFFIELDColon.html">SFFIELD:</a></li>
+        <li role="menuitem"><a href="floating/SFLOATPlus.html">SFLOAT+</a></li>
+        <li role="menuitem"><a href="floating/SFLOATS.html">SFLOATS</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

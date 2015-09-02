@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: The optional String word set</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.17">17 The optional String word set</h1> <!-- 17 -->
+<h2 id="section.17.1">17.1 Introduction</h2> <!-- 17.1 -->
+<h2 id="section.17.2">17.2 Additional terms and notation</h2> <!-- 17.2 -->
+None.
+<p />
+<h2 id="section.17.3">17.3 Additional usage requirements</h2> <!-- 17.3 -->
+None.
+<p />
+<h2 id="section.17.4">17.4 Additional documentation requirements</h2> <!-- 17.4 -->
+<a name="string:document"></a>
+<p />
+<h3 id="subsection.17.4.1">17.4.1 System documentation</h3>
+<h4 id="subsubsection.17.4.1.1">17.4.1.1 Implementation-defined options</h4>
+<ul>
+<li> no additional options.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.17.4.1.2">17.4.1.2 Ambiguous conditions</h4>
+<ul>
+<li> The substitution cannot be created (<a href="string/REPLACES.html">REPLACES</a>);
+</li>
+<li> The name of a substitution contains the `<code>%</code>' delimiter character (<a href="string/REPLACES.html">REPLACES</a>);
+</li>
+<li> Result of a substitution is too long to fit into the given buffer (<a href="string/SUBSTITUTE.html">SUBSTITUTE</a> and <a href="string/UNESCAPE.html">UNESCAPE</a>);
+</li>
+<li> Source and destination buffers for <a href="string/SUBSTITUTE.html">SUBSTITUTE</a> are the same.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.17.4.1.3">17.4.1.3 Other system documentation</h4>
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h3 id="subsection.17.4.2">17.4.2 Program documentation</h3>
+<p />
+<h4 id="subsubsection.17.4.2.1">17.4.2.1 Environmental dependencies</h4>
+<ul>
+<li> no additional dependencies.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.17.4.2.2">17.4.2.2 Other program documentation</h4>
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h2 id="section.17.5">17.5 Compliance and labeling</h2> <!-- 17.5 -->
+<h3 id="subsection.17.5.1">17.5.1 Forth-2012 systems</h3> <!-- 17.5.1 -->
+The phrase &quot;Providing the String word set&quot; shall be appended to
+the label of any Standard System that provides all of the String
+word set.
+<p />
+The phrase &quot;Providing <em>name(s)</em> from the String Extensions
+word set&quot; shall be appended to the label of any Standard System
+that provides portions of the String Extensions word set.
+<p />
+The phrase &quot;Providing the String Extensions word set&quot; shall be
+appended to the label of any Standard System that provides all of
+the String and String Extensions word sets.
+<p />
+<h3 id="subsection.17.5.2">17.5.2 Forth-2012 programs</h3> <!-- 17.5.2 -->
+The phrase &quot;Requiring the String word set&quot; shall be appended to
+the label of Standard Programs that require the system to provide
+the String word set.
+<p />
+The phrase &quot;Requiring <em>name(s)</em> from the String Extensions
+word set&quot; shall be appended to the label of Standard Programs that
+require the system to provide portions of the String Extensions
+word set.
+<p />
+The phrase &quot;Requiring the String Extensions word set&quot; shall be
+appended to the label of Standard Programs that require the system
+to provide all of the String and String Extensions word sets.
+<p />
+<h2 id="section.17.6">17.6 Glossary</h2> <!-- 17.6 -->
+<h3 id="subsection.17.6.1">17.6.1 String words</h3> <!-- 17.6.1 -->
+<ul>
+<li><a href="string/MinusTRAILING.html">17.6.1.0170 -TRAILING</a></li>
+<li><a href="string/DivSTRING.html">17.6.1.0245 /STRING</a></li>
+<li><a href="string/BLANK.html">17.6.1.0780 BLANK</a></li>
+<li><a href="string/CMOVE.html">17.6.1.0910 CMOVE</a></li>
+<li><a href="string/CMOVEtop.html">17.6.1.0920 CMOVE&gt;</a></li>
+<li><a href="string/COMPARE.html">17.6.1.0935 COMPARE</a></li>
+<li><a href="string/SEARCH.html">17.6.1.2191 SEARCH</a></li>
+<li><a href="string/SLITERAL.html">17.6.1.2212 SLITERAL</a></li>
+</ul>
+<h3 id="subsection.17.6.2">17.6.2 String extension words</h3> <!-- 17.6.2 -->
+<ul>
+<li><a href="string/REPLACES.html">17.6.2.2141 REPLACES</a></li>
+<li><a href="string/SUBSTITUTE.html">17.6.2.2255 SUBSTITUTE</a></li>
+<li><a href="string/UNESCAPE.html">17.6.2.2375 UNESCAPE</a></li>
+
+</ul>
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">String word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html" class="current">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.17.1" class="current">Introduction</a></li>
+        <li role="menuitem"><a href="#section.17.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="#section.17.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="#section.17.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="#section.17.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="#section.17.6">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">-TRAILING</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="string/MinusTRAILING.html">-TRAILING</a></li>
+        <li role="menuitem"><a href="string/DivSTRING.html">/STRING</a></li>
+        <li role="menuitem"><a href="string/BLANK.html">BLANK</a></li>
+        <li role="menuitem"><a href="string/CMOVE.html">CMOVE</a></li>
+        <li role="menuitem"><a href="string/CMOVEtop.html">CMOVE&gt;</a></li>
+        <li role="menuitem"><a href="string/COMPARE.html">COMPARE</a></li>
+        <li role="menuitem"><a href="string/SEARCH.html">SEARCH</a></li>
+        <li role="menuitem"><a href="string/SLITERAL.html">SLITERAL</a></li>
+        <li role="menuitem"><a href="string/REPLACES.html">REPLACES</a></li>
+        <li role="menuitem"><a href="string/SUBSTITUTE.html">SUBSTITUTE</a></li>
+        <li role="menuitem"><a href="string/UNESCAPE.html">UNESCAPE</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

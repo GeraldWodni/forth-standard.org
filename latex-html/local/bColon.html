@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: {:</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="local:b:">
+  <div class="wordNumber">13.6.2.2550</div>
+  <div class="wordName">{:</div>
+  <div class="wordEnglish">brace-colon</div>
+  <div class="wordList">LOCAL EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">Interpretation:</div>
+    <div class="sec">
+
+
+      Interpretation semantics for this word are undefined.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Compilation:</div>
+    <div class="sec">
+
+
+      ( <em>i * x &quot;&lt;spaces&gt;ccc <code>:}</code>&quot;</em> -- )
+      <p />
+      Parse <em>ccc</em> according to the following syntax:
+      <div class="center">
+
+        <strong>{:</strong> &lt;<em>arg</em>&gt;* [<strong>|</strong> &lt;<em>val</em>&gt;*] [<strong>&ndash;&nbsp;&ndash;</strong> &lt;<em>out</em>&gt;*] <code>:}</code>
+        
+        </div>
+      where &lt;<em>arg</em>&gt;, &lt;<em>val</em>&gt; and &lt;<em>out</em>&gt; are local names, and
+      <em>i</em> is the number of &lt;<em>arg</em>&gt; names given.
+      <p />
+      The following ambiguous conditions exist when:
+      <ul>
+      <li> a local name ends in &quot;<code>:</code>&quot;, &quot;<code>[</code>&quot;, &quot;<code>^</code>&quot;;
+      </li>
+      <li> a local name is a single non-alphabetic character;
+      </li>
+      <li> the text between <strong>{:</strong> and <code>:}</code> extends
+      over more than one line;
+      </li>
+      <li> <strong>{:</strong> ... <code>:}</code> is used more than once in a word.
+      </li>
+</ul>
+      <p />
+      Append the run-time semantics below. 
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Run-time:</div>
+    <div class="sec">
+
+
+      ( <em>x<sub>1</sub> ... x<sub>n</sub></em> -- )
+      <p />
+      Create locals for &lt;<em>arg</em>&gt;s and &lt;<em>val</em>&gt;s. &lt;<em>out</em>&gt;s are ignored.
+      <p />
+      <ol style="list-style-type: decimal">
+      <li> names are initialized from the data stack, with the
+      top of the stack being assigned to the right most &lt;<em>arg</em>&gt; name.
+      <p />
+      </li>
+      <li> names are uninitialized.
+      </li>
+</ol>
+      <p />
+      &lt;<em>val</em>&gt; and &lt;<em>arg</em>&gt; names have the execution semantics
+      given below.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname"><em>name</em> Execution:</div>
+    <div class="sec">
+
+
+      ( -- <em>x</em> )
+      <p />
+      Place the value currently assigned to <em>name</em> on the stack.
+      An ambiguous condition exists when <em>name</em> is executed while
+      in interpretation state.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname"><a href="../core/TO.html">TO</a> <em>name</em> Run-time:</div>
+    <div class="sec">
+
+
+      ( <em>x</em> -- )
+      <p />
+      Set <em>name</em> to the value <em>x</em>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <strong><a href="../notation.html#notation:BNF">2.2.5 BNF notation</a></strong>,
+      <a href="../core/VALUE.html">6.2.2405 VALUE</a>,
+      <a href="../core/TO.html">6.2.2295 TO</a>,
+      <a href="../rationale.html#rat:local:b:">A.13.6.2.2550 {:</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+
+      The Forth 94 Technical Committee was unable to identify any
+      common practice for locals.  It provided a way to define locals
+      and a method of parsing them in the hope that a common practice
+      would emerge.
+      <p />
+      Since then, common practice has emerged.  Most implementations that
+      provide <a href="../local/LOCAL.html">(LOCAL)</a> and  <a href="../local/LOCALS.html">LOCALS|</a> also provide some form of the
+      { ... } notation; however, the phrase { ... } conflicts with
+      other systems.  The <strong>{:</strong> ... <code>:}</code> notation is a compromise
+      to avoid name conflicts.
+      <p />
+      The notation provides for different kinds of local: those that are
+      initialized from the data stack at run-time, uninitialized locals, and
+      outputs.  Initialized locals are separated from uninitialized locals by
+      `<code>|</code>'.  The definition of locals is terminated by
+      `<code>--</code>' or `<code>:}</code>'.
+      <p />
+      All text between `<code>--</code>' and `<code>:}</code>' is ignored.  This eases
+      documentation by allowing a complete stack comment in the locals definition.
+      <p />
+      The `<code>|</code>' (ASCII $7C) character is widely used as the
+      separator between local arguments and local values.  Some implementations
+      have used `<code>\</code>' (ASCII $5C) or `<code>&brvbar;</code>' ($A6).
+      Systems are free to continue to provide these alternative separators.
+      However, only the recognition of the `<code>|</code>' separator is
+      mandatory. Therefore portable programs must use the `<code>|</code>'
+      separator.
+      <p />
+      A number of systems extend the locals notation in various ways.  Some of
+      these extensions may emerge as common practice.  This standard has reserved
+      the notation used by these extensions to avoid difficulties when porting
+      code to these systems.  In particular local names ending in
+      `<code>:</code>' (colon),
+      `<code>[</code>' (open bracket), or
+      `<code>^</code>' (caret) are reserved.
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+
+      12345 <a href="../core/CONSTANT.html">CONSTANT</a> undefined-value
+      <p />
+      <a href="../core/Colon.html">:</a> match-or-end? <a href="../core/p.html">(</a> c-addr1 u1 c-addr2 u2 -- f ) <br />
+      &nbsp;&nbsp;&nbsp;2 <a href="../core/PICK.html">PICK</a> <a href="../core/ZeroEqual.html">0=</a> <a href="../core/toR.html">&gt;R</a> <a href="../string/COMPARE.html">COMPARE</a> <a href="../core/ZeroEqual.html">0=</a> <a href="../core/Rfrom.html">R&gt;</a> <a href="../core/OR.html">OR</a> <a href="../core/Semi.html">;</a>
+      <p />
+      <a href="../core/Colon.html">:</a> scan-args <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/bs.html">\</a> 0 c-addr1 u1 -- c-addr1 u1 ... c-addrn un n c-addrn+1 un+1<br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/BEGIN.html">BEGIN</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/TwoDUP.html">2DUP</a> <a href="../core/Sq.html">S&quot;</a> |&quot;    match-or-end? <a href="../core/ZeroEqual.html">0=</a> <a href="../core/WHILE.html">WHILE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/TwoDUP.html">2DUP</a> <a href="../core/Sq.html">S&quot;</a> --&quot; match-or-end? <a href="../core/ZeroEqual.html">0=</a> <a href="../core/WHILE.html">WHILE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/TwoDUP.html">2DUP</a> <a href="../core/Sq.html">S&quot;</a> :}&quot;  match-or-end? <a href="../core/ZeroEqual.html">0=</a> <a href="../core/WHILE.html">WHILE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/ROT.html">ROT</a> <a href="../core/OnePlus.html">1+</a> <a href="../core/PARSE-NAME.html">PARSE-NAME</a> <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/AGAIN.html">AGAIN</a> <a href="../core/THEN.html">THEN</a> <a href="../core/THEN.html">THEN</a> <a href="../core/THEN.html">THEN</a> <a href="../core/Semi.html">;</a>
+      <p />
+      <a href="../core/Colon.html">:</a> scan-locals <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/bs.html">\</a> n c-addr1 u1 -- c-addr1 u1 ... c-addrn un n c-addrn+1 un+1 <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/TwoDUP.html">2DUP</a> <a href="../core/Sq.html">S&quot;</a> |&quot; <a href="../string/COMPARE.html">COMPARE</a> <a href="../core/ZeroEqual.html">0=</a> <a href="../core/ZeroEqual.html">0=</a> <a href="../core/IF.html">IF</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/EXIT.html">EXIT</a> <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/THEN.html">THEN</a> <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/TwoDROP.html">2DROP</a> <a href="../core/PARSE-NAME.html">PARSE-NAME</a> <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/BEGIN.html">BEGIN</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/TwoDUP.html">2DUP</a> <a href="../core/Sq.html">S&quot;</a> --&quot; match-or-end? <a href="../core/ZeroEqual.html">0=</a> <a href="../core/WHILE.html">WHILE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/TwoDUP.html">2DUP</a> <a href="../core/Sq.html">S&quot;</a> :}&quot;  match-or-end? <a href="../core/ZeroEqual.html">0=</a> <a href="../core/WHILE.html">WHILE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/ROT.html">ROT</a> <a href="../core/OnePlus.html">1+</a> <a href="../core/PARSE-NAME.html">PARSE-NAME</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/POSTPONE.html">POSTPONE</a> undefined-value <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/AGAIN.html">AGAIN</a> <a href="../core/THEN.html">THEN</a> <a href="../core/THEN.html">THEN</a> <a href="../core/Semi.html">;</a>
+      <p />
+      <a href="../core/Colon.html">:</a> scan-end <a href="../core/p.html">(</a> c-addr1 u1 -- c-addr2 u2 ) <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/BEGIN.html">BEGIN</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/TwoDUP.html">2DUP</a> <a href="../core/Sq.html">S&quot;</a> :}&quot; match-or-end? <a href="../core/ZeroEqual.html">0=</a> <a href="../core/WHILE.html">WHILE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/TwoDROP.html">2DROP</a> <a href="../core/PARSE-NAME.html">PARSE-NAME</a> <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/REPEAT.html">REPEAT</a> <a href="../core/Semi.html">;</a>
+      <p />
+      <a href="../core/Colon.html">:</a> define-locals <a href="../core/p.html">(</a> c-addr1 u1 ... c-addrn un n -- ) <br />
+      &nbsp;&nbsp;&nbsp;0 <a href="../core/qDO.html">?DO</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../local/LOCAL.html">(LOCAL)</a> <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/LOOP.html">LOOP</a> <br />
+      &nbsp;&nbsp;&nbsp;0 0 <a href="../local/LOCAL.html">(LOCAL)</a> <a href="../core/Semi.html">;</a>
+      <p />
+      <a href="../core/Colon.html">:</a> {: <a href="../core/p.html">(</a> -- ) <br />
+      &nbsp;&nbsp;&nbsp;0 <a href="../core/PARSE-NAME.html">PARSE-NAME</a> <br />
+      &nbsp;&nbsp;&nbsp;scan-args scan-locals scan-end <br />
+      &nbsp;&nbsp;&nbsp;<a href="../core/TwoDROP.html">2DROP</a> define-locals <br />
+      <a href="../core/Semi.html">;</a> <a href="../core/IMMEDIATE.html">IMMEDIATE</a>
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Locals word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html" class="current">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../locals.html#section.13.1">Introduction</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">{:</span>
+      <div class="menu">
+        <ul id="menu-word" style="width: 202px;">
+        <li role="menuitem"><a href="LOCAL.html">(LOCAL)</a></li>
+        <li role="menuitem"><a href="LOCALS.html">LOCALS|</a></li>
+        <li role="menuitem"><a href="bColon.html" class="current">{:</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

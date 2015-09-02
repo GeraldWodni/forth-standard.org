@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: SUBSTITUTE</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="string:SUBSTITUTE">
+  <div class="wordNumber">17.6.2.2255</div>
+  <div class="wordName">SUBSTITUTE</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">STRING EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>c-addr<sub>1</sub> u<sub>1</sub> c-addr<sub>2</sub> u<sub>2</sub></em> -- <em>c-addr<sub>2</sub> u<sub>3</sub> n</em> )
+      <p />
+      Perform substitution on the string <em>c-addr<sub>1</sub> u<sub>1</sub></em> placing
+      the result at string <em>c-addr<sub>2</sub> u<sub>3</sub></em>, where <em>u3</em> is
+      the length of the resulting string.
+      An error occurs if the resulting string will not fit into
+      <em>c-addr<sub>2</sub> u<sub>2</sub></em> or if <em>c-addr<sub>2</sub></em> is the same as <em>c-addr<sub>1</sub></em>.
+      The return value <em>n</em> is positive or 0 on success and indicates the
+      number of substitutions made.
+      A negative value for <em>n</em> indicates that an error occurred, leaving
+      <em>c-addr<sub>2</sub> u<sub>3</sub></em> undefined.
+      Negative values of <em>n</em> are implementation defined except for
+      values in table <strong><a href="../exception.html#table:throw">9.1 <a href="exception/THROW.html">THROW</a> code assignments</a></strong>.
+      <p />
+      Substitution occurs left to right from the start of <em>c-addr<sub>1</sub></em>
+      in one pass and is non-recursive.
+      <p />
+      When text of a potential substitution name, surrounded by `<code>%</code>' (ASCII $25) delimiters
+      is encountered by <strong>SUBSTITUTE</strong>, the following occurs:
+      <p />
+      <ol style="list-style-type: decimal">
+      <li> If the name is null, a single delimiter character is passed
+      to the output, i.e., <code>%%</code> is replaced by <code>%</code>.
+      The current number of substitutions is not changed.
+      <p />
+      </li>
+      <li> If the text is a valid substitution name acceptable to
+      <a href="../string/REPLACES.html">17.6.2.2141 REPLACES</a>, the leading and trailing delimiter
+      characters and the enclosed substitution name are replaced by
+      the substitution text.  The current number of substitutions
+      is incremented.
+      <p />
+      </li>
+      <li> If the text is not a valid substitution name, the name with
+      leading	and trailing delimiters is passed unchanged to the
+      output.  The current number of substitutions is not changed.
+      <p />
+      </li>
+      <li> Parsing of the input string resumes after the trailing delimiter.
+      </li>
+</ol>
+      <p />
+      If after processing any pairs of delimiters, the residue of the input string contains
+      a single delimiter, the residue is passed unchanged to the output.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../string/REPLACES.html">17.6.2.2141 REPLACES</a>, <a href="../string/UNESCAPE.html">17.6.2.2375 UNESCAPE</a>, <a href="../rationale.html#rat:string:SUBSTITUTE">A.17.6.2.2255 SUBSTITUTE</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+
+      Many applications need to be able to perform text substitution, for
+      example:
+      <p />
+      <div class="center">
+
+        Your balance at &lt;<em>time</em>&gt; on &lt;<em>date</em>&gt; is &lt;<em>currencyvalue</em>&gt;.
+        
+        </div>
+      <p />
+      Translation of a sentence or message from one language to another may
+      result in changes to the displayed parameter order.  The example, the
+      Afrikaans translation of this sentence requires a different order:
+      <p />
+      <div class="center">
+
+        Jou balans op &lt;<em>date</em>&gt; om &lt;<em>time</em>&gt; is &lt;<em>currencyvalue</em>&gt;.
+        
+        </div>
+      <p />
+      The words <strong>SUBSTITUTE</strong> and <a href="../string/REPLACES.html">REPLACES</a> provide for this
+      requirements by defining a text substitution facility.  For example,
+      we can provide an initial string in the form:
+      <p />
+      <div class="center">
+
+        <code>Your balance at %time% on %date% is %currencyvalue%.</code>
+        
+        </div>
+      <p />
+      The <code>%</code> is used as delimiters for the substitution name.  The
+      text &quot;<code>currencyvalue</code>&quot;, &quot;<code>date</code>&quot; and &quot;<code>time</code>&quot;
+      are text substitutions, where the replacement text is defined by
+      <a href="../string/REPLACES.html">REPLACES</a>:
+      <p />
+      
+      
+            <div class="quote">
+        <div class="tt">
+<div class="tabbing">
+            <a href="../core/Colon.html">:</a> date <a href="../core/Sq.html">S&quot;</a> 10/Nov/2014&quot; <a href="../core/Semi.html">;</a> <br />
+            <a href="../core/Colon.html">:</a> time <a href="../core/Sq.html">S&quot;</a> 02:52&quot; <a href="../core/Semi.html">;</a> <br />
+            date  <a href="../core/Sq.html">S&quot;</a> date&quot; <a href="../string/REPLACES.html">REPLACES</a> <br />
+            time  <a href="../core/Sq.html">S&quot;</a> time&quot; <a href="../string/REPLACES.html">REPLACES</a>
+            <br />
+            
+            </div>
+          
+          </div>
+        </div>
+      <p />
+      The substitution name &quot;date&quot; is defined to be replaced with the string
+      &quot;10/Nov/2014&quot; and &quot;time&quot; to be replaced with &quot;02:52&quot;.  Thus
+      <strong>SUBSTITUTE</strong> would produce the string:
+      <p />
+      <div class="center">
+
+        <code>Your balance at 02:52 on 10/Nov/2014 is %currencyvalue%.</code>
+        
+        </div>
+      <p />
+      As the substitution name &quot;currencyvalue&quot; has not been defined, it is
+      left unchanged in the resulting string.
+      <p />
+      The return value <em>n</em> is nonnegative on success and indicates the
+      number of substitutions made.  In the above example, this would be two.
+      A negative value indicates that an error occurred.
+      As substitution is not recursive, the return value could be used to
+      provide a recursive substitution.
+      <p />
+      Implementation of <strong>SUBSTITUTE</strong> may be considered as being equivalent
+      to a wordlist which is searched.  If the substitution name is found, the
+      word is executed, returning a substitution string.
+      Such words can be deferred or multiple wordlists can be used.
+      The implementation techniques required are similar to those used by
+      <a href="../core/ENVIRONMENTq.html">ENVIRONMENT?</a>.
+      There is no provision for changing the delimiter character, although a
+      system may provide system-specific extensions.
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+
+      <span class="rm">Assuming <a href="../implement.html#imp:string:REPLACES">E.17.6.2.2141 REPLACES</a> has been defined.</span>
+      <p />
+      <a href="../tools/BracketUNDEFINED.html">[UNDEFINED]</a> bounds <a href="../tools/BracketIF.html">[IF]</a> <br />
+      &nbsp;&nbsp; <a href="../core/Colon.html">:</a> bounds &nbsp;&nbsp; <a href="../core/bs.html">\</a> addr len -- addr+len addr <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/OVER.html">OVER</a> <a href="../core/Plus.html">+</a> <a href="../core/SWAP.html">SWAP</a><br />
+      &nbsp;&nbsp; <a href="../core/Semi.html">;</a> <br />
+      <a href="../tools/BracketTHEN.html">[THEN]</a>
+      <p />
+      <a href="../tools/BracketUNDEFINED.html">[UNDEFINED]</a> -rot <a href="../tools/BracketIF.html">[IF]</a> <br />
+      &nbsp;&nbsp; <a href="../core/Colon.html">:</a> -rot &nbsp;&nbsp; <a href="../core/bs.html">\</a> a b c -- c a b <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/ROT.html">ROT</a> <a href="../core/ROT.html">ROT</a> <br />
+      &nbsp;&nbsp; <a href="../core/Semi.html">;</a> <br />
+      <a href="../tools/BracketTHEN.html">[THEN]</a>
+      <p />
+      <a href="../core/CHAR.html">CHAR</a> % <a href="../core/CONSTANT.html">CONSTANT</a> delim 
+      &nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Character used as the substitution name delimiter.</span> <br />
+      string-max <a href="../core/BUFFERColon.html">BUFFER:</a> Name	<!-- \word{bs} -{}- addr \\ -->
+       <a href="../core/bs.html">\</a> <span class="rm">Holds substitution name as a counted string.</span> <br />
+      <a href="../core/VARIABLE.html">VARIABLE</a> DestLen <!-- \word{bs} -{}- addr \\ -->
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Maximum length of the destination buffer.</span> <br />
+      <a href="../double/TwoVARIABLE.html">2VARIABLE</a> Dest <!-- \word{bs} -{}- addr \\ -->
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Holds destination string current length and address.</span> <br />
+      <a href="../core/VARIABLE.html">VARIABLE</a> SubstErr <!-- \word{bs} -{}- addr \\ -->
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Holds zero or an error code.</span>
+      <p />
+      <a href="../core/Colon.html">:</a> addDest <a href="../core/bs.html">\</a> char -- <br />
+      <a href="../core/bs.html">\</a> <span class="rm">Add the character to the destination string.</span> <br />
+      &nbsp;&nbsp; Dest <a href="../core/Fetch.html">@</a> DestLen <a href="../core/Fetch.html">@</a> <a href="../core/less.html">&lt;</a> <a href="../core/IF.html">IF</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; Dest <a href="../core/TwoFetch.html">2@</a> <a href="../core/Plus.html">+</a> <a href="../core/CStore.html">C!</a>  1 <a href="../core/CHARS.html">CHARS</a> Dest <a href="../core/PlusStore.html">+!</a> <br />
+      &nbsp;&nbsp; <a href="../core/ELSE.html">ELSE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/DROP.html">DROP</a> -1 SubstErr <a href="../core/Store.html">!</a> <br />
+      &nbsp;&nbsp; <a href="../core/THEN.html">THEN</a> <br />
+      <a href="../core/Semi.html">;</a>
+      <p />
+      <a href="../core/Colon.html">:</a> formName <a href="../core/bs.html">\</a> c-addr len -- c-addr' len' <br />
+      <a href="../core/bs.html">\</a> <span class="rm">Given a source string pointing at a leading delimiter, place the name string in the name buffer.</span> <br />
+      &nbsp;&nbsp; 1 <a href="../string/DivSTRING.html">/STRING</a> <a href="../core/TwoDUP.html">2DUP</a> delim scan <a href="../core/toR.html">&gt;R</a> <a href="../core/DROP.html">DROP</a>				  <a href="../core/bs.html">\</a> <span class="rm">find length of residue</span> <br />
+      &nbsp;&nbsp; <a href="../core/TwoDUP.html">2DUP</a> <a href="../core/Rfrom.html">R&gt;</a> <a href="../core/Minus.html">-</a> <a href="../core/DUP.html">DUP</a> <a href="../core/toR.html">&gt;R</a> Name place &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">save name in buffer</span> <br />
+      &nbsp;&nbsp; <a href="../core/Rfrom.html">R&gt;</a> 1 <a href="../core/CHARS.html">CHARS</a> <a href="../core/Plus.html">+</a> <a href="../string/DivSTRING.html">/STRING</a>						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">step over name and trailing <code>%</code></span> <br />
+      <a href="../core/Semi.html">;</a>
+      <p />
+      <a href="../core/Colon.html">:</a> &gt;dest <a href="../core/bs.html">\</a> c-addr len -- <br />
+      <a href="../core/bs.html">\</a> <span class="rm">Add a string to the output string.</span> <br />
+      &nbsp;&nbsp; bounds <a href="../core/qDO.html">?DO</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/I.html">I</a> <a href="../core/CFetch.html">C@</a> addDest <br />
+      &nbsp;&nbsp; 1 <a href="../core/CHARS.html">CHARS</a> <a href="../core/PlusLOOP.html">+LOOP</a> <br />
+      <a href="../core/Semi.html">;</a>
+      <p />
+      <a href="../core/Colon.html">:</a> processName <a href="../core/bs.html">\</a> -- flag <br />
+      <a href="../core/bs.html">\</a> <span class="rm">Process the last substitution name. Return true if found, 0 if not found.</span> <br />
+      &nbsp;&nbsp; Name <a href="../core/COUNT.html">COUNT</a> findSubst <a href="../core/DUP.html">DUP</a> <a href="../core/toR.html">&gt;R</a> <a href="../core/IF.html">IF</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/EXECUTE.html">EXECUTE</a> <a href="../core/COUNT.html">COUNT</a> &gt;dest <br />
+      &nbsp;&nbsp; <a href="../core/ELSE.html">ELSE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; delim addDest  Name <a href="../core/COUNT.html">COUNT</a> &gt;dest  delim addDest <br />
+      &nbsp;&nbsp; <a href="../core/THEN.html">THEN</a> <br />
+      &nbsp;&nbsp; <a href="../core/Rfrom.html">R&gt;</a> <br />
+      <a href="../core/Semi.html">;</a>
+      <p />
+      <a href="../core/Colon.html">:</a> <strong>SUBSTITUTE</strong> <a href="../core/bs.html">\</a> src slen dest dlen -- dest dlen' n <br />
+      <a href="../core/bs.html">\</a> <span class="rm">Expand the source string using substitutions.</span> <br />
+      <a href="../core/bs.html">\</a> <span class="rm">Note that this version is simplistic, performs no error checking,</span> <br />
+      <a href="../core/bs.html">\</a> <span class="rm">and requires a global buffer and global variables.</span> <br />
+      &nbsp;&nbsp; Destlen <a href="../core/Store.html">!</a>  0 Dest <a href="../core/TwoStore.html">2!</a>  0 -rot <a href="../core/bs.html">\</a> -- 0 src slen <br />
+      &nbsp;&nbsp; 0 SubstErr <a href="../core/Store.html">!</a> <br />
+      &nbsp;&nbsp; <a href="../core/BEGIN.html">BEGIN</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/DUP.html">DUP</a> 0 <a href="../core/more.html">&gt;</a> <br />
+      &nbsp;&nbsp; <a href="../core/WHILE.html">WHILE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/OVER.html">OVER</a> <a href="../core/CFetch.html">C@</a> delim <a href="../core/ne.html">&lt;&gt;</a> <a href="../core/IF.html">IF</a>									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">character not <code>%</code></span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/OVER.html">OVER</a> <a href="../core/CFetch.html">C@</a> addDest  1 <a href="../string/DivSTRING.html">/STRING</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/ELSE.html">ELSE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/OVER.html">OVER</a> 1 <a href="../core/CHARS.html">CHARS</a> <a href="../core/Plus.html">+</a> <a href="../core/CFetch.html">C@</a> delim <a href="../core/Equal.html">=</a> <a href="../core/IF.html">IF</a>	&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm"><code>%%</code> for one output <code>%</code></span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		delim addDest  2 <a href="../string/DivSTRING.html">/STRING</a>													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">add one <code>%</code> to output</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/ELSE.html">ELSE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		formName processName <a href="../core/IF.html">IF</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			<a href="../core/ROT.html">ROT</a> <a href="../core/OnePlus.html">1+</a> -rot														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">count substitutions</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		<a href="../core/THEN.html">THEN</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/THEN.html">THEN</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/THEN.html">THEN</a> <br />
+      &nbsp;&nbsp; <a href="../core/REPEAT.html">REPEAT</a> <br />
+      &nbsp;&nbsp; <a href="../core/TwoDROP.html">2DROP</a> Dest <a href="../core/TwoFetch.html">2@</a>  <a href="../core/ROT.html">ROT</a> SubstErr <a href="../core/Fetch.html">@</a> <a href="../core/IF.html">IF</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/DROP.html">DROP</a>  SubstErr <a href="../core/Fetch.html">@</a> <br />
+      &nbsp;&nbsp; <a href="../core/THEN.html">THEN</a> <br />
+      <a href="../core/Semi.html">;</a>
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+
+            <div class="tt">
+30 <a href="../core/CHARS.html">CHARS</a> <a href="../core/BUFFERColon.html">BUFFER:</a> subbuff <a href="../core/bs.html">\</a> <span class="rm">Destination buffer</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">Define a few string constants</span> <br />
+        <a href="../core/Colon.html">:</a> &quot;hi&quot;    <a href="../core/Sq.html">S&quot;</a> hi&quot;    <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> &quot;wld&quot;   <a href="../core/Sq.html">S&quot;</a> wld&quot;   <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> &quot;hello&quot; <a href="../core/Sq.html">S&quot;</a> hello&quot; <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> &quot;world&quot; <a href="../core/Sq.html">S&quot;</a> world&quot; <a href="../core/Semi.html">;</a>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">Define a few test strings</span> <br />
+        <a href="../core/Colon.html">:</a> sub1 <a href="../core/Sq.html">S&quot;</a> Start: %hi%,%wld%! :End&quot; ; &nbsp;&nbsp;&nbsp;<a href="../core/bs.html">\</a> <span class="rm">Original string</span> <br />
+        <a href="../core/Colon.html">:</a> sub2 <a href="../core/Sq.html">S&quot;</a> Start: hello,world! :End&quot; ;    &nbsp;&nbsp;<a href="../core/bs.html">\</a> <span class="rm">First target string</span> <br />
+        <a href="../core/Colon.html">:</a> sub3 <a href="../core/Sq.html">S&quot;</a> Start: world,hello! :End&quot; ;    &nbsp;&nbsp;<a href="../core/bs.html">\</a> <span class="rm">Second target string</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">Define the <code>hi</code> and <code>wld</code> substitutions</span> <br />
+        <span class="tt">T{ &quot;hello&quot;&nbsp;&quot;hi&quot;&nbsp;&nbsp;<a href="../string/REPLACES.html">REPLACES</a> -&gt;  }T</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Replace &quot;<code>%hi%</code>&quot;  with &quot;<code>hello</code>&quot;</span> <br />
+        <span class="tt">T{ &quot;world&quot;&nbsp;&quot;wld&quot;&nbsp;<a href="../string/REPLACES.html">REPLACES</a> -&gt;  }T</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Replace &quot;<code>%wld%</code>&quot; with &quot;<code>world</code>&quot;</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">&quot;<code>%hi%,%wld%</code>&quot; changed to &quot;<code>hello,world</code>&quot;</span> <br />
+        <span class="tt">T{ sub1&nbsp;subbuff&nbsp;30&nbsp;<strong>SUBSTITUTE</strong>&nbsp;<a href="../core/ROT.html">ROT</a>&nbsp;<a href="../core/ROT.html">ROT</a>&nbsp;sub2&nbsp;<a href="../string/COMPARE.html">COMPARE</a> -&gt; 2&nbsp;0 }T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">Change the <code>hi</code> and <code>wld</code> substitutions</span> <br />
+        <span class="tt">T{ &quot;world&quot;&nbsp;&quot;hi&quot;&nbsp;&nbsp;<a href="../string/REPLACES.html">REPLACES</a> -&gt;  }T</span> <br />
+        <span class="tt">T{ &quot;hello&quot;&nbsp;&quot;wld&quot;&nbsp;<a href="../string/REPLACES.html">REPLACES</a> -&gt;  }T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">Now &quot;<code>%hi%,%wld%</code>&quot; should be changed to &quot;<code>world,hello</code>&quot;</span> <br />
+        <span class="tt">T{ sub1&nbsp;subbuff&nbsp;30&nbsp;<strong>SUBSTITUTE</strong>&nbsp;<a href="../core/ROT.html">ROT</a>&nbsp;<a href="../core/ROT.html">ROT</a>&nbsp;sub3&nbsp;<a href="../string/COMPARE.html">COMPARE</a> -&gt; 2&nbsp;0 }T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">Where the subsitution name is not defined</span> <br />
+        <a href="../core/Colon.html">:</a> sub4 <a href="../core/Sq.html">S&quot;</a> aaa%bbb%ccc&quot; ; <br />
+        <span class="tt">T{ sub4&nbsp;subbuff&nbsp;30&nbsp;<strong>SUBSTITUTE</strong>&nbsp;<a href="../core/ROT.html">ROT</a>&nbsp;<a href="../core/ROT.html">ROT</a>&nbsp;sub4&nbsp;<a href="../string/COMPARE.html">COMPARE</a> -&gt; 0&nbsp;0 }T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">Finally the <code>%</code> character itself</span> <br />
+        <a href="../core/Colon.html">:</a> sub5 <a href="../core/Sq.html">S&quot;</a> aaa%%bbb&quot; <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> sub6 <a href="../core/Sq.html">S&quot;</a> aaa%bbb&quot; <a href="../core/Semi.html">;</a> <br />
+        <span class="tt">T{ sub5&nbsp;subbuff&nbsp;30&nbsp;<strong>SUBSTITUTE</strong>&nbsp;<a href="../core/ROT.html">ROT</a>&nbsp;<a href="../core/ROT.html">ROT</a>&nbsp;sub6&nbsp;<a href="../string/COMPARE.html">COMPARE</a> -&gt; 0&nbsp;0 }T</span> <br />
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">String word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html" class="current">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../string.html#section.17.1">Introduction</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">SUBSTITUTE</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="MinusTRAILING.html">-TRAILING</a></li>
+        <li role="menuitem"><a href="DivSTRING.html">/STRING</a></li>
+        <li role="menuitem"><a href="BLANK.html">BLANK</a></li>
+        <li role="menuitem"><a href="CMOVE.html">CMOVE</a></li>
+        <li role="menuitem"><a href="CMOVEtop.html">CMOVE&gt;</a></li>
+        <li role="menuitem"><a href="COMPARE.html">COMPARE</a></li>
+        <li role="menuitem"><a href="SEARCH.html">SEARCH</a></li>
+        <li role="menuitem"><a href="SLITERAL.html">SLITERAL</a></li>
+        <li role="menuitem"><a href="REPLACES.html">REPLACES</a></li>
+        <li role="menuitem"><a href="SUBSTITUTE.html" class="current">SUBSTITUTE</a></li>
+        <li role="menuitem"><a href="UNESCAPE.html">UNESCAPE</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

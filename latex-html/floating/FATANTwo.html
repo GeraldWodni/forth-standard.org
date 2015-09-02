@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: FATAN2</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="floating:FATAN2">
+  <div class="wordNumber">12.6.2.1489</div>
+  <div class="wordName">FATAN2</div>
+  <div class="wordEnglish">f-a-tan-two</div>
+  <div class="wordList">FLOATING EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( F: <em>r<sub>1</sub> r<sub>2</sub></em> -- <em>r<sub>3</sub></em> ) or
+      ( <em>r<sub>1</sub> r<sub>2</sub></em> -- <em>r<sub>3</sub></em> )
+      <p />
+      <em>r<sub>3</sub></em> is the principal radian angle (between -<em>&pi;</em> and <em>&pi;</em>)
+      whose tangent is <em>r<sub>1</sub>/r<sub>2</sub></em>.
+      A system that returns false for &quot;<code>-0E 0E 0E <a href="../floating/Ftilde.html">F~</a></code>&quot;
+      shall return a value (approximating) <em>-&pi;</em> when <em>r<sub>1</sub></em> <em>=</em> 0E
+      and <em>r<sub>2</sub></em> is negative.
+      An ambiguous condition exists if <em>r<sub>1</sub></em> and <em>r<sub>2</sub></em> are
+      zero.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../rationale.html#rat:floating:FATAN2">A.12.6.2.1489 FATAN2</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.12.6.1.1489 FATAN2 -->
+      <a href="../floating/FSINCOS.html">FSINCOS</a> and <strong>FATAN2</strong> are a complementary pair of
+      operators which convert angles to 2-vectors and vice-versa.
+      They are essential to most geometric and physical applications
+      since they correctly and unambiguously handle this conversion
+      in all cases except null vectors, even when the tangent of the
+      angle would be infinite.
+      <p />
+      <a href="../floating/FSINCOS.html">FSINCOS</a> returns a Cartesian unit vector in the direction
+      of the given angle, measured counter-clockwise from the positive
+      X-axis. The order of results on the stack, namely <em>y</em> underneath
+      <em>x</em>, permits the 2-vector data type to be additionally viewed
+      and used as a ratio approximating the tangent of the angle.
+      Thus the phrase <a href="../floating/FSINCOS.html">FSINCOS</a> <a href="../floating/FDiv.html">F/</a> is functionally
+      equivalent to <a href="../floating/FTAN.html">FTAN</a>, but is useful over only a limited
+      and discontinuous range of angles, whereas <a href="../floating/FSINCOS.html">FSINCOS</a> and
+      <strong>FATAN2</strong> are useful for all angles.
+      <p />
+      The argument order for <strong>FATAN2</strong> is the same, converting a
+      vector in the conventional representation to a scalar angle.
+      Thus, for all angles, <a href="../floating/FSINCOS.html">FSINCOS</a> <strong>FATAN2</strong> is an identity
+      within the accuracy of the arithmetic and the argument range of
+      <a href="../floating/FSINCOS.html">FSINCOS</a>. Note that while <a href="../floating/FSINCOS.html">FSINCOS</a> always returns a
+      valid unit vector, <strong>FATAN2</strong> will accept any non-null vector.
+      An ambiguous condition exists if the vector argument to
+      <strong>FATAN2</strong> has zero magnitude.
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+      <div class="tt">
+<a href="../tools/BracketUNDEFINED.html">[UNDEFINED]</a>  NaN <a href="../tools/BracketIF.html">[IF]</a>  0e 0e <a href="../floating/FDiv.html">F/</a> <a href="../floating/FCONSTANT.html">FCONSTANT</a>  NaN <a href="../tools/BracketTHEN.html">[THEN]</a> <br />
+        <a href="../tools/BracketUNDEFINED.html">[UNDEFINED]</a> +Inf <a href="../tools/BracketIF.html">[IF]</a>  1e 0e <a href="../floating/FDiv.html">F/</a> <a href="../floating/FCONSTANT.html">FCONSTANT</a> +Inf <a href="../tools/BracketTHEN.html">[THEN]</a> <br />
+        <a href="../tools/BracketUNDEFINED.html">[UNDEFINED]</a> -Inf <a href="../tools/BracketIF.html">[IF]</a> -1e 0e <a href="../floating/FDiv.html">F/</a> <a href="../floating/FCONSTANT.html">FCONSTANT</a> -Inf <a href="../tools/BracketTHEN.html">[THEN]</a>
+        <p />
+        <a href="../core/TRUE.html">TRUE</a> verbose <a href="../core/Store.html">!</a> <br />
+        <a href="../core/DECIMAL.html">DECIMAL</a>
+        <p />
+        <span class="rm">The test harness default for <code>EXACT?</code> is TRUE.
+        Uncomment the following line if your system needs it to
+        be FALSE</span> <br />
+        <a href="../core/bs.html">\</a> SET-NEAR
+        <p />
+        <a href="../core/VARIABLE.html">VARIABLE</a> #errors    0 #errors <a href="../core/Store.html">!</a>
+        <p />
+        <a href="../core/ColonNONAME.html">:NONAME</a> <a href="../core/p.html">(</a> c-addr u -- ) <br />
+        &nbsp;&nbsp; <a href="../core/p.html">(</a> <span class="rm">Display an error message followed by the
+        line that had the error@.</span> ) <br />
+        &nbsp;&nbsp; 1 #errors <a href="../core/PlusStore.html">+!</a> error1 <a href="../core/Semi.html">;</a> error-xt <a href="../core/Store.html">!</a>
+        <p />
+        <a href="../tools/BracketUNDEFINED.html">[UNDEFINED]</a> pi <a href="../tools/BracketIF.html">[IF]</a> <br />
+        &nbsp;&nbsp; 0.3141592653589793238463E1 <a href="../floating/FCONSTANT.html">FCONSTANT</a> pi <br />
+        <a href="../tools/BracketTHEN.html">[THEN]</a>
+        <p />
+        <a href="../tools/BracketUNDEFINED.html">[UNDEFINED]</a> -pi <a href="../tools/BracketIF.html">[IF]</a> <br />
+        &nbsp;&nbsp; pi <a href="../floating/FNEGATE.html">FNEGATE</a> <a href="../floating/FCONSTANT.html">FCONSTANT</a> -pi <br />
+        <a href="../tools/BracketTHEN.html">[THEN]</a>
+        <p />
+        <a href="../core/FALSE.html">FALSE</a> <a href="../tools/BracketIF.html">[IF]</a> <br />
+        &nbsp;&nbsp;  0.7853981633974483096157E0 <a href="../floating/FCONSTANT.html">FCONSTANT</a>   pi/4 <br />
+        &nbsp;&nbsp; -0.7853981633974483096157E0 <a href="../floating/FCONSTANT.html">FCONSTANT</a>  -pi/4 <br />
+        &nbsp;&nbsp;  0.1570796326794896619231E1 <a href="../floating/FCONSTANT.html">FCONSTANT</a>   pi/2 <br />
+        &nbsp;&nbsp; -0.1570796326794896619231E1 <a href="../floating/FCONSTANT.html">FCONSTANT</a>  -pi/2 <br />
+        &nbsp;&nbsp;  0.4712388980384689857694E1 <a href="../floating/FCONSTANT.html">FCONSTANT</a>  3pi/2 <br />
+        &nbsp;&nbsp;  0.2356194490192344928847E1 <a href="../floating/FCONSTANT.html">FCONSTANT</a>  3pi/4 <br />
+        &nbsp;&nbsp; -0.2356194490192344928847E1 <a href="../floating/FCONSTANT.html">FCONSTANT</a> -3pi/4 <br />
+        <a href="../tools/BracketELSE.html">[ELSE]</a> <br />
+        &nbsp;&nbsp;  pi   4e <a href="../floating/FDiv.html">F/</a> <a href="../floating/FCONSTANT.html">FCONSTANT</a>   pi/4 <br />
+        &nbsp;&nbsp; -pi   4e <a href="../floating/FDiv.html">F/</a> <a href="../floating/FCONSTANT.html">FCONSTANT</a>  -pi/4 <br />
+        &nbsp;&nbsp;  pi   2e <a href="../floating/FDiv.html">F/</a> <a href="../floating/FCONSTANT.html">FCONSTANT</a>   pi/2 <br />
+        &nbsp;&nbsp; -pi   2e <a href="../floating/FDiv.html">F/</a> <a href="../floating/FCONSTANT.html">FCONSTANT</a>  -pi/2 <br />
+        &nbsp;&nbsp;  pi/2 3e <a href="../floating/FTimes.html">F*</a> <a href="../floating/FCONSTANT.html">FCONSTANT</a>  3pi/2 <br />
+        &nbsp;&nbsp;  pi/4 3e <a href="../floating/FTimes.html">F*</a> <a href="../floating/FCONSTANT.html">FCONSTANT</a>  3pi/4 <br />
+        &nbsp;&nbsp; -pi/4 3e <a href="../floating/FTimes.html">F*</a> <a href="../floating/FCONSTANT.html">FCONSTANT</a> -3pi/4 <br />
+        <a href="../tools/BracketTHEN.html">[THEN]</a>
+        <p />
+        verbose <a href="../core/Fetch.html">@</a> <a href="../tools/BracketIF.html">[IF]</a> <br />
+        &nbsp;&nbsp; <a href="../core/ColonNONAME.html">:NONAME</a> <a href="../core/p.html">(</a> -- fp.separate? ) <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/DEPTH.html">DEPTH</a> <a href="../core/toR.html">&gt;R</a> 1e <a href="../core/DEPTH.html">DEPTH</a> <a href="../core/Rfrom.html">R&gt;</a> <a href="../floating/FDROP.html">FDROP</a> <a href="../core/TwoRfrom.html">2R&gt;</a> <a href="../core/Equal.html">=</a> <a href="../core/Semi.html">;</a> <a href="../core/EXECUTE.html">EXECUTE</a> <br />
+        &nbsp;&nbsp; <a href="../core/CR.html">CR</a> <a href="../core/Dotp.html">.(</a> <span class="rm">floating-point and data stacks</span> ) <br />
+        &nbsp;&nbsp; <a href="../tools/BracketIF.html">[IF]</a> <a href="../core/Dotp.html">.(</a> <span class="rm">*separate*</span> ) <a href="../tools/BracketELSE.html">[ELSE]</a> <a href="../core/Dotp.html">.(</a> <span class="rm">*not separate*</span> ) <a href="../tools/BracketTHEN.html">[THEN]</a> <br />
+        &nbsp;&nbsp; <a href="../core/CR.html">CR</a> <br />
+        <a href="../tools/BracketTHEN.html">[THEN]</a>
+        <p />
+        TESTING normal values
+        <p />
+        <a href="../core/bs.html">\</a>   y   x              rad         deg <br />
+        <span class="tt">T{ &nbsp;0e&nbsp;&nbsp;1e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;&nbsp;0e&nbsp;&nbsp; R}T</span>&nbsp;&nbsp; <a href="../core/bs.html">\</a>   0 <br />
+        <span class="tt">T{ &nbsp;1e&nbsp;&nbsp;1e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;&nbsp;pi/4 R}T</span>&nbsp;&nbsp; <a href="../core/bs.html">\</a>  45 <br />
+        <span class="tt">T{ &nbsp;1e&nbsp;&nbsp;0e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;&nbsp;pi/2 R}T</span>&nbsp;&nbsp; <a href="../core/bs.html">\</a>  90 <br />
+        <span class="tt">T{ -1e&nbsp;-1e&nbsp;<strong>FATAN2</strong> -&gt; -3pi/4 R}T</span>&nbsp;&nbsp; <a href="../core/bs.html">\</a> 135 <br />
+        <span class="tt">T{ &nbsp;0e&nbsp;-1e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;&nbsp;pi&nbsp;&nbsp; R}T</span>&nbsp;&nbsp; <a href="../core/bs.html">\</a> 180 <br />
+        <span class="tt">T{ -1e&nbsp;&nbsp;1e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;-pi/4 R}T</span>&nbsp;&nbsp; <a href="../core/bs.html">\</a> 225 <br />
+        <span class="tt">T{ -1e&nbsp;&nbsp;0e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;-pi/2 R}T</span>&nbsp;&nbsp; <a href="../core/bs.html">\</a> 270 <br />
+        <span class="tt">T{ -1e&nbsp;&nbsp;1e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;-pi/4 R}T</span>&nbsp;&nbsp; <a href="../core/bs.html">\</a> 315
+        <p />
+        TESTING Single UNIX 3 special values spec
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">ISO C / Single UNIX Specification Version 3:</span> <br />
+        <a href="../core/bs.html">\</a> &nbsp;&nbsp; <a href="http://www.unix.org/single_unix_specification/">http://www.unix.org/single_unix_specification/</a> <br />
+        <a href="../core/bs.html">\</a> <span class="rm">Select &quot;Topic&quot;, then &quot;Math Interfaces&quot;, then &quot;<code>atan2()</code>&quot;:</span> <br />
+        <a href="../core/bs.html">\</a> &nbsp;&nbsp; <a href="http://www.opengroup.org/onlinepubs/009695399/functions/atan2f.html">http://www.opengroup.org/onlinepubs/009695399/</a> <br />
+        <a href="../core/bs.html">\</a> &nbsp;&nbsp; <a href="http://www.opengroup.org/onlinepubs/009695399/functions/atan2f.html">functions/atan2f.html</a>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">If <em>y</em> is +/-0 and <em>x</em> is &lt; 0, +/-pi shall be returned.</span> <br />
+        <span class="tt">T{ &nbsp;0e&nbsp;-1e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;pi R}T</span> <br />
+        <span class="tt">T{ -0e&nbsp;-1e&nbsp;<strong>FATAN2</strong> -&gt; -pi R}T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">If <em>y</em> is +/-0 and <em>x</em> is &gt; 0, +/-0 shall be returned.</span> <br />
+        <span class="tt">T{ &nbsp;0e&nbsp;&nbsp;1e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;0e R}T</span><br />
+        <span class="tt">T{ -0e&nbsp;&nbsp;1e&nbsp;<strong>FATAN2</strong> -&gt; -0e R}T</span><br />
+        <a href="../core/bs.html">\</a> <span class="rm">If <em>y</em> is &lt; 0 and <em>x</em> is +/-0, -pi/2 shall be returned.</span> <br />
+        <span class="tt">T{ -1e&nbsp;&nbsp;0e&nbsp;<strong>FATAN2</strong> -&gt; -pi/2 R}T</span> <br />
+        <span class="tt">T{ -1e&nbsp;-0e&nbsp;<strong>FATAN2</strong> -&gt; -pi/2 R}T</span> <br />
+        <a href="../core/bs.html">\</a> <span class="rm">If <em>y</em> is &gt; 0 and <em>x</em> is +/-0, pi/2 shall be returned.</span> <br />
+        <span class="tt">T{ &nbsp;1e&nbsp;&nbsp;0e&nbsp;<strong>FATAN2</strong> -&gt; pi/2 R}T</span> <br />
+        <span class="tt">T{ &nbsp;1e&nbsp;-0e&nbsp;<strong>FATAN2</strong> -&gt; pi/2 R}T</span> <br />
+        TESTING Single UNIX 3 special values optional spec
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">Optional ISO C / single UNIX specs:</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">If either <em>x</em> or <em>y</em> is NaN, a NaN shall be returned.</span> <br />
+        <span class="tt">T{ NaN&nbsp;&nbsp;1e&nbsp;<strong>FATAN2</strong> -&gt; NaN R}T</span><br />
+        <span class="tt">T{ &nbsp;1e&nbsp;NaN&nbsp;<strong>FATAN2</strong> -&gt; NaN R}T</span><br />
+        <span class="tt">T{ NaN&nbsp;NaN&nbsp;<strong>FATAN2</strong> -&gt; NaN R}T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">If <em>y</em> is +/-0 and <em>x</em> is -0, +/-pi shall be returned.</span> <br />
+        <span class="tt">T{ &nbsp;0e&nbsp;-0e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;pi R}T</span><br />
+        <span class="tt">T{ -0e&nbsp;-0e&nbsp;<strong>FATAN2</strong> -&gt; -pi R}T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">If <em>y</em> is +/-0 and <em>x</em> is +0, +/-0 shall be returned.</span> <br />
+        <span class="tt">T{ &nbsp;0e&nbsp;&nbsp;0e&nbsp;<strong>FATAN2</strong> -&gt; +0e R}T</span><br />
+        <span class="tt">T{ -0e&nbsp;&nbsp;0e&nbsp;<strong>FATAN2</strong> -&gt; -0e R}T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">For finite values of +/-<em>y</em> &gt; 0, if <em>x</em> is -Inf, +/-pi shall be returned.</span> <br />
+        <span class="tt">T{ &nbsp;1e&nbsp;-Inf&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;pi R}T</span><br />
+        <span class="tt">T{ -1e&nbsp;-Inf&nbsp;<strong>FATAN2</strong> -&gt; -pi R}T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">For finite values of +/-<em>y</em> &gt; 0, if <em>x</em> is +Inf, +/-0 shall be returned.</span> <br />
+        <span class="tt">T{ &nbsp;1e&nbsp;+Inf&nbsp;<strong>FATAN2</strong> -&gt; +0e R}T</span><br />
+        <span class="tt">T{ -1e&nbsp;+Inf&nbsp;<strong>FATAN2</strong> -&gt; -0e R}T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">For finite values of <em>x</em>, if <em>y</em> is +/-Inf, +/-pi/2 shall be returned.</span> <br />
+        <span class="tt">T{ +Inf&nbsp;&nbsp;1e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;pi/2 R}T</span><br />
+        <span class="tt">T{ +Inf&nbsp;-1e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;pi/2 R}T</span><br />
+        <span class="tt">T{ +Inf&nbsp;&nbsp;0e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;pi/2 R}T</span><br />
+        <span class="tt">T{ +Inf&nbsp;-0e&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;pi/2 R}T</span><br />
+        <span class="tt">T{ -Inf&nbsp;&nbsp;1e&nbsp;<strong>FATAN2</strong> -&gt; -pi/2 R}T</span><br />
+        <span class="tt">T{ -Inf&nbsp;-1e&nbsp;<strong>FATAN2</strong> -&gt; -pi/2 R}T</span><br />
+        <span class="tt">T{ -Inf&nbsp;&nbsp;0e&nbsp;<strong>FATAN2</strong> -&gt; -pi/2 R}T</span><br />
+        <span class="tt">T{ -Inf&nbsp;-0e&nbsp;<strong>FATAN2</strong> -&gt; -pi/2 R}T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">If <em>y</em> is +/-Inf and <em>x</em> is -Inf, +/-3pi/4 shall be returned.</span> <br />
+        <span class="tt">T{ +Inf&nbsp;-Inf&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;3pi/4 R}T</span><br />
+        <span class="tt">T{ -Inf&nbsp;-Inf&nbsp;<strong>FATAN2</strong> -&gt; -3pi/4 R}T</span>
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">If <em>y</em> is +/-Inf and <em>x</em> is +Inf, +/-pi/4 shall be returned.</span> <br />
+        <span class="tt">T{ +Inf&nbsp;+Inf&nbsp;<strong>FATAN2</strong> -&gt; &nbsp;pi/4 R}T</span><br />
+        <span class="tt">T{ -Inf&nbsp;+Inf&nbsp;<strong>FATAN2</strong> -&gt; -pi/4 R}T</span>
+        <p />
+        verbose <a href="../core/Fetch.html">@</a> <a href="../tools/BracketIF.html">[IF]</a> <br />
+        &nbsp;&nbsp; <a href="../core/CR.html">CR</a> <a href="../core/Dotp.html">.(</a> <span class="rm">#ERRORS:</span> ) #errors <a href="../core/Fetch.html">@</a> <a href="../core/d.html">.</a> <a href="../core/CR.html">CR</a> <br />
+        <a href="../tools/BracketTHEN.html">[THEN]</a>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Floating-Point word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html" class="current">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../float.html#section.12.1">Introduction</a></li>
+        <li role="menuitem"><a href="../float.html#section.12.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../float.html#section.12.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../float.html#section.12.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../float.html#section.12.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../float.html#section.12.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">FATAN2</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="toFLOAT.html">&gt;FLOAT</a></li>
+        <li role="menuitem"><a href="DtoF.html">D&gt;F</a></li>
+        <li role="menuitem"><a href="FStore.html">F!</a></li>
+        <li role="menuitem"><a href="FTimes.html">F*</a></li>
+        <li role="menuitem"><a href="FPlus.html">F+</a></li>
+        <li role="menuitem"><a href="FMinus.html">F-</a></li>
+        <li role="menuitem"><a href="FDiv.html">F/</a></li>
+        <li role="menuitem"><a href="FZeroless.html">F0&lt;</a></li>
+        <li role="menuitem"><a href="FZeroEqual.html">F0=</a></li>
+        <li role="menuitem"><a href="Fless.html">F&lt;</a></li>
+        <li role="menuitem"><a href="FtoD.html">F&gt;D</a></li>
+        <li role="menuitem"><a href="FFetch.html">F@</a></li>
+        <li role="menuitem"><a href="FALIGN.html">FALIGN</a></li>
+        <li role="menuitem"><a href="FALIGNED.html">FALIGNED</a></li>
+        <li role="menuitem"><a href="FCONSTANT.html">FCONSTANT</a></li>
+        <li role="menuitem"><a href="FDEPTH.html">FDEPTH</a></li>
+        <li role="menuitem"><a href="FDROP.html">FDROP</a></li>
+        <li role="menuitem"><a href="FDUP.html">FDUP</a></li>
+        <li role="menuitem"><a href="FLITERAL.html">FLITERAL</a></li>
+        <li role="menuitem"><a href="FLOATPlus.html">FLOAT+</a></li>
+        <li role="menuitem"><a href="FLOATS.html">FLOATS</a></li>
+        <li role="menuitem"><a href="FLOOR.html">FLOOR</a></li>
+        <li role="menuitem"><a href="FMAX.html">FMAX</a></li>
+        <li role="menuitem"><a href="FMIN.html">FMIN</a></li>
+        <li role="menuitem"><a href="FNEGATE.html">FNEGATE</a></li>
+        <li role="menuitem"><a href="FOVER.html">FOVER</a></li>
+        <li role="menuitem"><a href="FROT.html">FROT</a></li>
+        <li role="menuitem"><a href="FROUND.html">FROUND</a></li>
+        <li role="menuitem"><a href="FSWAP.html">FSWAP</a></li>
+        <li role="menuitem"><a href="FVARIABLE.html">FVARIABLE</a></li>
+        <li role="menuitem"><a href="REPRESENT.html">REPRESENT</a></li>
+        <li role="menuitem"><a href="DFStore.html">DF!</a></li>
+        <li role="menuitem"><a href="DFFetch.html">DF@</a></li>
+        <li role="menuitem"><a href="DFALIGN.html">DFALIGN</a></li>
+        <li role="menuitem"><a href="DFALIGNED.html">DFALIGNED</a></li>
+        <li role="menuitem"><a href="DFFIELDColon.html">DFFIELD:</a></li>
+        <li role="menuitem"><a href="DFLOATPlus.html">DFLOAT+</a></li>
+        <li role="menuitem"><a href="DFLOATS.html">DFLOATS</a></li>
+        <li role="menuitem"><a href="FTimesTimes.html">F**</a></li>
+        <li role="menuitem"><a href="Fd.html">F.</a></li>
+        <li role="menuitem"><a href="FtoS.html">F&gt;S</a></li>
+        <li role="menuitem"><a href="FABS.html">FABS</a></li>
+        <li role="menuitem"><a href="FACOS.html">FACOS</a></li>
+        <li role="menuitem"><a href="FACOSH.html">FACOSH</a></li>
+        <li role="menuitem"><a href="FALOG.html">FALOG</a></li>
+        <li role="menuitem"><a href="FASIN.html">FASIN</a></li>
+        <li role="menuitem"><a href="FASINH.html">FASINH</a></li>
+        <li role="menuitem"><a href="FATAN.html">FATAN</a></li>
+        <li role="menuitem"><a href="FATANTwo.html" class="current">FATAN2</a></li>
+        <li role="menuitem"><a href="FATANH.html">FATANH</a></li>
+        <li role="menuitem"><a href="FCOS.html">FCOS</a></li>
+        <li role="menuitem"><a href="FCOSH.html">FCOSH</a></li>
+        <li role="menuitem"><a href="FEd.html">FE.</a></li>
+        <li role="menuitem"><a href="FEXP.html">FEXP</a></li>
+        <li role="menuitem"><a href="FEXPMOne.html">FEXPM1</a></li>
+        <li role="menuitem"><a href="FFIELDColon.html">FFIELD:</a></li>
+        <li role="menuitem"><a href="FLN.html">FLN</a></li>
+        <li role="menuitem"><a href="FLNPOne.html">FLNP1</a></li>
+        <li role="menuitem"><a href="FLOG.html">FLOG</a></li>
+        <li role="menuitem"><a href="FSd.html">FS.</a></li>
+        <li role="menuitem"><a href="FSIN.html">FSIN</a></li>
+        <li role="menuitem"><a href="FSINCOS.html">FSINCOS</a></li>
+        <li role="menuitem"><a href="FSINH.html">FSINH</a></li>
+        <li role="menuitem"><a href="FSQRT.html">FSQRT</a></li>
+        <li role="menuitem"><a href="FTAN.html">FTAN</a></li>
+        <li role="menuitem"><a href="FTANH.html">FTANH</a></li>
+        <li role="menuitem"><a href="FTRUNC.html">FTRUNC</a></li>
+        <li role="menuitem"><a href="FVALUE.html">FVALUE</a></li>
+        <li role="menuitem"><a href="Ftilde.html">F~</a></li>
+        <li role="menuitem"><a href="PRECISION.html">PRECISION</a></li>
+        <li role="menuitem"><a href="StoF.html">S&gt;F</a></li>
+        <li role="menuitem"><a href="SET-PRECISION.html">SET-PRECISION</a></li>
+        <li role="menuitem"><a href="SFStore.html">SF!</a></li>
+        <li role="menuitem"><a href="SFFetch.html">SF@</a></li>
+        <li role="menuitem"><a href="SFALIGN.html">SFALIGN</a></li>
+        <li role="menuitem"><a href="SFALIGNED.html">SFALIGNED</a></li>
+        <li role="menuitem"><a href="SFFIELDColon.html">SFFIELD:</a></li>
+        <li role="menuitem"><a href="SFLOATPlus.html">SFLOAT+</a></li>
+        <li role="menuitem"><a href="SFLOATS.html">SFLOATS</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

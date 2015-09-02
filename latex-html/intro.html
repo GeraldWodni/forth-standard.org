@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: Introduction</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<div>
+<div class="Large">
+    <div class="bf">
+Forth 2012 Standard
+      </div>
+    </div>
+  </div>
+<p />
+<h1 id="chapter.1">1 Introduction</h1>
+<a name="chap:intro"></a>
+<p />
+<h2 id="section.1.1">1.1 Purpose</h2>
+The purpose of this standard is to promote the portability of Forth
+programs for use on a wide variety of computing systems, to facilitate
+the communication of programs, programming techniques, and ideas among
+Forth programmers, and to serve as a basis for the future evolution of
+the Forth language.
+<p />
+<h2 id="section.1.2">1.2 Scope</h2>
+This standard specifies an interface between a Forth System and a
+Forth Program by defining the words provided by a Standard System.
+<p />
+<h3 id="subsection.1.2.1">1.2.1 Inclusions</h3>
+This standard specifies:
+<ul>
+<li> the forms that a program written in the Forth language may take;
+</li>
+<li> the rules for interpreting the meaning of a program and its data.
+</li>
+</ul>
+<p />
+<h3 id="subsection.1.2.2">1.2.2 Exclusions</h3> <!-- 1.2.2 -->
+<a name="intro:exclusions"></a>
+<p />
+This standard does not specify:
+<ul>
+<li> the mechanism by which programs are transformed for use on
+computing systems;
+</li>
+<li> the operations required for setup and control of the use of
+programs on computing systems;
+</li>
+<li> the method of transcription of programs or their input or
+output data to or from a storage medium;
+</li>
+<li> the program and Forth system behavior when the rules of this
+standard fail to establish an interpretation;
+</li>
+<li> the size or complexity of a program and its data that will
+exceed the capacity of any specific computing system or the
+capability of a particular Forth system;
+</li>
+<li> the physical properties of input/output records, files, and units;
+</li>
+<li> the physical properties and implementation of storage.
+</li>
+</ul>
+<p />
+<h2 id="section.1.3">1.3 Document organization</h2>
+<a name="intro:wordsets"></a>
+<p />
+<h3 id="subsection.1.3.1">1.3.1 Word sets</h3>
+This standard groups Forth words and capabilities into <em>word sets</em>
+under a name indicating some shared aspect, typically their common
+functional area. Each word set may have an extension, containing words
+that offer additional functionality. These words are not required in an
+implementation of the word set.
+<p />
+The &quot;Core&quot; word set, defined in sections <a href="intro.html#chap:intro">1</a> through <a href="core.html#chap:core">6</a>, contains the
+required words and capabilities of a Standard System. The other word
+sets, defined in sections <a href="block.html#wordlist:block">7</a> through
+<a href="xchar.html#wordlist:xchar">18</a>, are optional, making it possible to provide
+Standard Systems with tailored levels of functionality.
+<p />
+<h4 id="subsubsection.1.3.1.1">1.3.1.1 Text sections</h4>
+<a name="intro:numbering"></a>
+<p />
+Within each word set, section 1 contains introductory and explanatory
+material and section 2 introduces terms and notation used throughout
+the standard. There are no requirements in these sections.
+<p />
+Sections 3 and 4 contain the usage and documentation requirements,
+respectively, for Standard Systems and Programs, while section 5
+specifies their labeling.
+<p />
+Sections <em>x</em>.1&ndash;<em>x</em>.6 of each word set have the same section
+numbering as sections 1&ndash;6 of the whole document to make it easy to
+relate the sections to each other.  This may lead to gaps in section
+numbers if a particular section does not occur in a word set.
+<p />
+<h4 id="subsubsection.1.3.1.2">1.3.1.2 Glossary sections</h4>
+<p />
+Section 6 of each word set specifies the required behavior of the
+definitions in the word set and the extensions word set.
+<p />
+<h3 id="subsection.1.3.2">1.3.2 Annexes</h3>
+<a name="intro:annex"></a>
+<p />
+The annexes do not contain any required material.
+<p />
+Annex <a href="rationale.html#annex:rationale">A</a> provides some of the rationale behind the
+committee's decisions in creating this standard, as well as
+implementation examples. It has the same section numbering as the
+body of the standard to make it easy to relate each requirements
+section to its rationale section.
+<p />
+Annex <a href="bib.html#annex:bib">B</a> is a short bibliography on Forth.
+<p />
+Annex <a href="diff.html#annex:diff">C</a> discusses the compatibility of this standard
+with earlier Forths.
+<p />
+Annex <a href="port.html#annex:port">D</a> presents some techniques for writing portable
+programs.
+<p />
+Annex <a href="alpha.html#annex:index">H</a> is an index of all Forth words defined in this
+standard.
+<p />
+<h2 id="section.1.4">1.4 Future directions</h2>
+<p />
+<h3 id="subsection.1.4.1">1.4.1 New technology</h3>
+<p />
+This standard adopts certain words and practices that are
+increasingly found in common practice. New words have also
+been adopted to ease creation of portable programs.
+<p />
+<h3 id="subsection.1.4.2">1.4.2 Obsolescent features</h3>
+<a name="intro:obsoleat"></a>
+<p />
+This standard adopts certain words and practices that cause
+some previously used words and practices to become obsolescent.
+Although retained here because of their widespread use, their
+use in new implementations or new programs is discouraged,
+as they may be withdrawn from future revisions of the standard.
+<p />
+This standard designates the following word as obsolescent:
+<p />
+
+<table>
+<tr valign="top"><td class="r"><a href="tools/FORGET.html">15.6.2.1580</a>	</td><td><a href="tools/FORGET.html">FORGET</a>	</td></tr>
+<tr valign="top"><td class="r"><a href="core/BracketCOMPILE.html">6.2.2530</a></td><td><a href="core/BracketCOMPILE.html">[COMPILE]</a> </td></tr>
+<tr valign="top"><td class="r"><a href="local/LOCALS.html">13.6.2.1795</a>	</td><td><a href="local/LOCALS.html">LOCALS|</a>
+</table>
+<p />
+This standard designates the following practice as obsolescent:
+<p />
+<ul>
+<li> Using <a href="core/ENVIRONMENTq.html">ENVIRONMENT?</a> to enquire whether a word set is present.
+</li>
+</ul>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html" class="current">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Purpose</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.1.1">Purpose</a></li>
+        <li role="menuitem"><a href="#section.1.2">Scope</a></li>
+        <li role="menuitem"><a href="#section.1.3">Document organization</a></li>
+        <li role="menuitem"><a href="#section.1.4">Future directions</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

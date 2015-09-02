@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: CREATE-FILE</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="file:CREATE-FILE">
+  <div class="wordNumber">11.6.1.1010</div>
+  <div class="wordName">CREATE-FILE</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">FILE</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>c-addr u fam</em> -- <em>fileid ior</em> )
+      <p />
+      Create the file named in the character string specified by
+      <em>c-addr</em> and <em>u</em>, and open it with file access method
+      <em>fam</em>. The meaning of values of <em>fam</em> is
+      implementation defined. If a file with the same name already
+      exists, recreate it as an empty file.
+      <p />
+      If the file was successfully created and opened, <em>ior</em> is
+      zero, <em>fileid</em> is its identifier, and the file has been
+      positioned to the start of the file.
+      <p />
+      Otherwise, <em>ior</em> is the implementation-defined I/O result
+      code and <em>fileid</em> is undefined.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../rationale.html#rat:file:CREATE-FILE">A.11.6.1.1010 CREATE-FILE</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.11.6.1.1010 CREATE-FILE -->
+      Typical use:
+      <p />
+      &nbsp;&nbsp; <a href="../core/Colon.html">:</a> <code>X</code> ...
+      <a href="../file/Sq.html">S&quot;</a> <code>TEST.FTH&quot;</code> <a href="../file/RDivW.html">R/W</a>
+      <strong>CREATE-FILE</strong>
+      <a href="../core/ABORTq.html">ABORT&quot;</a> <code>CREATE-FILE FAILED&quot;</code>
+      <a href="../core/Semi.html">;</a>
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+      <div class="tt">
+<a href="../core/Colon.html">:</a> fn1 <a href="../file/Sq.html">S&quot;</a> fatest1.txt&quot; <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/VARIABLE.html">VARIABLE</a> fid1
+        <p />
+        <span class="tt">T{ fn1&nbsp;<a href="../file/RDivW.html">R/W</a>&nbsp;<strong>CREATE-FILE</strong>&nbsp;<a href="../core/SWAP.html">SWAP</a>&nbsp;fid1&nbsp;<a href="../core/Store.html">!</a> -&gt; 0 }T</span> <br />
+        <span class="tt">T{ fid1&nbsp;<a href="../core/Fetch.html">@</a>&nbsp;<a href="../file/CLOSE-FILE.html">CLOSE-FILE</a> -&gt; 0 }T</span>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">File-Access word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html" class="current">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../file.html#section.11.1">Introduction</a></li>
+        <li role="menuitem"><a href="../file.html#section.11.2">Additional terms</a></li>
+        <li role="menuitem"><a href="../file.html#section.11.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../file.html#section.11.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../file.html#section.11.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../file.html#section.11.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">CREATE-FILE</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="p.html">(</a></li>
+        <li role="menuitem"><a href="BIN.html">BIN</a></li>
+        <li role="menuitem"><a href="CLOSE-FILE.html">CLOSE-FILE</a></li>
+        <li role="menuitem"><a href="CREATE-FILE.html" class="current">CREATE-FILE</a></li>
+        <li role="menuitem"><a href="DELETE-FILE.html">DELETE-FILE</a></li>
+        <li role="menuitem"><a href="FILE-POSITION.html">FILE-POSITION</a></li>
+        <li role="menuitem"><a href="FILE-SIZE.html">FILE-SIZE</a></li>
+        <li role="menuitem"><a href="INCLUDE-FILE.html">INCLUDE-FILE</a></li>
+        <li role="menuitem"><a href="INCLUDED.html">INCLUDED</a></li>
+        <li role="menuitem"><a href="OPEN-FILE.html">OPEN-FILE</a></li>
+        <li role="menuitem"><a href="RDivO.html">R/O</a></li>
+        <li role="menuitem"><a href="RDivW.html">R/W</a></li>
+        <li role="menuitem"><a href="READ-FILE.html">READ-FILE</a></li>
+        <li role="menuitem"><a href="READ-LINE.html">READ-LINE</a></li>
+        <li role="menuitem"><a href="REPOSITION-FILE.html">REPOSITION-FILE</a></li>
+        <li role="menuitem"><a href="RESIZE-FILE.html">RESIZE-FILE</a></li>
+        <li role="menuitem"><a href="Sq.html">S&quot;</a></li>
+        <li role="menuitem"><a href="SOURCE-ID.html">SOURCE-ID</a></li>
+        <li role="menuitem"><a href="WDivO.html">W/O</a></li>
+        <li role="menuitem"><a href="WRITE-FILE.html">WRITE-FILE</a></li>
+        <li role="menuitem"><a href="WRITE-LINE.html">WRITE-LINE</a></li>
+        <li role="menuitem"><a href="FILE-STATUS.html">FILE-STATUS</a></li>
+        <li role="menuitem"><a href="FLUSH-FILE.html">FLUSH-FILE</a></li>
+        <li role="menuitem"><a href="INCLUDE.html">INCLUDE</a></li>
+        <li role="menuitem"><a href="REFILL.html">REFILL</a></li>
+        <li role="menuitem"><a href="RENAME-FILE.html">RENAME-FILE</a></li>
+        <li role="menuitem"><a href="REQUIRE.html">REQUIRE</a></li>
+        <li role="menuitem"><a href="REQUIRED.html">REQUIRED</a></li>
+        <li role="menuitem"><a href="Seq.html">S\&quot;</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

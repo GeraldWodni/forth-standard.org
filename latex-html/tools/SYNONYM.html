@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: SYNONYM</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="tools:SYNONYM">
+  <div class="wordNumber">15.6.2.2264</div>
+  <div class="wordName">SYNONYM</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">TOOLS EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>&quot;&lt;spaces&gt;newname&quot; &quot;&lt;spaces&gt;oldname&quot;</em> -- )
+      <p />
+      For both strings skip leading space delimiters.  Parse <em>newname</em>
+      and <em>oldname</em> delimited by a space.  Create a definition for
+      <em>newname</em> with the semantics defined below.
+      <em>Newname</em> may be the same as <em>oldname</em>;
+      when looking up <em>oldname</em>, <em>newname</em> shall not be found.
+      <p />
+      An ambiguous conditions exists if <em>oldname</em> can not be found or
+      <a href="../core/IMMEDIATE.html">IMMEDIATE</a> is applied to <em>newname</em>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname"><em>newname</em> interpretation:</div>
+    <div class="sec">
+
+
+      ( <em>i * x</em> -- <em>j * x</em> ) <br />
+      Perform the interpretation semantics of <em>oldname</em>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname"><em>newname</em> compilation:</div>
+    <div class="sec">
+
+
+      ( <em>i * x</em> -- <em>j * x</em> ) <br />
+      Perform the compilation semantics of <em>oldname</em>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../core/IMMEDIATE.html">6.1.1710 IMMEDIATE</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+
+            <div class="rm">
+The implementation of <strong>SYNONYM</strong> requires detailed knowledge
+        of the host implementation, which is one reason why it should be
+        standardized.  The implementation below is imperfect and specific
+        to VFX Forth, in particular <code>HIDE</code>, <code>REVEAL</code> and
+        <code>IMMEDIATE?</code> are non-standard words.
+        <p />
+                <div class="quote">
+          <div class="tt">
+<a href="../core/Colon.html">:</a> <strong>SYNONYM</strong> <a href="../core/bs.html">\</a> &quot;newname&quot; &quot;oldname&quot; -- <br />
+            <a href="../core/bs.html">\</a> <span class="rm">Create a new definition which redirects to an existing one.</span> <br />
+            &nbsp;&nbsp; <a href="../core/CREATE.html">CREATE</a> <a href="../core/IMMEDIATE.html">IMMEDIATE</a> <br />
+            &nbsp;&nbsp;&nbsp;&nbsp; HIDE <a href="../core/Tick.html">'</a> <a href="../core/Comma.html">,</a> REVEAL <br />
+            &nbsp;&nbsp; <a href="../core/DOES.html">DOES&gt;</a> <br />
+            &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/Fetch.html">@</a>  <a href="../tools/STATE.html">STATE</a> <a href="../core/Fetch.html">@</a> <a href="../core/ZeroEqual.html">0=</a> <a href="../core/OVER.html">OVER</a> IMMEDIATE? <a href="../core/OR.html">OR</a> <br />
+            &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/IF.html">IF</a> <a href="../core/EXECUTE.html">EXECUTE</a> <a href="../core/ELSE.html">ELSE</a> <a href="../core/COMPILEComma.html">COMPILE,</a> <a href="../core/THEN.html">THEN</a> <br />
+            <a href="../core/Semi.html">;</a>
+            
+            </div>
+          </div>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Programming-Tools word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html" class="current">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../tools.html#section.15.1">Introduction</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">SYNONYM</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="DotS.html">.S</a></li>
+        <li role="menuitem"><a href="q.html">?</a></li>
+        <li role="menuitem"><a href="DUMP.html">DUMP</a></li>
+        <li role="menuitem"><a href="SEE.html">SEE</a></li>
+        <li role="menuitem"><a href="WORDS.html">WORDS</a></li>
+        <li role="menuitem"><a href="SemiCODE.html">;CODE</a></li>
+        <li role="menuitem"><a href="AHEAD.html">AHEAD</a></li>
+        <li role="menuitem"><a href="ASSEMBLER.html">ASSEMBLER</a></li>
+        <li role="menuitem"><a href="BYE.html">BYE</a></li>
+        <li role="menuitem"><a href="CODE.html">CODE</a></li>
+        <li role="menuitem"><a href="CS-PICK.html">CS-PICK</a></li>
+        <li role="menuitem"><a href="CS-ROLL.html">CS-ROLL</a></li>
+        <li role="menuitem"><a href="EDITOR.html">EDITOR</a></li>
+        <li role="menuitem"><a href="FORGET.html">FORGET</a></li>
+        <li role="menuitem"><a href="NtoR.html">N&gt;R</a></li>
+        <li role="menuitem"><a href="NAMEtoCOMPILE.html">NAME&gt;COMPILE</a></li>
+        <li role="menuitem"><a href="NAMEtoINTERPRET.html">NAME&gt;INTERPRET</a></li>
+        <li role="menuitem"><a href="NAMEtoSTRING.html">NAME&gt;STRING</a></li>
+        <li role="menuitem"><a href="NRfrom.html">NR&gt;</a></li>
+        <li role="menuitem"><a href="STATE.html">STATE</a></li>
+        <li role="menuitem"><a href="SYNONYM.html" class="current">SYNONYM</a></li>
+        <li role="menuitem"><a href="TRAVERSE-WORDLIST.html">TRAVERSE-WORDLIST</a></li>
+        <li role="menuitem"><a href="BracketDEFINED.html">[DEFINED]</a></li>
+        <li role="menuitem"><a href="BracketELSE.html">[ELSE]</a></li>
+        <li role="menuitem"><a href="BracketIF.html">[IF]</a></li>
+        <li role="menuitem"><a href="BracketTHEN.html">[THEN]</a></li>
+        <li role="menuitem"><a href="BracketUNDEFINED.html">[UNDEFINED]</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: Compatibility analysis</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1>Annex C: Compatibility analysis</h1> <!-- D (informative annex) -->
+<a name="annex:diff"></a>
+Before this standard, there were several industry standards for Forth.
+The most influential are listed here in chronological order, along
+with the major differences between this standard and the most recent,
+Forth 94.
+<p />
+<h2 id="section.C.1">C.1 FIG Forth (circa 1978)</h2> <!-- D.1 -->
+FIG Forth was a &quot;model&quot; implementation of the Forth language
+developed by the Forth Interest Group (FIG). In FIG Forth, a
+relatively small number of words were implemented in processor-dependent
+machine language and the rest of the words were implemented in Forth.
+The FIG model was placed in the public domain, and was ported to a wide
+variety of computer systems. Because the bulk of the FIG Forth
+implementation was the same across all machines, programs written in
+FIG Forth enjoyed a substantial degree of portability, even for
+&quot;system-level&quot; programs that directly manipulate the internals
+of the Forth system implementation.
+<p />
+FIG Forth implementations were influential in increasing the number
+of people interested in using Forth. Many people associate the
+implementation techniques embodied in the FIG Forth model with
+&quot;the nature of Forth&quot;.
+<p />
+However, FIG Forth was not necessarily representative of commercial
+Forth implementations of the same era. Some of the most successful
+commercial Forth systems used implementation techniques different
+from the FIG Forth &quot;model&quot;.
+<p />
+<h2 id="section.C.2">C.2 Forth 79</h2> <!-- D.2 -->
+The Forth-79 Standard resulted from a series of meetings from 1978
+to 1980, by the Forth Standards Team, an international group of Forth
+users and vendors (interim versions known as Forth 77 and Forth 78
+were also released by the group).
+<p />
+Forth 79 described a set of words defined on a 16-bit, twos-complement,
+unaligned, linear byte-addressing virtual machine. It prescribed an
+implementation technique known as &quot;indirect threaded code&quot;, and used
+the ASCII character set.
+<p />
+The Forth-79 Standard served as the basis for several public domain
+and commercial implementations, some of which are still available and
+supported today.
+<p />
+<h2 id="section.C.3">C.3 Forth 83</h2> <!-- D.3 -->
+The Forth-83 Standard, also by the Forth Standards Team, was released
+in 1983. Forth 83 attempted to fix some of the deficiencies of Forth
+79.
+<p />
+Forth 83 was similar to Forth 79 in most respects. However, Forth 83
+changed the definition of several well-defined features of Forth 79.
+For example, the rounding behavior of integer division, the base value
+of the operands of <a href="core/PICK.html">PICK</a> and <a href="core/ROLL.html">ROLL</a>, the meaning of the
+address returned by <a href="core/Tick.html">'</a>, the compilation behavior of <a href="core/Tick.html">'</a>,
+the value of a &quot;true&quot; flag, the meaning of <code>NOT</code>, and the
+&quot;chaining&quot; behavior of words defined by <code>VOCABULARY</code> were all
+changed. Forth 83 relaxed the implementation restrictions of Forth 79
+to allow any kind of threaded code, but it did not fully allow
+compilation to native machine code (this was not specifically prohibited,
+but rather was an indirect consequence of another provision).
+<p />
+Many new Forth implementations were based on the Forth-83 Standard, but
+few &quot;strictly compliant&quot; Forth-83 implementations exist.
+<p />
+Although the incompatibilities resulting from the changes between
+Forth 79 and Forth 83 were usually relatively easy to fix, a number
+of successful Forth vendors did not convert their implementations to
+be Forth 83 compliant. For example, the most successful commercial
+Forth for Apple Macintosh computers is based on Forth 79.
+<p />
+<h2 id="section.C.4">C.4 ANS Forth (1994)</h2> <!-- D.5 -->
+<a name="diff:ans"></a>
+<p />
+In the mid to late 1980s the computer industry underwent a rapid and
+profound change.  The personal-computer market matured into a business
+and commercial market, while the market for ROM-based embedded control
+computers grew substantially.  Improvements in custom processor design
+allowed for the development of numerous &quot;Forth chips,&quot; customized
+for the execution of the Forth language.
+<p />
+In order to take full advantage of evolving technology, many Forth
+implementations ignored some of the restrictions imposed by the
+implied &quot;virtual machine&quot; of previous standards.
+The ANS Forth committee was formed in 1987 to address the fragmentation
+within the Forth community caused not only by the difference between
+Forth 79 and Forth 83 but the exploitation of technical developments.
+<p />
+The committee undertook a comprehensive review of a variety of existing
+implementations, especially those with substantial user bases and/or
+considerable success in the market place.  This allowed them to identify
+and document features common to these systems, many of which had not been
+included in any previous standard.
+This was the most comprehensive review of Forth systems to date, taking
+eighty-seven days covering twenty-three meetings over eight years.
+The inclusive nature of the standard allowed the various factions within
+the community to unify in support of ANS Forth, with many systems
+providing a compatibility layer.
+<p />
+The committee chose to move away from prescribing stringent requirements
+as previous standards had, with the specification of a virtual machine.
+It preferred to describe the operation of the virtual machine, without
+reference to its implementation, thus allowing an implementor to take
+full advantage of any technical developments while providing the
+developer with a complete list of entitlements.
+<p />
+This required the identification of implicit assumptions made by the
+previous standards, making them explicit and abstracting them into
+more general concepts where possible.  A good example of this is the
+size of an item on the stack.  In previous standards this was assumed
+to be 16 bits wide.  This was no longer a valid assumption.  ANS Forth
+introduced the concept of the <em>cell</em>, allowing an implementation
+to use a stack size most suited to the environment.
+<p />
+The American National Standards Institution (ANSI) published the ANS
+Forth Standard in 1994 with the title &quot;<em>ANSI X3.215-1994
+Information Systems &mdash; Programming Language FORTH</em>&quot;.  This is referenced
+throughout this document as Forth 94.
+<p />
+<h2 id="section.C.5">C.5 ISO Forth (1997)</h2>
+<a name="diff:iso"></a>
+<p />
+ANSI submitted the Forth 94 Standard to the
+ISO (International Organization for Standardization) and
+IEC (International Electrotechnical Commission) joint committee for
+consideration as an international standard.
+The ISO/IEC adopted the Forth 94 document as an international standard
+in 1997, publishing it under the title &quot;<em>ISO/IEC 15145:1997
+Information technology.  Programming languages.  FORTH</em>&quot;.
+<p />
+<h2 id="section.C.6">C.6 Approach of this standard</h2> <!-- D.6 -->
+<a name="diff:approach"></a>
+<p />
+During a workshop on the Forth standard at the EuroForth conference in
+2004 it was agreed that Forth 94 required updating.
+<p />
+A committee was formed and agreed that the process should be as open
+as possible, adopting the Usenet RfD/CfV (Request for Discussion/Call
+for Votes) process to produce semi-formal proposals for changes to the
+standard.  In addition to general discussion on the <code>comp.lang.forth</code>
+usenet news group, a moderated mailing list (with public archive) was
+created for those who do not follow the news group.
+Standards meetings to discuss CfVs were held in public in
+conjunction with the EuroForth conference.
+<p />
+The work of the Forth 94 committee was the basis of this standard,
+informally called Forth 200<em>x</em>.  The aim of the Forth 200<em>x</em>
+committee is to produce a rolling document, with the standard constantly
+being updated based on discussion of proposals and the corresponding
+votes.  A snapshot document is occasionally produced, with this document
+being the first.
+<p />
+The Forth 200<em>x</em> committee defined a procedure for proposals.  In
+addition to the formal text of the proposal, they had to include:
+the rationale behind the change;
+a reference implementation, or a description of the reason a reference
+implementation cannot be presented;
+unit testing for the proposed change, especially for border conditions.
+See <strong><a href="process.html#process">Proposals Process</a></strong> (page <a href="process.html#process">ix</a>) for a full description.
+<p />
+<h2 id="section.C.7">C.7 Differences from Forth 94</h2> <!-- D.7 -->
+<a name="diff:forth94"></a>
+<p />
+<h3 id="subsection.C.7.1">C.7.1 Removed Obsolete Words</h3> <!-- D.7.1 -->
+<a name="diff:ans:obsolete"></a>
+<p />
+Forth 94 declared seven words as `obsolescent', all but
+<a href="tools/FORGET.html">FORGET</a> have been removed from this standard.
+<p />
+<dl class="desc">
+<dt>Words affected:</dt><dd>  <code>#TIB</code>,
+<code>CONVERT</code>,
+<code>EXPECT</code>,
+<code>QUERY</code>,
+<code>SPAN</code>,
+<code>TIB</code>,
+<a href="core/WORD.html">WORD</a>.
+</dd>
+<dt>Reason:</dt><dd>  Obsolescent words have been removed.
+</dd>
+<dt>Impact:</dt><dd>  <a href="core/WORD.html">WORD</a> is no longer required to leave a space at the end of
+the returned string.
+<p />
+It is recommended that, should the obsolete words be included,
+they have the behaviour described in Forth 94.  The names should
+not be reused for other purposes.
+<p />
+</dd>
+<dt>Transition/Conversion:</dt><dd>  The functions of <code>TIB</code> and <code>#TIB</code> have been
+superseded by <a href="core/SOURCE.html">SOURCE</a>.
+The function of <code>CONVERT</code> has been superseded by
+<a href="core/toNUMBER.html">&gt;NUMBER</a>.
+<p />
+The functions of <code>EXPECT</code> and <code>SPAN</code> have been
+superseded by <a href="core/ACCEPT.html">ACCEPT</a>.
+<p />
+The function of <code>QUERY</code> may be performed with <a href="core/ACCEPT.html">ACCEPT</a>
+and <a href="core/EVALUATE.html">EVALUATE</a>.
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h3 id="subsection.C.7.2">C.7.2 Separate Floating-point Stack is now Standard</h3> <!-- D.7.2 -->
+<a name="diff:fpstack"></a>
+<p />
+Previously systems could implement either a separate floating-point
+stack or a combined floating-point/data stack; programs were required
+to cater for both (or declare an environmental dependency on a
+particular variant).
+<p />
+<dl class="desc">
+<dt>Words Affected:</dt><dd>  All floating-point words.
+</dd>
+<dt>Reason:</dt><dd>  The developing of software that may be used with either a combined
+stack or a separate stack is extremely difficult and costly.  While
+some of the systems surveyed provide a combined floating-point/data
+stack, they all provide a separate floating-point stack.
+<p />
+</dd>
+<dt>Impact:</dt><dd>  Forth 94 programs with an environmental dependency on a separate
+floating-point stack become standard programs.
+<p />
+Forth 94 programs with an environmental dependency on a combined
+stack retain the environmental dependency.
+<p />
+Forth 94 programs (without environmental dependency, i.e., those
+working on either kind of system) remain standard programs.
+<p />
+Forth 94 systems that implement a separate floating-point stack
+continue to be standard systems.
+<p />
+Forth 94 systems that implement a combined stack become systems
+with an environmental restriction of not providing a separate
+floating-point stack, but a combined stack.
+<p />
+</dd>
+<dt>Transition/Conversion:</dt><dd>  Any code that has an environmental dependency on the use of a
+combined floating-point/data stack should be ported to use a
+separate floating-point stack.
+<p />
+A system that has an environmental restriction on using a combined
+floating-point/data stack should consider providing a separate
+floating-point stack.
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h3 id="subsection.C.7.3">C.7.3 Using <a href="core/ENVIRONMENTq.html">ENVIRONMENT?</a> to inquire whether a word set is present</h3> <!-- D.7.3 -->
+<a name="diff:environment"></a>
+<p />
+With the advent of a new standard, it was necessary to review the
+meaning of word set queries.  Compatibility with Forth 94 demands
+that a word set query produce the same result as for Forth 94; i.e.,
+querying for <code>CORE-EXT</code> returns true only if all the Forth 94
+CORE EXT words are present.  The question was how to distinguish
+between word sets described by this and subsequent standards.
+<p />
+The committee considered adding a year indicator to the word set name
+(&quot;<code>CORE-EXT-2012</code>&quot;) or a providing a general query
+(&quot;<code>Forth-2012</code>&quot;) which could be combined with the
+word-set query.  As the committee could find very few examples of the
+word-set queries being used, it chose not to update the word set-query
+mechanism, but rather to mark it as obsolescent.
+<p />
+<dl class="desc">
+<dt>Words Affected:</dt><dd>  <a href="core/ENVIRONMENTq.html">ENVIRONMENT?</a>
+</dd>
+<dt>Reason:</dt><dd>  The use of the word-set query to inquire whether a word set is
+present in the system has been marked obsolescent.  If present
+the query indicates the word set, as documented in Forth 94, is
+available.
+<p />
+</dd>
+<dt>Impact:</dt><dd>  Forth 94 did not guarantee the presence of these queries.  Many
+systems that provided all the words in a particular word set did
+not provide the corresponding query.  Portable programs are not
+affected as they could not rely on this function.
+<p />
+</dd>
+<dt>Transition/Conversion:</dt><dd>  There is no direct equivalent to determine the presence of a whole
+word set.  The <a href="tools/BracketDEFINED.html">15.6.2.2530.30 [DEFINED]</a> and <a href="tools/BracketUNDEFINED.html">15.6.2.2534 [UNDEFINED]</a>
+words can be used to detect the availability (or otherwise) of
+individual words.
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h3 id="subsection.C.7.4">C.7.4 Additional <a href="core/TO.html">TO</a> targets</h3> <!-- D.7.4 -->
+<a name="diff:12:to"></a>
+<p />
+<a href="core/TO.html">6.2.2295 TO</a> has been extended to act on targets defined with
+<a href="floating/FVALUE.html">12.6.2.1628 FVALUE</a> and <a href="double/TwoVALUE.html">8.6.2.0435 2VALUE</a>.
+<p />
+<dl class="desc">
+<dt>Words affected:</dt><dd>  <a href="core/TO.html">TO</a>
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h3 id="subsection.C.7.5">C.7.5 Input/Output return values</h3> <!-- D.7.5 -->
+<a name="diff:12:ior"></a>
+<p />
+<dl class="desc">
+<dt>Words affected:</dt><dd>  All words that return an <em>ior</em>.
+</dd>
+<dt>Reason:</dt><dd>  Forth 94 left the error code (<em>ior</em>) implementation-defined,
+although it did recommend an <em>ior</em> to be a <a href="exception/THROW.html">THROW</a>
+code.  Forth 2012 now requires an <em>ior</em> to be a
+<a href="exception/THROW.html">THROW</a> code.
+<p />
+</dd>
+<dt>Transition/Conversion:</dt><dd>  Forth 94 programs are not affected.  Programs that are dependent
+on <em>iors</em> being throwable are no longer required to document
+the dependency.
+<p />
+Forth 94 systems that abided by the recommendation are not affected.
+Systems that did not heed this advice are required to do so. A
+number of <a href="exception/THROW.html">THROW</a> codes were added to table
+<a href="exception.html#table:throw">9.1</a> to ease this transition.
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h3 id="subsection.C.7.6">C.7.6 Minimum number of locals</h3> <!-- D.7.6 -->
+<a name="diff:12:locals"></a>
+<p />
+<dl class="desc">
+<dt>Words affected:</dt><dd>  <a href="local/LOCAL.html">(LOCAL)</a>, <a href="local/LOCALS.html">LOCALS|</a>
+</dd>
+<dt>Reason:</dt><dd>  Some programs require more than eight locals.
+</dd>
+<dt>Transition/Conversion:</dt><dd>  Existing programs are unaffected.  Systems implementing the locals
+word set have to be changed to support at least 16 (previously 8)
+locals.
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h3 id="subsection.C.7.7">C.7.7 Number prefixes</h3> <!-- D.7.7 -->
+<a name="diff:12:prefix"></a>
+<p />
+Decimal, hexadecimal, binary number literals can now be written
+irrespective of <a href="core/BASE.html">BASE</a> by using the prefix #, $, %.  Also, character
+literals can be written as 'c'.
+Standard programs are unaffected.  Systems have to be changed to
+recognize these forms.
+<p />
+See <strong><a href="usage.html#usage:numbers">3.4.1.3 Text interpreter input number conversion</a></strong>.
+<h3 id="subsection.C.7.8">C.7.8 <a href="core/SOURCE-ID.html">SOURCE-ID</a> Clarification</h3> <!-- D.7.7 -->
+<a name="diff:12:sourceid"></a>
+<p />
+When interpreting text from a file, the relationship between the position in the
+file returned by <a href="core/SOURCE-ID.html">SOURCE-ID</a>, and the current interpretation position is
+undefined.
+<p />
+<h3 id="subsection.C.7.9">C.7.9 <a href="floating/FASINH.html">FASINH</a></h3> <!-- D.7.9 -->
+<a name="diff:12:fasinh"></a>
+<p />
+An ambiguous condition on <em>r1</em> being less than 0 was removed.
+<p />
+Existing programs are not affected.  Existing systems are
+unlikely to be affected.
+<p />
+<h3 id="subsection.C.7.10">C.7.10 <a href="floating/FATANTwo.html">FATAN2</a></h3> <!-- D.7.10 -->
+<a name="diff:12:fatan2"></a>
+<p />
+<dl class="desc">
+<dt>Words affected:</dt><dd>  <a href="floating/FATANTwo.html">FATAN2</a>
+</dd>
+<dt>Reason:</dt><dd>  The result is now specified more tightly: it is the principal angle
+(between -pi and pi).
+<p />
+</dd>
+<dt>Impact:</dt><dd>  Forth 94 compliant programs are not affected.
+</dd>
+<dt>Transition/Conversion:</dt><dd>  Systems may have to change <a href="floating/FATANTwo.html">FATAN2</a> to return
+the principal angle.
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h2 id="section.C.8">C.8 Additional words</h2> <!-- D.8 -->
+<a name="diff:new12"></a>
+<p />
+The following words have been added to the standard:
+<p />
+
+<h3 id="subsection.C.8.6">C.8.6 Core word sets</h3>
+The following words have been added to <strong><a href="core.html#wordlist:core-ext">6.2 Core extension words</a></strong>:
+<p />
+<div class="minipage" style="width: 15em">
+
+  <a href="core/ACTION-OF.html">6.2.0698 ACTION-OF</a> <br />
+  <a href="core/BUFFERColon.html">6.2.0825 BUFFER:</a> <br />
+  <a href="core/DEFER.html">6.2.1173 DEFER</a>
+  
+  </div>
+
+<div class="minipage" style="width: 15em">
+
+  <a href="core/DEFERStore.html">6.2.1175 DEFER!</a> <br />
+  <a href="core/DEFERFetch.html">6.2.1177 DEFER@</a> <br />
+  <a href="core/HOLDS.html">6.2.1675 HOLDS</a>
+  
+  </div>
+
+<div class="minipage" style="width: 15em">
+
+  <a href="core/IS.html">6.2.1725 IS</a> <br />
+  <a href="core/PARSE-NAME.html">6.2.2020 PARSE-NAME</a> <br />
+  <a href="core/Seq.html">6.2.2266 S\&quot;</a>
+  
+  </div>
+<br class="clear" />
+<p />
+<h3 id="subsection.C.8.8">C.8.8 Double-Number word sets</h3>
+The following words have been added to <strong><a href="wordlist/double-ext.html">8.6.2 Double-Number extension words</a></strong>:
+<p />
+<a href="double/TwoVALUE.html">8.6.2.0435 2VALUE</a>
+<p />
+<h3 id="subsection.C.8.10">C.8.10 Facility word sets</h3>
+The following words have been added to <strong><a href="wordlist/facility-ext.html">10.6.2 Facility extension words</a></strong>:
+<p />
+<div class="minipage" style="width: 17.5em">
+
+  <a href="facility/PlusFIELD.html">10.6.2.0135 +FIELD</a> <br />
+  <a href="facility/BEGIN-STRUCTURE.html">10.6.2.0763 BEGIN-STRUCTURE</a> <br />
+  <a href="facility/CFIELDColon.html">10.6.2.0893 CFIELD:</a> <br />
+  <a href="facility/EKEYtoFKEY.html">10.6.2.1306.40 EKEY&gt;FKEY</a> <br />
+  <a href="facility/END-STRUCTURE.html">10.6.2.1336 END-STRUCTURE</a> <br />
+  <a href="facility/FIELDColon.html">10.6.2.1518 FIELD:</a> <br />
+  <a href="facility/K-ALT-MASK.html">10.6.2.1740.01 K-ALT-MASK</a> <br />
+  <a href="facility/K-CTRL-MASK.html">10.6.2.1740.02 K-CTRL-MASK</a> <br />
+  <a href="facility/K-DELETE.html">10.6.2.1740.03 K-DELETE</a> <br />
+  <a href="facility/K-DOWN.html">10.6.2.1740.04 K-DOWN</a> <br />
+  <a href="facility/K-END.html">10.6.2.1740.05 K-END</a>
+  
+  </div>
+
+<div class="minipage" style="width: 12.5em">
+
+  <a href="facility/K-FOne.html">10.6.2.1740.06 K-F1</a> <br />
+  <a href="facility/K-FOneZero.html">10.6.2.1740.07 K-F10</a> <br />
+  <a href="facility/K-FOneOne.html">10.6.2.1740.08 K-F11</a> <br />
+  <a href="facility/K-FOneTwo.html">10.6.2.1740.09 K-F12</a> <br />
+  <a href="facility/K-FTwo.html">10.6.2.1740.10 K-F2</a> <br />
+  <a href="facility/K-F3.html">10.6.2.1740.11 K-F3</a> <br />
+  <a href="facility/K-F4.html">10.6.2.1740.12 K-F4</a> <br />
+  <a href="facility/K-F5.html">10.6.2.1740.13 K-F5</a> <br />
+  <a href="facility/K-F6.html">10.6.2.1740.14 K-F6</a> <br />
+  <a href="facility/K-F7.html">10.6.2.1740.15 K-F7</a> <br />
+  <a href="facility/K-F8.html">10.6.2.1740.16 K-F8</a>
+  
+  </div>
+
+<div class="minipage" style="width: 17.5em">
+
+  <a href="facility/K-F9.html">10.6.2.1740.17 K-F9</a> <br />
+  <a href="facility/K-HOME.html">10.6.2.1740.18 K-HOME</a> <br />
+  <a href="facility/K-INSERT.html">10.6.2.1740.19 K-INSERT</a> <br />
+  <a href="facility/K-LEFT.html">10.6.2.1740.20 K-LEFT</a> <br />
+  <a href="facility/K-NEXT.html">10.6.2.1740.21 K-NEXT</a> <br />
+  <a href="facility/K-PRIOR.html">10.6.2.1740.22 K-PRIOR</a> <br />
+  <a href="facility/K-RIGHT.html">10.6.2.1740.23 K-RIGHT</a> <br />
+  <a href="facility/K-SHIFT-MASK.html">10.6.2.1740.24 K-SHIFT-MASK</a> <br />
+  <a href="facility/K-UP.html">10.6.2.1740.25 K-UP</a>
+  
+  </div>
+<br class="clear" />
+<p />
+<h3 id="subsection.C.8.11">C.8.11 File-Access word sets</h3>
+The following words have been added to <strong><a href="wordlist/file-ext.html">11.6.2 File-Access extension words</a></strong>:
+<p />
+<div class="minipage" style="width: 15em">
+
+  <a href="file/INCLUDE.html">11.6.2.1714 INCLUDE</a>
+  
+  </div>
+
+<div class="minipage" style="width: 15em">
+
+  <a href="file/REQUIRE.html">11.6.2.2144.10 REQUIRE</a>
+  
+  </div>
+
+<div class="minipage" style="width: 15em">
+
+  <a href="file/REQUIRED.html">11.6.2.2144.50 REQUIRED</a>
+  
+  </div>
+<br class="clear" />
+<p />
+<h3 id="subsection.C.8.12">C.8.12 Floating-Point word sets</h3>
+The following words have been added to <strong><a href="wordlist/floating-ext.html">12.6.2 Floating-Point extension words</a></strong>:
+<p />
+<div class="minipage" style="width: 15em">
+
+  <a href="floating/DFFIELDColon.html">12.6.2.1207.40 DFFIELD:</a> <br />
+  <a href="floating/FtoS.html">12.6.2.1471 F&gt;S</a> <br />
+  <a href="floating/FFIELDColon.html">12.6.2.1517 FFIELD:</a>
+  
+  </div>
+
+<div class="minipage" style="width: 15em">
+
+  <a href="floating/FTRUNC.html">12.6.2.1627 FTRUNC</a> <br />
+  <a href="floating/FVALUE.html">12.6.2.1628 FVALUE</a>
+  
+  </div>
+
+<div class="minipage" style="width: 15em">
+
+  <a href="floating/StoF.html">12.6.2.2175 S&gt;F</a> <br />
+  <a href="floating/SFFIELDColon.html">12.6.2.2206.40 SFFIELD:</a>
+  
+  </div>
+<br class="clear" />
+<p />
+<h3 id="subsection.C.8.13">C.8.13 Locals word sets</h3>
+The following words have been added to <strong><a href="wordlist/local-ext.html">13.6.2 Locals extension words</a></strong>:
+<p />
+<a href="local/bColon.html">13.6.2.2550 {:</a>
+<p />
+<h3 id="subsection.C.8.15">C.8.15 Programming-Tools word sets</h3>
+<a name="diff:12:tools"></a>
+The following words have been added to the <strong><a href="wordlist/tools-ext.html">15.6.2 Programming-Tools extension words</a></strong>:
+<p />
+<div class="minipage" style="width: 22.5em">
+
+  <a href="tools/NtoR.html">15.6.2.1908 N&gt;R</a> <br />
+  <a href="tools/NAMEtoCOMPILE.html">15.6.2.1909.10 NAME&gt;COMPILE</a> <br />
+  <a href="tools/NAMEtoINTERPRET.html">15.6.2.1909.20 NAME&gt;INTERPRET</a> <br />
+  <a href="tools/NAMEtoSTRING.html">15.6.2.1909.40 NAME&gt;STRING</a> <br />
+  <a href="tools/NRfrom.html">15.6.2.1940 NR&gt;</a>
+  
+  </div>
+
+<div class="minipage" style="width: 22.5em">
+
+  <a href="tools/SYNONYM.html">15.6.2.2264 SYNONYM</a> <br />
+  <a href="tools/TRAVERSE-WORDLIST.html">15.6.2.2297 TRAVERSE-WORDLIST</a> <br />
+  <a href="tools/BracketDEFINED.html">15.6.2.2530.30 [DEFINED]</a> <br />
+  <a href="tools/BracketUNDEFINED.html">15.6.2.2534 [UNDEFINED]</a>
+  
+  </div>
+<br class="clear" />
+<p />
+<h3 id="subsection.C.8.17">C.8.17 String word sets</h3>
+The following words have been added to the <strong><a href="wordlist/string-ext.html">17.6.2 String extension words</a></strong>:
+<p />
+<div class="minipage" style="width: 15em">
+
+  <a href="string/REPLACES.html">17.6.2.2141 REPLACES</a>
+  
+  </div>
+
+<div class="minipage" style="width: 15em">
+
+  <a href="string/SUBSTITUTE.html">17.6.2.2255 SUBSTITUTE</a>
+  
+  </div>
+
+<div class="minipage" style="width: 15em">
+
+  <a href="string/UNESCAPE.html">17.6.2.2375 UNESCAPE</a>
+  
+  </div>
+<br class="clear" />
+<p />
+<h3 id="subsection.C.8.18">C.8.18 Extended-Character word sets</h3>
+The Extended Character word set was introduced by Forth-2012.
+<p />
+The following words make up <strong><a href="xchar.html#wordlist:xchar">18 The optional Extended-Character word set</a></strong>:
+<p />
+<div class="minipage" style="width: 12.5em">
+
+  <a href="xchar/X-SIZE.html">18.6.1.2486.50 X-SIZE</a> <br />
+  <a href="xchar/XCStorePlus.html">18.6.1.2487.10 XC!+</a> <br />
+  <a href="xchar/XCStorePlusq.html">18.6.1.2487.15 XC!+?</a> <br />
+  <a href="xchar/XCComma.html">18.6.1.2487.20 XC,</a>
+  
+  </div>
+
+<div class="minipage" style="width: 12.5em">
+
+  <a href="xchar/XC-SIZE.html">18.6.1.2487.25 XC-SIZE</a> <br />
+  <a href="xchar/XCFetchPlus.html">18.6.1.2487.35 XC@+</a> <br />
+  <a href="xchar/XCHARPlus.html">18.6.1.2487.40 XCHAR+</a> <br />
+  <a href="xchar/XEMIT.html">18.6.1.2488.10 XEMIT</a>
+  
+  </div>
+
+<div class="minipage" style="width: 20em">
+
+  <a href="xchar/XKEY.html">18.6.1.2488.30 XKEY</a> <br />
+  <a href="xchar/XKEYq.html">18.6.1.2488.35 XKEY?</a> <br />
+  <a href="xchar/PlusXDivSTRING.html">18.6.2.0145 +X/STRING</a> <br />
+  <a href="xchar/MinusTRAILING-GARBAGE.html">18.6.2.0175 -TRAILING-GARBAGE</a>
+  
+  </div>
+<br class="clear" />
+<p />
+The following words make up <strong><a href="wordlist/xchar-ext.html">18.6.2 Extended-Character extension words</a></strong>:
+<p />
+<div class="minipage" style="width: 15em">
+
+  <a href="xchar/CHAR.html">18.6.2.0895 CHAR</a> <br />
+  <a href="xchar/EKEYtoXCHAR.html">18.6.2.1306.60 EKEY&gt;XCHAR</a> <br />
+  <a href="xchar/PARSE.html">18.6.2.2008 PARSE</a>
+  
+  </div>
+
+<div class="minipage" style="width: 15em">
+
+  <a href="xchar/X-WIDTH.html">18.6.2.2486.70 X-WIDTH</a> <br />
+  <a href="xchar/XC-WIDTH.html">18.6.2.2487.30 XC-WIDTH</a> <br />
+  <a href="xchar/XCHARMinus.html">18.6.2.2487.45 XCHAR-</a>
+  
+  </div>
+
+<div class="minipage" style="width: 15em">
+
+  <a href="xchar/XHOLD.html">18.6.2.2488.20 XHOLD</a> <br />
+  <a href="xchar/XSTRINGMinus.html">18.6.2.2495 X\STRING-</a> <br />
+  <a href="xchar/BracketCHAR.html">18.6.2.2520 [CHAR]</a>
+  
+  </div>
+<br class="clear" />
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Compatibility analysis</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html" class="current">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">FIG Forth (circa 1978)</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.C.1">FIG Forth (circa 1978)</a></li>
+        <li role="menuitem"><a href="#section.C.2">Forth 79</a></li>
+        <li role="menuitem"><a href="#section.C.3">Forth 83</a></li>
+        <li role="menuitem"><a href="#section.C.4">ANS Forth (1994)</a></li>
+        <li role="menuitem"><a href="#section.C.5">ISO Forth (1997)</a></li>
+        <li role="menuitem"><a href="#section.C.6">Approach of this standard</a></li>
+        <li role="menuitem"><a href="#section.C.7">Differences from Forth 94</a></li>
+        <li role="menuitem"><a href="#section.C.8">Additional words</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

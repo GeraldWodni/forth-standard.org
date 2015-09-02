@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: The optional File-Access word set</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.11">11 The optional File-Access word set</h1> <!-- 11 -->
+<h2 id="section.11.1">11.1 Introduction</h2> <!-- 11.1 -->
+These words provide access to mass storage in the form of &quot;files&quot;
+under the following assumptions:
+<p />
+<ul>
+<li> files are provided by a host operating system;
+</li>
+<li> file names are represented as character strings;
+</li>
+<li> the format of file names is determined by the host operating
+system;
+</li>
+<li> an open file is identified by a single-cell file identifier
+(<em>fileid</em>);
+</li>
+<li> file-state information (e.g., position, size) is managed by
+the host operating system;
+</li>
+<li> file contents are accessed as a sequence of characters;
+</li>
+<li> file read operations return an actual transfer count, which
+can differ from the requested transfer count.
+</li>
+</ul>
+<p />
+<h2 id="section.11.2">11.2 Additional terms</h2> <!-- 11.2 -->
+<dl class="desc">
+<dt>file-access method:</dt><dd>
+A permissible means of accessing a file, such as &quot;read/write&quot;
+or &quot;read only&quot;.
+</dd>
+<dt>file position:</dt><dd>
+The character offset from the start of the file.
+</dd>
+<dt>input file:</dt><dd>
+The file, containing a sequence of lines, that is the input source.
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h2 id="section.11.3">11.3 Additional usage requirements</h2> <!-- 11.3 -->
+<h3 id="subsection.11.3.1">11.3.1 Data types</h3> <!-- 11.3.1 -->
+Append table <a href="file.html#file:types">11.1</a> to table <a href="usage.html#table:datatypes">3.1</a>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 11.1: Data types</div>
+  <a name="file:types"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>Symbol</em> </td><td><em>Data type</em> </td><td class="r"><em>Size on stack</em> </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>fam</em>		</td><td>file access method	</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>fileid</em>	</td><td>file identifier		</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td></td></tr>
+  </table>
+  
+  </div>
+<h4 id="subsubsection.11.3.1.1">11.3.1.1 File identifiers</h4> <!-- 11.3.1.1 -->
+File identifiers are implementation-dependent single-cell values
+that are passed to file operators to designate specific files.
+Opening a file assigns a file identifier, which remains valid
+until closed.
+<p />
+
+<h4 id="subsubsection.11.3.1.3">11.3.1.3 File access methods (11.3.1.3)</h4> <!-- 11.3.1.3 -->
+File access methods are implementation-defined single-cell
+values.
+<p />
+<h4 id="subsubsection.11.3.1.4">11.3.1.4 File names</h4> <!-- 11.3.1.4 -->
+<a name="file:names"></a>
+<p />
+A character string containing the name of the file. The file name
+may include an implementation-dependent path name. The format of
+file names is implementation defined.
+<p />
+<h3 id="subsection.11.3.2">11.3.2 Blocks in files</h3> <!-- 11.3.2 -->
+<a name="file:blocks"></a>
+<p />
+Blocks may, but need not, reside in files.
+When they do:
+<ul>
+<li> Block numbers may be mapped to one or more files by
+implementation-defined means. An ambiguous condition exists
+if a requested block number is not currently mapped;
+</li>
+<li> An <a href="block/UPDATE.html">UPDATE</a>d block that came from a file shall
+be transferred back to the same file.
+</li>
+</ul>
+<p />
+<h3 id="subsection.11.3.3">11.3.3 Input source</h3> <!-- 11.3.4 -->
+<a name="file:source"></a>
+<p />
+The File-Access word set creates another input source for the text
+interpreter. When the input source is a text file, <a href="block/BLK.html">BLK</a>
+shall contain zero, <a href="file/SOURCE-ID.html">SOURCE-ID</a> shall contain the <em>fileid</em>
+of that text file, and the input buffer shall contain one line of
+the text file.  During text interpretation from a text file, the
+value returned by <a href="file/FILE-POSITION.html">FILE-POSITION</a> for the <em>fileid</em> returned
+by <a href="file/SOURCE-ID.html">SOURCE-ID</a> is undefined.  A standard program
+shall not call <a href="file/REPOSITION-FILE.html">REPOSITION-FILE</a> on the <em>fileid</em> returned
+by <a href="file/SOURCE-ID.html">SOURCE-ID</a>.
+<p />
+Input with <a href="file/INCLUDED.html">INCLUDED</a>, <a href="file/INCLUDE-FILE.html">INCLUDE-FILE</a>, <a href="block/LOAD.html">LOAD</a>
+and <a href="block/EVALUATE.html">EVALUATE</a> shall be nestable in any order to at least
+eight levels.
+<p />
+A program that uses more than eight levels of input-file nesting has
+an environmental dependency. See:
+<strong><a href="usage.html#usage:inbuf">3.3.3.5 Input buffers</a></strong>,
+<strong><a href="exception.html#wordlist:exception">9 The optional Exception word set</a></strong>.
+<p />
+<h3 id="subsection.11.3.4">11.3.4 Other transient regions</h3> <!-- 11.3.5 -->
+<a name="file:buffers"></a>
+<p />
+The system provides transient buffers for <a href="file/Sq.html">S&quot;</a> and <a href="file/Seq.html">S\&quot;</a>
+strings. These buffers shall be no less than 80 characters in length, and
+there shall be at least two buffers. The system should be able to store
+two strings defined by sequential use of <a href="file/Sq.html">S&quot;</a> or <a href="file/Seq.html">S\&quot;</a>.
+RAM-limited systems may have environmental restrictions on the number
+of buffers and their lifetimes.
+<p />
+<h3 id="subsection.11.3.5">11.3.5 Parsing</h3> <!-- 11.3.6 -->
+<a name="file:parsing"></a>
+<p />
+When parsing from a text file using a space delimiter, control
+characters shall be treated the same as the space character.
+<p />
+Lines of at least 128 characters shall be supported. A program that
+requires lines of more than 128 characters has an environmental
+dependency.
+<p />
+A program may reposition the parse area within the input buffer by
+manipulating the contents of <a href="core/toIN.html">&gt;IN</a>. More extensive
+repositioning can be accomplished using <a href="core/SAVE-INPUT.html">SAVE-INPUT</a> and
+<a href="core/RESTORE-INPUT.html">RESTORE-INPUT</a>.
+<p />
+See: <strong><a href="usage.html#usage:parsing">3.4.1 Parsing</a></strong>.
+<p />
+<h2 id="section.11.4">11.4 Additional documentation requirements</h2> <!-- 11.4 -->
+<h3 id="subsection.11.4.1">11.4.1 System documentation</h3> <!-- 11.4.1 -->
+<h4 id="subsubsection.11.4.1.1">11.4.1.1 Implementation-defined options</h4> <!-- 11.4.1.1 -->
+<a name="file:impopt"></a>
+<p />
+<ul>
+<li> file access methods used by
+<a href="file/BIN.html">11.6.1.0765 BIN</a>,
+<a href="file/CREATE-FILE.html">11.6.1.1010 CREATE-FILE</a>, <br />
+<a href="file/OPEN-FILE.html">11.6.1.1970 OPEN-FILE</a>,
+<a href="file/RDivO.html">11.6.1.2054 R/O</a>,
+<a href="file/RDivW.html">11.6.1.2056 R/W</a> and
+<a href="file/WDivO.html">11.6.1.2425 W/O</a>;
+</li>
+<li> file exceptions;
+</li>
+<li> file line terminator (<a href="file/READ-LINE.html">11.6.1.2090 READ-LINE</a>);
+</li>
+<li> file name format (<strong><a href="file.html#file:names">11.3.1.4 File names</a></strong>);
+</li>
+<li> information returned by <a href="file/FILE-STATUS.html">11.6.2.1524 FILE-STATUS</a>;
+</li>
+<li> input file state after an exception
+(<a href="file/INCLUDE-FILE.html">11.6.1.1717 INCLUDE-FILE</a>,
+<a href="file/INCLUDED.html">11.6.1.1718 INCLUDED</a>);
+</li>
+<li> maximum depth of file input nesting
+(<strong><a href="file.html#file:source">11.3.3 Input source</a></strong>);
+</li>
+<li> maximum size of input line (<strong><a href="file.html#file:parsing">11.3.5 Parsing</a></strong>);
+</li>
+<li> methods for mapping block ranges to files
+(<strong><a href="file.html#file:blocks">11.3.2 Blocks in files</a></strong>);
+</li>
+<li> number of string buffers provided (<strong><a href="file.html#file:buffers">11.3.4 Other transient regions</a></strong>);
+</li>
+<li> size of string buffer used by <strong><a href="file.html#file:buffers">11.3.4 Other transient regions</a></strong>.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.11.4.1.2">11.4.1.2 Ambiguous conditions</h4> <!-- 11.4.1.2 -->
+<ul>
+<li> attempting to position a file outside its boundaries
+(<a href="file/REPOSITION-FILE.html">11.6.1.2142 REPOSITION-FILE</a>);
+</li>
+<li> attempting to read from file positions not yet written
+(<a href="file/READ-FILE.html">11.6.1.2080 READ-FILE</a>, <br />
+<a href="file/READ-LINE.html">11.6.1.2090 READ-LINE</a>);
+</li>
+<li> <em>fileid</em> is invalid (<a href="file/INCLUDE-FILE.html">11.6.1.1717 INCLUDE-FILE</a>);
+</li>
+<li> I/O exception reading or closing <em>fileid</em>
+(<a href="file/INCLUDE-FILE.html">11.6.1.1717 INCLUDE-FILE</a>,
+<a href="file/INCLUDED.html">11.6.1.1718 INCLUDED</a>);
+</li>
+<li> named file cannot be opened
+(<a href="file/INCLUDED.html">11.6.1.1718 INCLUDED</a>);
+</li>
+<li> requesting an unmapped block number
+(<strong><a href="file.html#file:blocks">11.3.2 Blocks in files</a></strong>);
+</li>
+<li> using <a href="file/SOURCE-ID.html">11.6.1.2218 SOURCE-ID</a> when
+<a href="block/BLK.html">7.6.1.0790 BLK</a> is not zero;
+</li>
+<li> a file is required while it is being <a href="file/REQUIRED.html">REQUIRED</a>
+(<a href="file/REQUIRED.html">11.6.2.2144.50</a>) or <a href="file/INCLUDED.html">INCLUDED</a> (<a href="file/INCLUDED.html">11.6.1.1718</a>);
+</li>
+<li> a marker is defined outside and executed inside a file or
+vice versa, and the file is <a href="file/REQUIRED.html">REQUIRED</a>
+(<a href="file/REQUIRED.html">11.6.2.2144.50</a>) again;
+</li>
+<li> the same file is required twice using different names
+(e.g., through symbolic links), or different files with the
+same name are provided to <a href="file/REQUIRED.html">11.6.2.2144.50 REQUIRED</a> (by doing
+some renaming between the invocations of <a href="file/REQUIRED.html">REQUIRED</a>);
+</li>
+<li> the stack effect of including with
+<a href="file/REQUIRED.html">11.6.2.2144.50 REQUIRED</a> the file is not ( <em>i * x</em> -- <em>i * x</em> ).
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.11.4.1.3">11.4.1.3 Other system documentation</h4> <!-- 11.4.1.3 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h3 id="subsection.11.4.2">11.4.2 Program documentation</h3> <!-- 11.4.2 -->
+<h4 id="subsubsection.11.4.2.1">11.4.2.1 Environmental dependencies</h4> <!-- 11.4.2.1 -->
+<ul>
+<li> requiring lines longer than 128 characters
+(<strong><a href="file.html#file:parsing">11.3.5 Parsing</a></strong>);
+</li>
+<li> using more than eight levels of input-file nesting
+(<strong><a href="file.html#file:source">11.3.3 Input source</a></strong>).
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.11.4.2.2">11.4.2.2 Other program documentation</h4> <!-- 11.4.2.2 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h2 id="section.11.5">11.5 Compliance and labeling</h2> <!-- 11.5 -->
+<h3 id="subsection.11.5.1">11.5.1 Forth-2012 systems</h3> <!-- 11.5.1 -->
+The phrase &quot;Providing the File Access word set&quot; shall be appended
+to the label of any Standard System that provides all of the File
+Access word set.
+<p />
+The phrase &quot;Providing <em>name(s)</em> from the File Access Extensions
+word set&quot; shall be appended to the label of any Standard System that
+provides portions of the File Access Extensions word set.
+<p />
+The phrase &quot;Providing the File Access Extensions word set&quot; shall
+be appended to the label of any Standard System that provides all of
+the File Access and File Access Extensions word sets.
+<p />
+<h3 id="subsection.11.5.2">11.5.2 Forth-2012 programs</h3> <!-- 11.5.2 -->
+The phrase &quot;Requiring the File Access word set&quot; shall be appended
+to the label of Standard Programs that require the system to provide
+the File Access word set.
+<p />
+The phrase &quot;Requiring <em>name(s)</em> from the File Access Extensions
+word set&quot; shall be appended to the label of Standard Programs that
+require the system to provide portions of the File Access Extensions
+word set.
+<p />
+The phrase &quot;Requiring the File Access Extensions word set&quot; shall be
+appended to the label of Standard Programs that require the system to
+provide all of the File Access and File Access Extensions word sets.
+<p />
+<h2 id="section.11.6">11.6 Glossary</h2> <!-- 11.6 -->
+<h3 id="subsection.11.6.1">11.6.1 File Access words</h3> <!-- 11.6.1 -->
+<ul>
+<li><a href="file/p.html">11.6.1.0080 (</a></li>
+
+<li><a href="file/BIN.html">11.6.1.0765 BIN</a></li>
+
+<li><a href="file/CLOSE-FILE.html">11.6.1.0900 CLOSE-FILE</a></li>
+
+<li><a href="file/CREATE-FILE.html">11.6.1.1010 CREATE-FILE</a></li>
+<li><a href="file/DELETE-FILE.html">11.6.1.1190 DELETE-FILE</a></li>
+<li><a href="file/FILE-POSITION.html">11.6.1.1520 FILE-POSITION</a></li>
+<li><a href="file/FILE-SIZE.html">11.6.1.1522 FILE-SIZE</a></li>
+
+<li><a href="file/INCLUDE-FILE.html">11.6.1.1717 INCLUDE-FILE</a></li>
+<li><a href="file/INCLUDED.html">11.6.1.1718 INCLUDED</a></li>
+<li><a href="file/OPEN-FILE.html">11.6.1.1970 OPEN-FILE</a></li>
+<li><a href="file/RDivO.html">11.6.1.2054 R/O</a></li>
+<li><a href="file/RDivW.html">11.6.1.2056 R/W</a></li>
+<li><a href="file/READ-FILE.html">11.6.1.2080 READ-FILE</a></li>
+<li><a href="file/READ-LINE.html">11.6.1.2090 READ-LINE</a></li>
+<li><a href="file/REPOSITION-FILE.html">11.6.1.2142 REPOSITION-FILE</a></li>
+<li><a href="file/RESIZE-FILE.html">11.6.1.2147 RESIZE-FILE</a></li>
+<li><a href="file/Sq.html">11.6.1.2165 S&quot;</a></li>
+<li><a href="file/SOURCE-ID.html">11.6.1.2218 SOURCE-ID</a></li>
+<li><a href="file/WDivO.html">11.6.1.2425 W/O</a></li>
+<li><a href="file/WRITE-FILE.html">11.6.1.2480 WRITE-FILE</a></li>
+<li><a href="file/WRITE-LINE.html">11.6.1.2485 WRITE-LINE</a></li>
+</ul>
+<h3 id="subsection.11.6.2">11.6.2 File-Access extension words</h3> <!-- 11.6.2 -->
+<ul>
+<li><a href="file/FILE-STATUS.html">11.6.2.1524 FILE-STATUS</a></li>
+<li><a href="file/FLUSH-FILE.html">11.6.2.1560 FLUSH-FILE</a></li>
+<li><a href="file/INCLUDE.html">11.6.2.1714 INCLUDE</a></li>
+<li><a href="file/REFILL.html">11.6.2.2125 REFILL</a></li>
+<li><a href="file/RENAME-FILE.html">11.6.2.2130 RENAME-FILE</a></li>
+<li><a href="file/REQUIRE.html">11.6.2.2144.10 REQUIRE</a></li>
+<li><a href="file/REQUIRED.html">11.6.2.2144.50 REQUIRED</a></li>
+<li><a href="file/Seq.html">11.6.2.2266 S\&quot;</a></li>
+</ul>
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">File-Access word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html" class="current">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.11.1" class="current">Introduction</a></li>
+        <li role="menuitem"><a href="#section.11.2">Additional terms</a></li>
+        <li role="menuitem"><a href="#section.11.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="#section.11.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="#section.11.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="#section.11.6">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">(</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="file/p.html">(</a></li>
+        <li role="menuitem"><a href="file/BIN.html">BIN</a></li>
+        <li role="menuitem"><a href="file/CLOSE-FILE.html">CLOSE-FILE</a></li>
+        <li role="menuitem"><a href="file/CREATE-FILE.html">CREATE-FILE</a></li>
+        <li role="menuitem"><a href="file/DELETE-FILE.html">DELETE-FILE</a></li>
+        <li role="menuitem"><a href="file/FILE-POSITION.html">FILE-POSITION</a></li>
+        <li role="menuitem"><a href="file/FILE-SIZE.html">FILE-SIZE</a></li>
+        <li role="menuitem"><a href="file/INCLUDE-FILE.html">INCLUDE-FILE</a></li>
+        <li role="menuitem"><a href="file/INCLUDED.html">INCLUDED</a></li>
+        <li role="menuitem"><a href="file/OPEN-FILE.html">OPEN-FILE</a></li>
+        <li role="menuitem"><a href="file/RDivO.html">R/O</a></li>
+        <li role="menuitem"><a href="file/RDivW.html">R/W</a></li>
+        <li role="menuitem"><a href="file/READ-FILE.html">READ-FILE</a></li>
+        <li role="menuitem"><a href="file/READ-LINE.html">READ-LINE</a></li>
+        <li role="menuitem"><a href="file/REPOSITION-FILE.html">REPOSITION-FILE</a></li>
+        <li role="menuitem"><a href="file/RESIZE-FILE.html">RESIZE-FILE</a></li>
+        <li role="menuitem"><a href="file/Sq.html">S&quot;</a></li>
+        <li role="menuitem"><a href="file/SOURCE-ID.html">SOURCE-ID</a></li>
+        <li role="menuitem"><a href="file/WDivO.html">W/O</a></li>
+        <li role="menuitem"><a href="file/WRITE-FILE.html">WRITE-FILE</a></li>
+        <li role="menuitem"><a href="file/WRITE-LINE.html">WRITE-LINE</a></li>
+        <li role="menuitem"><a href="file/FILE-STATUS.html">FILE-STATUS</a></li>
+        <li role="menuitem"><a href="file/FLUSH-FILE.html">FLUSH-FILE</a></li>
+        <li role="menuitem"><a href="file/INCLUDE.html">INCLUDE</a></li>
+        <li role="menuitem"><a href="file/REFILL.html">REFILL</a></li>
+        <li role="menuitem"><a href="file/RENAME-FILE.html">RENAME-FILE</a></li>
+        <li role="menuitem"><a href="file/REQUIRE.html">REQUIRE</a></li>
+        <li role="menuitem"><a href="file/REQUIRED.html">REQUIRED</a></li>
+        <li role="menuitem"><a href="file/Seq.html">S\&quot;</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

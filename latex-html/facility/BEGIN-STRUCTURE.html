@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: BEGIN-STRUCTURE</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="facility:BEGIN-STRUCTURE">
+  <div class="wordNumber">10.6.2.0763</div>
+  <div class="wordName">BEGIN-STRUCTURE</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">FACILITY EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>&quot;&lt;spaces&gt;name&quot;</em> -- <em>struct-sys 0</em> )
+      <p />
+      Skip leading space delimiters. Parse <em>name</em> delimited
+      by a space. Create a definition for <em>name</em> with the
+      execution semantics defined below.  Return a <em>struct-sys</em>
+      (zero or more implementation dependent items) that will be
+      used by <a href="../facility/END-STRUCTURE.html">END-STRUCTURE</a> and an initial offset of 0.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname"><em>name</em> Execution:</div>
+    <div class="sec">
+
+
+      ( -- <em>+n</em> )
+      <p />
+      <em>+n</em> is the size in memory expressed in address units of
+      the data structure.  An ambiguous condition exists if
+      <em>name</em> is executed prior to the associated
+      <a href="../facility/END-STRUCTURE.html">END-STRUCTURE</a> being executed.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../facility/PlusFIELD.html">10.6.2.0135 +FIELD</a>,
+      <a href="../facility/END-STRUCTURE.html">10.6.2.1336 END-STRUCTURE</a>, <br />
+      <a href="../rationale.html#rat:facility:BEGIN-STRUCTURE">A.10.6.2.0763 BEGIN-STRUCTURE</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.10.6.2.---- BEGIN-STRUCTURE -->
+      There are two schools of thought regarding named data
+      structures: name first and name last.  The name last
+      school can define a named data structure as follows:
+      <p />
+            <div class="quote">
+        <div class="tt">
+0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> initial total byte count <br />
+          &nbsp;&nbsp; 1 <a href="../core/CELLS.html">CELLS</a> <a href="../facility/PlusFIELD.html">+FIELD</a> p.x	&nbsp;&nbsp; <a href="../core/bs.html">\</a> A single cell filed named p.x <br />
+          &nbsp;&nbsp; 1 <a href="../core/CELLS.html">CELLS</a> <a href="../facility/PlusFIELD.html">+FIELD</a> p.y   &nbsp;&nbsp; <a href="../core/bs.html">\</a> A single cell field named p.y <br />
+          <a href="../core/CONSTANT.html">CONSTANT</a> point &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> save structure size
+          
+          </div>
+        </div>
+      <p />
+      While the name first school would define the same data
+      structure as:
+      <p />
+            <div class="quote">
+        <div class="tt">
+<strong>BEGIN-STRUCTURE</strong> point  <a href="../core/bs.html">\</a> create the named structure <br />
+          &nbsp;&nbsp; 1 <a href="../core/CELLS.html">CELLS</a> <a href="../facility/PlusFIELD.html">+FIELD</a> p.x	&nbsp;&nbsp; <a href="../core/bs.html">\</a> A single cell filed named p.x <br />
+          &nbsp;&nbsp; 1 <a href="../core/CELLS.html">CELLS</a> <a href="../facility/PlusFIELD.html">+FIELD</a> p.y   &nbsp;&nbsp; <a href="../core/bs.html">\</a> A single cell field named p.y <br />
+          <a href="../facility/END-STRUCTURE.html">END-STRUCTURE</a>
+          
+          </div>
+        </div>
+      <p />
+      Although many systems provide a name first structure there
+      is no common practice to the words used.  The words
+      <strong>BEGIN-STRUCTURE</strong> and <a href="../facility/END-STRUCTURE.html">END-STRUCTURE</a> have been
+      defied as a means of providing a portable notation that does
+      not conflict with existing systems.
+      <p />
+      The field defining words (<em>x</em><code>FIELD:</code> and
+      <a href="../facility/PlusFIELD.html">+FIELD</a>) are defined so they can be used by both
+      schools.  Compatibility between the two schools comes from
+      defining a new stack item <em>struct-sys</em>, which is
+      implementation dependent and can be 0 or more cells.
+      The name first school would provide an address (<em>addr</em>)
+      as the <em>struct-sys</em> parameter, while the name last
+      school would defined <em>struct-sys</em> as being empty.
+      <p />
+      Executing the name of the data structure, returns the size of
+      the data structure.  This allows the data stricture to be used
+      within another data structure:
+      <p />
+            <div class="quote">
+        <div class="tt">
+<strong>BEGIN-STRUCTURE</strong> point  <a href="../core/bs.html">\</a> -- a-addr 0 ; -- lenp <br />
+          &nbsp;&nbsp; <a href="../facility/FIELDColon.html">FIELD:</a> p.x		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> -- a-addr cell <br />
+          &nbsp;&nbsp; <a href="../facility/FIELDColon.html">FIELD:</a> p.y      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> -- a-addr cell*2 <br />
+          <a href="../facility/END-STRUCTURE.html">END-STRUCTURE</a> <br />
+          <strong>BEGIN-STRUCTURE</strong> rect  &nbsp;&nbsp;&nbsp;<a href="../core/bs.html">\</a> -- a-addr 0 ; -- lenr <br />
+          &nbsp;&nbsp; point <a href="../facility/PlusFIELD.html">+FIELD</a> r.tlhc   &nbsp;&nbsp; <a href="../core/bs.html">\</a> -- a-addr cell*2 <br />
+          &nbsp;&nbsp; point <a href="../facility/PlusFIELD.html">+FIELD</a> r.brhc   &nbsp;&nbsp; <a href="../core/bs.html">\</a> -- a-addr cell*4 <br />
+          <a href="../facility/END-STRUCTURE.html">END-STRUCTURE</a>
+          
+          </div>
+        </div>
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Alignment:</div>
+    <div class="sec">
+
+  In practice, structures are used for two different purposes
+      with incompatible requirements:
+      <ol style="list-style-type: decimal">
+      <li> For collecting related internal-use data into a
+      convenient &quot;package&quot; that can be referred to by a
+      single &quot;handle&quot;. For this use, alignment is important,
+      so that efficient native fetch and store instructions
+      can be used.
+      <p />
+      </li>
+      <li> For mapping external data structures like hardware
+      register maps and protocol packets. For this use,
+      automatic alignment is inappropriate, because the
+      alignment of the external data structure often doesn't
+      match the rules for a given processor.
+      </li>
+</ol>
+      <p />
+      Many languages cater for the first use, but ignore the
+      second.  This leads to various customized solutions, usage
+      requirements, portability problems, bugs, etc.
+      <a href="../facility/PlusFIELD.html">+FIELD</a> is defined to be non-aligning, while the
+      named field defining words (<em>x</em><code>FIELD:</code>) are
+      aligning.  This is intentional and allows for both uses.
+      <p />
+      The standard currently defines an aligned field defining
+      word for each of the standard data types:
+      <p />
+      <div class="center">
+
+        <table class="center">
+        <tr valign="top"><td class="r"><a href="../facility/CFIELDColon.html">CFIELD:</a>					</td><td>a character </td></tr>
+        <tr valign="top"><td class="r"><a href="../facility/FIELDColon.html">FIELD:</a>					</td><td>a native integer (single cell) </td></tr>
+        <tr valign="top"><td class="r"><a href="../floating/FFIELDColon.html">FFIELD:</a>	</td><td>a native float </td></tr>
+        <tr valign="top"><td class="r"><a href="../floating/SFFIELDColon.html">SFFIELD:</a>	</td><td>a 32 bit float </td></tr>
+        <tr valign="top"><td class="r"><a href="../floating/DFFIELDColon.html">DFFIELD:</a>	</td><td>a 64 bit float
+        </table>
+        
+        </div>
+      <p />
+      Although this is a sufficient set, most systems provide
+      facilities to define field defining words for standard
+      data types.
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Future:</div>
+    <div class="sec">
+
+  The following cannot be defined until the required addressing
+      has been defined. The names should be considered reserved
+      until then.
+      <p />
+      <div class="center">
+
+        <table class="center">
+        <tr valign="top"><td class="r"><code>BFIELD:</code> </td><td>1 byte (8 bit) field </td></tr>
+        <tr valign="top"><td class="r"><code>WFIELD:</code> </td><td>16 bit field </td></tr>
+        <tr valign="top"><td class="r"><code>LFIELD:</code> </td><td>32 bit field </td></tr>
+        <tr valign="top"><td class="r"><code>XFIELD:</code> </td><td>64 bit field </td></tr>
+        <tr valign="top"><td class="r"></td></tr>
+        </table>
+        
+        </div>
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+ <!-- I.10.6.2.---- BEGIN-STRUCTURE -->
+      <span class="rm">Begin definition of a new structure. Use in the
+      form <strong>BEGIN-STRUCTURE</strong> &lt;<em>name</em>&gt;.  At run time
+      &lt;<em>name</em>&gt; returns the size of the structure.</span>
+      <p />
+      <a href="../core/Colon.html">:</a> <strong>BEGIN-STRUCTURE</strong>&nbsp;&nbsp;<a href="../core/bs.html">\</a> -- addr 0 ; -- size <br />
+      &nbsp;&nbsp; <a href="../core/CREATE.html">CREATE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/HERE.html">HERE</a> 0  0 <a href="../core/Comma.html">,</a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a>  mark stack, lay dummy <br />
+      &nbsp;&nbsp; <a href="../core/DOES.html">DOES&gt;</a> <a href="../core/Fetch.html">@</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/bs.html">\</a> -- rec-len <br />
+      <a href="../core/Semi.html">;</a>
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Facility word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html" class="current">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../facility.html#section.10.1">Introduction</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">BEGIN-STRUCTURE</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="AT-XY.html">AT-XY</a></li>
+        <li role="menuitem"><a href="KEYq.html">KEY?</a></li>
+        <li role="menuitem"><a href="PAGE.html">PAGE</a></li>
+        <li role="menuitem"><a href="PlusFIELD.html">+FIELD</a></li>
+        <li role="menuitem"><a href="BEGIN-STRUCTURE.html" class="current">BEGIN-STRUCTURE</a></li>
+        <li role="menuitem"><a href="CFIELDColon.html">CFIELD:</a></li>
+        <li role="menuitem"><a href="EKEY.html">EKEY</a></li>
+        <li role="menuitem"><a href="EKEYtoCHAR.html">EKEY&gt;CHAR</a></li>
+        <li role="menuitem"><a href="EKEYtoFKEY.html">EKEY&gt;FKEY</a></li>
+        <li role="menuitem"><a href="EKEYq.html">EKEY?</a></li>
+        <li role="menuitem"><a href="EMITq.html">EMIT?</a></li>
+        <li role="menuitem"><a href="END-STRUCTURE.html">END-STRUCTURE</a></li>
+        <li role="menuitem"><a href="FIELDColon.html">FIELD:</a></li>
+        <li role="menuitem"><a href="K-ALT-MASK.html">K-ALT-MASK</a></li>
+        <li role="menuitem"><a href="K-CTRL-MASK.html">K-CTRL-MASK</a></li>
+        <li role="menuitem"><a href="K-DELETE.html">K-DELETE</a></li>
+        <li role="menuitem"><a href="K-DOWN.html">K-DOWN</a></li>
+        <li role="menuitem"><a href="K-END.html">K-END</a></li>
+        <li role="menuitem"><a href="K-FOne.html">K-F1</a></li>
+        <li role="menuitem"><a href="K-FOneZero.html">K-F10</a></li>
+        <li role="menuitem"><a href="K-FOneOne.html">K-F11</a></li>
+        <li role="menuitem"><a href="K-FOneTwo.html">K-F12</a></li>
+        <li role="menuitem"><a href="K-FTwo.html">K-F2</a></li>
+        <li role="menuitem"><a href="K-F3.html">K-F3</a></li>
+        <li role="menuitem"><a href="K-F4.html">K-F4</a></li>
+        <li role="menuitem"><a href="K-F5.html">K-F5</a></li>
+        <li role="menuitem"><a href="K-F6.html">K-F6</a></li>
+        <li role="menuitem"><a href="K-F7.html">K-F7</a></li>
+        <li role="menuitem"><a href="K-F8.html">K-F8</a></li>
+        <li role="menuitem"><a href="K-F9.html">K-F9</a></li>
+        <li role="menuitem"><a href="K-HOME.html">K-HOME</a></li>
+        <li role="menuitem"><a href="K-INSERT.html">K-INSERT</a></li>
+        <li role="menuitem"><a href="K-LEFT.html">K-LEFT</a></li>
+        <li role="menuitem"><a href="K-NEXT.html">K-NEXT</a></li>
+        <li role="menuitem"><a href="K-PRIOR.html">K-PRIOR</a></li>
+        <li role="menuitem"><a href="K-RIGHT.html">K-RIGHT</a></li>
+        <li role="menuitem"><a href="K-SHIFT-MASK.html">K-SHIFT-MASK</a></li>
+        <li role="menuitem"><a href="K-UP.html">K-UP</a></li>
+        <li role="menuitem"><a href="MS.html">MS</a></li>
+        <li role="menuitem"><a href="TIMEandDATE.html">TIME&amp;DATE</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

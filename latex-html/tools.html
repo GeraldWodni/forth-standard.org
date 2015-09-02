@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: The optional Programming-Tools word set</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.15">15 The optional Programming-Tools word set</h1> <!-- 15 -->
+<h2 id="section.15.1">15.1 Introduction</h2> <!-- 15.1 -->
+This optional word set contains words most often used during the
+development of applications.
+<p />
+<h2 id="section.15.2">15.2 Additional terms and notation</h2> <!-- 15.2 -->
+None.
+<p />
+<h2 id="section.15.3">15.3 Additional usage requirements</h2> <!-- 15.3 -->
+<h3 id="subsection.15.3.1">15.3.1 Data types</h3> <!-- 15.3.1 -->
+<a name="tools:datatype"></a>
+<p />
+A name token is a single-cell value that identifies a named word.
+<p />
+Append table <a href="tools.html#tools:types">15.1</a> to table <a href="usage.html#table:datatypes">3.1</a>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 15.1: Data types</div>
+  <a name="tools:types"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>Symbol</em> </td><td><em>Data type</em> </td><td class="r"><em>Size on stack</em> </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>nt</em>	</td><td>name token </td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td></td></tr>
+  </table>
+  
+  </div>
+See: <strong><a href="rationale.html#rat:tools:nt">A.15.3.1 Name tokens</a></strong>.
+<p />
+<h3 id="subsection.15.3.2">15.3.2 The Forth dictionary</h3> <!-- 15.3.2 -->
+<a name="tools:dict"></a>
+<p />
+A program using the words <a href="tools/CODE.html">CODE</a> or <a href="tools/SemiCODE.html">;CODE</a> associated
+with assembler code has an environmental dependency on that
+particular instruction set and assembler notation.
+<p />
+Programs using the words <a href="tools/EDITOR.html">EDITOR</a> or <a href="tools/ASSEMBLER.html">ASSEMBLER</a> require
+the Search Order word set or an equivalent implementation-defined
+capability.
+<p />
+See: <strong><a href="usage.html#usage:dict">3.3 The Forth dictionary</a></strong>.
+<p />
+<h2 id="section.15.4">15.4 Additional documentation requirements</h2> <!-- 15.4 -->
+<h3 id="subsection.15.4.1">15.4.1 System documentation</h3> <!-- 15.4.1 -->
+<h4 id="subsubsection.15.4.1.1">15.4.1.1 Implementation-defined options</h4> <!-- 15.4.1.1 -->
+<ul>
+<li> ending sequence for input following
+<a href="tools/SemiCODE.html">15.6.2.0470 ;CODE</a> and
+<a href="tools/CODE.html">15.6.2.0930 CODE</a>;
+</li>
+<li> manner of processing input following
+<a href="tools/SemiCODE.html">15.6.2.0470 ;CODE</a> and
+<a href="tools/CODE.html">15.6.2.0930 CODE</a>;
+</li>
+<li> search-order capability for
+<a href="tools/EDITOR.html">15.6.2.1300 EDITOR</a> and
+<a href="tools/ASSEMBLER.html">15.6.2.0740 ASSEMBLER</a>
+(<strong><a href="tools.html#tools:dict">15.3.2 The Forth dictionary</a></strong>);
+</li>
+<li> source and format of display by <a href="tools/SEE.html">15.6.1.2194 SEE</a>.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.15.4.1.2">15.4.1.2 Ambiguous conditions</h4> <!-- 15.4.1.2 -->
+<a name="tools:ambiguous"></a>
+<p />
+<ul>
+<li> deleting the compilation word-list (<a href="tools/FORGET.html">15.6.2.1580 FORGET</a>);
+</li>
+<li> fewer than <em>u+1</em> items on control-flow stack
+(<a href="tools/CS-PICK.html">15.6.2.1015 CS-PICK</a>,
+<a href="tools/CS-ROLL.html">15.6.2.1020 CS-ROLL</a>);
+</li>
+<li> <em>name</em> can't be found (<a href="tools/FORGET.html">15.6.2.1580 FORGET</a>, <a href="tools/SYNONYM.html">15.6.2.2264 SYNONYM</a>);
+</li>
+<li> <em>name</em> not defined via <a href="core/CREATE.html">6.1.1000 CREATE</a>
+(<a href="tools/SemiCODE.html">15.6.2.0470 ;CODE</a>);
+</li>
+<li> <a href="core/POSTPONE.html">6.1.2033 POSTPONE</a> applied to <a href="tools/BracketIF.html">15.6.2.2532 [IF]</a>;
+</li>
+<li> reaching the end of the input source before matching
+<a href="tools/BracketELSE.html">15.6.2.2531 [ELSE]</a> or <a href="tools/BracketTHEN.html">15.6.2.2533 [THEN]</a>
+(<a href="tools/BracketIF.html">15.6.2.2532 [IF]</a>);
+</li>
+<li> removing a needed definition (<a href="tools/FORGET.html">15.6.2.1580 FORGET</a>);
+</li>
+<li> <a href="core/IMMEDIATE.html">6.1.1710 IMMEDIATE</a> is applied to a word defined by <a href="tools/SYNONYM.html">15.6.2.2264 SYNONYM</a>;
+</li>
+<li> <a href="tools/NRfrom.html">15.6.2.1940 NR&gt;</a> is used with data not stored by <a href="tools/NtoR.html">15.6.2.1908 N&gt;R</a>;
+</li>
+<li> adding to or deleting from the wordlist during the execution of
+<a href="tools/TRAVERSE-WORDLIST.html">15.6.2.2297 TRAVERSE-WORDLIST</a>
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.15.4.1.3">15.4.1.3 Other system documentation</h4> <!-- 15.4.1.3 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h3 id="subsection.15.4.2">15.4.2 Program documentation</h3> <!-- 15.4.2 -->
+<h4 id="subsubsection.15.4.2.1">15.4.2.1 Environmental dependencies</h4> <!-- 15.4.2.1 -->
+<ul>
+<li> using the words <a href="tools/SemiCODE.html">15.6.2.0470 ;CODE</a> or
+<a href="tools/CODE.html">15.6.2.0930 CODE</a>.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.15.4.2.2">15.4.2.2 Other program documentation</h4> <!-- 15.4.2.2 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h2 id="section.15.5">15.5 Compliance and labeling</h2> <!-- 15.5 -->
+
+<h3 id="subsection.15.5.1">15.5.1 Forth-2012 systems</h3> <!-- 15.5.1 -->
+The phrase &quot;Providing the Programming-Tools word set&quot; shall be
+appended to the label of any Standard System that provides all of
+the Programming-Tools word set.
+<p />
+The phrase &quot;Providing <em>name(s)</em> from the Programming-Tools
+Extensions word set&quot; shall be appended to the label of any Standard
+System that provides portions of the Programming-Tools Extensions
+word set.
+<p />
+The phrase &quot;Providing the Programming-Tools Extensions word set&quot;
+shall be appended to the label of any Standard System that provides
+all of the Programming-Tools and Programming-Tools Extensions word
+sets.
+<p />
+<h3 id="subsection.15.5.2">15.5.2 Forth-2012 programs</h3> <!-- 15.5.2 -->
+The phrase &quot;Requiring the Programming-Tools word set&quot; shall be
+appended to the label of Standard Programs that require the system
+to provide the Programming-Tools word set.
+<p />
+The phrase &quot;Requiring <em>name(s)</em> from the Programming-Tools
+Extensions word set&quot; shall be appended to the label of Standard
+Programs that require the system to provide portions of the
+Programming-Tools Extensions word set.
+<p />
+The phrase &quot;Requiring the Programming-Tools Extensions word set&quot;
+shall be appended to the label of Standard Programs that require the
+system to provide all of the Programming-Tools and Programming-Tools
+Extensions word sets.
+<p />
+<h2 id="section.15.6">15.6 Glossary</h2> <!-- 15.6 -->
+<h3 id="subsection.15.6.1">15.6.1 Programming-Tools words</h3> <!-- 15.6.1 -->
+<ul>
+<li><a href="tools/DotS.html">15.6.1.0220 .S</a></li>
+<li><a href="tools/q.html">15.6.1.0600 ?</a></li>
+<li><a href="tools/DUMP.html">15.6.1.1280 DUMP</a></li>
+<li><a href="tools/SEE.html">15.6.1.2194 SEE</a></li>
+<li><a href="tools/WORDS.html">15.6.1.2465 WORDS</a></li>
+</ul>
+<h3 id="subsection.15.6.2">15.6.2 Programming-Tools extension words</h3> <!-- 15.6.2 -->
+<ul>
+<li><a href="tools/SemiCODE.html">15.6.2.0470 ;CODE</a></li>
+<li><a href="tools/AHEAD.html">15.6.2.0702 AHEAD</a></li>
+
+<li><a href="tools/ASSEMBLER.html">15.6.2.0740 ASSEMBLER</a></li>
+
+<li><a href="tools/BYE.html">15.6.2.0830 BYE</a></li>
+
+
+<li><a href="tools/CODE.html">15.6.2.0930 CODE</a></li>
+<li><a href="tools/CS-PICK.html">15.6.2.1015 CS-PICK</a></li>
+<li><a href="tools/CS-ROLL.html">15.6.2.1020 CS-ROLL</a></li>
+<li><a href="tools/EDITOR.html">15.6.2.1300 EDITOR</a></li>
+<li><a href="tools/FORGET.html">15.6.2.1580 FORGET</a></li>
+
+<li><a href="tools/NtoR.html">15.6.2.1908 N&gt;R</a></li>
+
+<li><a href="tools/NAMEtoCOMPILE.html">15.6.2.1909.10 NAME&gt;COMPILE</a></li>
+
+
+<li><a href="tools/NAMEtoINTERPRET.html">15.6.2.1909.20 NAME&gt;INTERPRET</a></li>
+
+<li><a href="tools/NAMEtoSTRING.html">15.6.2.1909.40 NAME&gt;STRING</a></li>
+<li><a href="tools/NRfrom.html">15.6.2.1940 NR&gt;</a></li>
+<li><a href="tools/STATE.html">15.6.2.2250 STATE</a></li>
+
+<li><a href="tools/SYNONYM.html">15.6.2.2264 SYNONYM</a></li>
+<li><a href="tools/TRAVERSE-WORDLIST.html">15.6.2.2297 TRAVERSE-WORDLIST</a></li>
+<li><a href="tools/BracketDEFINED.html">15.6.2.2530.30 [DEFINED]</a></li>
+<li><a href="tools/BracketELSE.html">15.6.2.2531 [ELSE]</a></li>
+<li><a href="tools/BracketIF.html">15.6.2.2532 [IF]</a></li>
+<li><a href="tools/BracketTHEN.html">15.6.2.2533 [THEN]</a></li>
+<li><a href="tools/BracketUNDEFINED.html">15.6.2.2534 [UNDEFINED]</a></li>
+</ul>
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Programming-Tools word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html" class="current">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.15.1" class="current">Introduction</a></li>
+        <li role="menuitem"><a href="#section.15.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="#section.15.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="#section.15.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="#section.15.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="#section.15.6">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">.S</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="tools/DotS.html">.S</a></li>
+        <li role="menuitem"><a href="tools/q.html">?</a></li>
+        <li role="menuitem"><a href="tools/DUMP.html">DUMP</a></li>
+        <li role="menuitem"><a href="tools/SEE.html">SEE</a></li>
+        <li role="menuitem"><a href="tools/WORDS.html">WORDS</a></li>
+        <li role="menuitem"><a href="tools/SemiCODE.html">;CODE</a></li>
+        <li role="menuitem"><a href="tools/AHEAD.html">AHEAD</a></li>
+        <li role="menuitem"><a href="tools/ASSEMBLER.html">ASSEMBLER</a></li>
+        <li role="menuitem"><a href="tools/BYE.html">BYE</a></li>
+        <li role="menuitem"><a href="tools/CODE.html">CODE</a></li>
+        <li role="menuitem"><a href="tools/CS-PICK.html">CS-PICK</a></li>
+        <li role="menuitem"><a href="tools/CS-ROLL.html">CS-ROLL</a></li>
+        <li role="menuitem"><a href="tools/EDITOR.html">EDITOR</a></li>
+        <li role="menuitem"><a href="tools/FORGET.html">FORGET</a></li>
+        <li role="menuitem"><a href="tools/NtoR.html">N&gt;R</a></li>
+        <li role="menuitem"><a href="tools/NAMEtoCOMPILE.html">NAME&gt;COMPILE</a></li>
+        <li role="menuitem"><a href="tools/NAMEtoINTERPRET.html">NAME&gt;INTERPRET</a></li>
+        <li role="menuitem"><a href="tools/NAMEtoSTRING.html">NAME&gt;STRING</a></li>
+        <li role="menuitem"><a href="tools/NRfrom.html">NR&gt;</a></li>
+        <li role="menuitem"><a href="tools/STATE.html">STATE</a></li>
+        <li role="menuitem"><a href="tools/SYNONYM.html">SYNONYM</a></li>
+        <li role="menuitem"><a href="tools/TRAVERSE-WORDLIST.html">TRAVERSE-WORDLIST</a></li>
+        <li role="menuitem"><a href="tools/BracketDEFINED.html">[DEFINED]</a></li>
+        <li role="menuitem"><a href="tools/BracketELSE.html">[ELSE]</a></li>
+        <li role="menuitem"><a href="tools/BracketIF.html">[IF]</a></li>
+        <li role="menuitem"><a href="tools/BracketTHEN.html">[THEN]</a></li>
+        <li role="menuitem"><a href="tools/BracketUNDEFINED.html">[UNDEFINED]</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

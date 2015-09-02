@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: M*/</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="double:M*/">
+  <div class="wordNumber">8.6.1.1820</div>
+  <div class="wordName">M*/</div>
+  <div class="wordEnglish">m-star-slash</div>
+  <div class="wordList">DOUBLE</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>d<sub>1</sub> n<sub>1</sub> +n<sub>2</sub></em> -- <em>d<sub>2</sub></em> )
+      <p />
+      Multiply <em>d<sub>1</sub></em> by <em>n<sub>1</sub></em> producing the triple-cell
+      intermediate result <em>t</em>. Divide <em>t</em> by <em>+n<sub>2</sub></em> giving the
+      double-cell quotient <em>d<sub>2</sub></em>. An ambiguous condition exists
+      if <em>+n<sub>2</sub></em> is zero or negative, or the quotient lies outside
+      of the range of a double-precision signed integer.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../rationale.html#rat:double:M*/">A.8.6.1.1820 M*/</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.8.6.1.1820 M*/ -->
+      <strong>M*/</strong> was once described by Chuck Moore as the most
+      useful arithmetic operator in Forth. It is the main workhorse
+      in most computations involving double-cell numbers. Note that
+      some systems allow signed divisors. This can cost a lot in
+      performance on some CPUs. The requirement for a positive
+      divisor has not proven to be a problem.
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+      <div class="tt">
+<span class="rm">To correct the result if the division is floored,
+        only used when necessary, i.e., negative quotient and
+        remainder <em>&lt;&gt;=</em> 0.</span>
+        <p />
+        <a href="../core/Colon.html">:</a> ?floored <a href="../core/Bracket.html">[</a> -3 2 <a href="../core/Div.html">/</a> -2 <a href="../core/Equal.html">=</a> <a href="../right-bracket.html">]</a> <a href="../core/LITERAL.html">LITERAL</a> <a href="../core/IF.html">IF</a> 1. <a href="../double/DMinus.html">D-</a> <a href="../core/THEN.html">THEN</a> <a href="../core/Semi.html">;</a>
+        <p />
+         
+        <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11&nbsp;<strong>M*/</strong> -&gt; &nbsp;3. }T</span> <br />
+        <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11&nbsp;<strong>M*/</strong> -&gt; -3.&nbsp;?floored }T</span> <br />
+        <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-5.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11&nbsp;<strong>M*/</strong> -&gt; -3.&nbsp;?floored }T</span> <br />
+        <span class="tt">T{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-5.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11&nbsp;<strong>M*/</strong> -&gt; &nbsp;3. }T</span> <br />
+        <span class="tt">T{ MAX-2INT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;16&nbsp;<strong>M*/</strong> -&gt; HI-2INT }T</span> <br />
+        <span class="tt">T{ MAX-2INT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;16&nbsp;<strong>M*/</strong> -&gt; HI-2INT&nbsp;<a href="../double/DNEGATE.html">DNEGATE</a>&nbsp;?floored }T</span> <br />
+        <span class="tt">T{ MIN-2INT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;16&nbsp;<strong>M*/</strong> -&gt; LO-2INT }T</span> <br />
+        <span class="tt">T{ MIN-2INT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;16&nbsp;<strong>M*/</strong> -&gt; LO-2INT&nbsp;<a href="../double/DNEGATE.html">DNEGATE</a> }T</span>
+        <p />
+        <span class="tt">T{ MAX-2INT&nbsp;MAX-INT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAX-INT&nbsp;<strong>M*/</strong> -&gt; MAX-2INT }T</span> <br />
+        <span class="tt">T{ MAX-2INT&nbsp;MAX-INT&nbsp;<a href="../core/TwoDiv.html">2/</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAX-INT&nbsp;<strong>M*/</strong> -&gt; MAX-INT&nbsp;1-&nbsp;HI-2INT&nbsp;<a href="../core/NIP.html">NIP</a> }T</span> <br />
+        <span class="tt">T{ MIN-2INT&nbsp;LO-2INT&nbsp;<a href="../core/NIP.html">NIP</a>&nbsp;<a href="../core/DUP.html">DUP</a>&nbsp;<a href="../core/NEGATE.html">NEGATE</a>&nbsp;<strong>M*/</strong> -&gt; MIN-2INT }T</span> <br />
+        <span class="tt">T{ MIN-2INT&nbsp;LO-2INT&nbsp;<a href="../core/NIP.html">NIP</a>&nbsp;<a href="../core/OneMinus.html">1-</a>&nbsp;MAX-INT&nbsp;<strong>M*/</strong> -&gt; MIN-INT&nbsp;3&nbsp;+&nbsp;HI-2INT&nbsp;<a href="../core/NIP.html">NIP</a>&nbsp;2&nbsp;<a href="../core/Plus.html">+</a> }T</span> <br />
+        <span class="tt">T{ MAX-2INT&nbsp;LO-2INT&nbsp;<a href="../core/NIP.html">NIP</a>&nbsp;<a href="../core/DUP.html">DUP</a>&nbsp;<a href="../core/NEGATE.html">NEGATE</a>&nbsp;<strong>M*/</strong> -&gt; MAX-2INT&nbsp;<a href="../double/DNEGATE.html">DNEGATE</a> }T</span> <br />
+        <span class="tt">T{ MIN-2INT&nbsp;MAX-INT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/DUP.html">DUP</a>&nbsp;<strong>M*/</strong> -&gt; MIN-2INT }T</span>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Double-Number word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html" class="current">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../double.html#section.8.1">Introduction</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">M*/</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="TwoCONSTANT.html">2CONSTANT</a></li>
+        <li role="menuitem"><a href="TwoLITERAL.html">2LITERAL</a></li>
+        <li role="menuitem"><a href="TwoVARIABLE.html">2VARIABLE</a></li>
+        <li role="menuitem"><a href="DPlus.html">D+</a></li>
+        <li role="menuitem"><a href="DMinus.html">D-</a></li>
+        <li role="menuitem"><a href="Dd.html">D.</a></li>
+        <li role="menuitem"><a href="DDotR.html">D.R</a></li>
+        <li role="menuitem"><a href="DZeroless.html">D0&lt;</a></li>
+        <li role="menuitem"><a href="DZeroEqual.html">D0=</a></li>
+        <li role="menuitem"><a href="DTwoTimes.html">D2*</a></li>
+        <li role="menuitem"><a href="DTwoDiv.html">D2/</a></li>
+        <li role="menuitem"><a href="Dless.html">D&lt;</a></li>
+        <li role="menuitem"><a href="DEqual.html">D=</a></li>
+        <li role="menuitem"><a href="DtoS.html">D&gt;S</a></li>
+        <li role="menuitem"><a href="DABS.html">DABS</a></li>
+        <li role="menuitem"><a href="DMAX.html">DMAX</a></li>
+        <li role="menuitem"><a href="DMIN.html">DMIN</a></li>
+        <li role="menuitem"><a href="DNEGATE.html">DNEGATE</a></li>
+        <li role="menuitem"><a href="MTimesDiv.html" class="current">M*/</a></li>
+        <li role="menuitem"><a href="MPlus.html">M+</a></li>
+        <li role="menuitem"><a href="TwoROT.html">2ROT</a></li>
+        <li role="menuitem"><a href="TwoVALUE.html">2VALUE</a></li>
+        <li role="menuitem"><a href="DUless.html">DU&lt;</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

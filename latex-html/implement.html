@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: Reference Implementations</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1>Annex E: Reference Implementations</h1> <!-- I. (informative annex) -->
+<a name="annex:implement"></a>
+<p />
+<h2 id="section.E.1">E.1 Introduction</h2> <!-- I.1 -->
+In the most recent review of this document, proposals were encouraged
+to include a reference implementation where possible.  Where an
+implementation requires system specific knowledge it was documented.
+<p />
+This appendix contains the reference implementations that have been
+accepted by the committee.  This is not a complete reference
+implementation nor do the committee recommend these implementations.
+They are supplied solely for the purpose of providing a detailed
+understanding of a definitions requirement.  System implementors are
+free to implement any operation in a manner that suits their system,
+but it must exhibit the same behavior as the reference implementation
+given here.
+<p />
+
+
+
+
+
+<h2 id="section.E.6">E.6 The Core word set</h2>				<!-- I.6 -->
+
+
+<div class="wordHead" id="imp:core:QUIT">
+  <div class="wordNumber">E.6.1.2050</div>
+  <div class="wordName">QUIT</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>QUIT</strong> <br />
+    &nbsp;&nbsp; <a href="core/p.html">(</a> <span class="rm">empty the return stack and set the input source to the user input device</span> ) <br />
+    &nbsp;&nbsp; <a href="core/POSTPONE.html">POSTPONE</a> <a href="core/Bracket.html">[</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/REFILL.html">REFILL</a> <br />
+    &nbsp;&nbsp; <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/BracketTick.html">[']</a> INTERPRET <a href="exception/CATCH.html">CATCH</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/CASE.html">CASE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;  0 <a href="core/OF.html">OF</a> <a href="core/STATE.html">STATE</a> <a href="core/Fetch.html">@</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/IF.html">IF</a>
+    <a href="core/Dotq.html">.&quot;</a> OK&quot; <a href="core/THEN.html">THEN</a> <a href="core/CR.html">CR</a> <a href="core/ENDOF.html">ENDOF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; -1 <a href="core/OF.html">OF</a> <a href="core/p.html">(</a> <span class="rm">Aborted</span> ) <a href="core/ENDOF.html">ENDOF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; -2 <a href="core/OF.html">OF</a> <a href="core/p.html">(</a> <span class="rm">display message from <a href="core/ABORTq.html">ABORT&quot;</a></span> ) <a href="core/ENDOF.html">ENDOF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/p.html">(</a> <span class="rm">default</span> ) <a href="core/DUP.html">DUP</a> <a href="core/Dotq.html">.&quot;</a> Exception # &quot; <a href="core/d.html">.</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/ENDCASE.html">ENDCASE</a> <br />
+    &nbsp;&nbsp; <a href="core/REPEAT.html">REPEAT</a> <a href="tools/BYE.html">BYE</a> <br />
+    <a href="core/Semi.html">;</a>
+    <p />
+        <div class="rm">
+This assumes the existence of a system-implementation word
+      <code>INTERPRET</code> that embodies the text interpreter semantics
+      described in <strong><a href="usage.html#usage:command">3.4 The Forth text interpreter</a></strong>.
+      Further discussion of the interpret loop can be found in
+      <a href="rationale.html#rat:core:COMPILE,">A.6.2.0945 COMPILE,</a>.
+      
+      </div>
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:core:ACTION-OF">
+  <div class="wordNumber">E.6.2.0698</div>
+  <div class="wordName">ACTION-OF</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>ACTION-OF</strong> <br />
+    &nbsp;&nbsp; <a href="core/STATE.html">STATE</a> <a href="core/Fetch.html">@</a> <a href="core/IF.html">IF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/POSTPONE.html">POSTPONE</a> <a href="core/BracketTick.html">[']</a> <a href="core/POSTPONE.html">POSTPONE</a> <a href="core/DEFERFetch.html">DEFER@</a> <br />
+    &nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/Tick.html">'</a> <a href="core/DEFERFetch.html">DEFER@</a> <br />
+    &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <a href="core/Semi.html">;</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:core:BUFFER:">
+  <div class="wordNumber">E.6.2.0825</div>
+  <div class="wordName">BUFFER:</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+        <div class="rm">
+This implementation depends on children of <a href="core/CREATE.html">CREATE</a>
+      returning an aligned address.  Other memory location techniques
+      require implementation-specific knowledge of the underlying Forth
+      system.
+      <p />
+            <div class="tt">
+<a href="core/Colon.html">:</a> <strong>BUFFER:</strong> <a href="core/bs.html">\</a> u &quot;&lt;name&gt;&quot; &ndash; ; &ndash; addr <br />
+        <a href="core/bs.html">\</a> <span class="rm">Create a buffer of u address units whose address is returned at run time.</span> <br />
+        &nbsp;&nbsp; <a href="core/CREATE.html">CREATE</a> <a href="core/ALLOT.html">ALLOT</a> <br />
+        <a href="core/Semi.html">;</a>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:core:DEFER">
+  <div class="wordNumber">E.6.2.1173</div>
+  <div class="wordName">DEFER</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>DEFER</strong> <a href="core/p.html">(</a> &quot;name&quot; -- ) <br />
+    &nbsp;&nbsp; <a href="core/CREATE.html">CREATE</a> <a href="core/BracketTick.html">[']</a> <a href="core/ABORT.html">ABORT</a> <a href="core/Comma.html">,</a> <br />
+    <a href="core/DOES.html">DOES&gt;</a> <a href="core/p.html">(</a> ... -- ... ) <br />
+    &nbsp;&nbsp; <a href="core/Fetch.html">@</a> <a href="core/EXECUTE.html">EXECUTE</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:core:DEFER!">
+  <div class="wordNumber">E.6.2.1175</div>
+  <div class="wordName">DEFER!</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>DEFER!</strong> <a href="core/p.html">(</a> xt2 xt1 -- ) <br />
+    &nbsp;&nbsp; <a href="core/toBODY.html">&gt;BODY</a> <a href="core/Store.html">!</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:core:DEFER@">
+  <div class="wordNumber">E.6.2.1177</div>
+  <div class="wordName">DEFER@</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>DEFER@</strong> <a href="core/p.html">(</a> xt1 -- xt2 ) <br />
+    &nbsp;&nbsp; <a href="core/toBODY.html">&gt;BODY</a> <a href="core/Fetch.html">@</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:core:HOLDS">
+  <div class="wordNumber">E.6.2.1675</div>
+  <div class="wordName">HOLDS</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>HOLDS</strong> <a href="core/p.html">(</a> addr u -- ) <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a> <a href="core/DUP.html">DUP</a> <a href="core/WHILE.html">WHILE</a> <a href="core/OneMinus.html">1-</a> <a href="core/TwoDUP.html">2DUP</a> <a href="core/Plus.html">+</a>
+    <a href="core/CFetch.html">C@</a> <a href="core/HOLD.html">HOLD</a> <a href="core/REPEAT.html">REPEAT</a> <a href="core/TwoDROP.html">2DROP</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:core:IS">
+  <div class="wordNumber">E.6.2.1725</div>
+  <div class="wordName">IS</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>IS</strong> <br />
+    &nbsp;&nbsp; <a href="core/STATE.html">STATE</a> <a href="core/Fetch.html">@</a> <a href="core/IF.html">IF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/POSTPONE.html">POSTPONE</a> <a href="core/BracketTick.html">[']</a> <a href="core/POSTPONE.html">POSTPONE</a> <a href="core/DEFERStore.html">DEFER!</a> <br />
+    &nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/Tick.html">'</a> <a href="core/DEFERStore.html">DEFER!</a> <br />
+    &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <a href="core/Semi.html">;</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:core:PARSE-NAME">
+  <div class="wordNumber">E.6.2.2020</div>
+  <div class="wordName">PARSE-NAME</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> isspace? <a href="core/p.html">(</a> c -- f ) <br />
+    &nbsp;&nbsp; <a href="core/BL.html">BL</a> <a href="core/OnePlus.html">1+</a> <a href="core/Uless.html">U&lt;</a> <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> isnotspace? <a href="core/p.html">(</a> c -- f ) <br />
+    &nbsp;&nbsp; isspace? <a href="core/ZeroEqual.html">0=</a> <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> xt-skip <a href="core/p.html">(</a> addr1 n1 xt -- addr2 n2 ) <br />
+    &nbsp;&nbsp; <a href="core/bs.html">\</a> skip all characters satisfying xt ( c -- f ) <br />
+    &nbsp;&nbsp; <a href="core/toR.html">&gt;R</a> <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/DUP.html">DUP</a> <br />
+    &nbsp;&nbsp; <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/OVER.html">OVER</a> <a href="core/CFetch.html">C@</a> <a href="core/RFetch.html">R@</a> <a href="core/EXECUTE.html">EXECUTE</a> <br />
+    &nbsp;&nbsp; <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; 1 <a href="string/DivSTRING.html">/STRING</a> <br />
+    &nbsp;&nbsp; <a href="core/REPEAT.html">REPEAT</a> <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/Rfrom.html">R&gt;</a> <a href="core/DROP.html">DROP</a> <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> parse-name <a href="core/p.html">(</a> &quot;name&quot; -- c-addr u ) <br />
+    &nbsp;&nbsp; <a href="core/SOURCE.html">SOURCE</a> <a href="core/toIN.html">&gt;IN</a> <a href="core/Fetch.html">@</a> <a href="string/DivSTRING.html">/STRING</a> <br />
+    &nbsp;&nbsp; <a href="core/BracketTick.html">[']</a> isspace? xt-skip <a href="core/OVER.html">OVER</a> <a href="core/toR.html">&gt;R</a> <br />
+    &nbsp;&nbsp; <a href="core/BracketTick.html">[']</a> isnotspace? xt-skip <a href="core/p.html">(</a> end-word restlen r: start-word ) <br />
+    &nbsp;&nbsp; <a href="core/TwoDUP.html">2DUP</a> 1 <a href="core/MIN.html">MIN</a> <a href="core/Plus.html">+</a> <a href="core/SOURCE.html">SOURCE</a> <a href="core/DROP.html">DROP</a> <a href="core/Minus.html">-</a> <a href="core/toIN.html">&gt;IN</a> <a href="core/Store.html">!</a> <br />
+    &nbsp;&nbsp; <a href="core/DROP.html">DROP</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/TUCK.html">TUCK</a> <a href="core/Minus.html">-</a> <a href="core/Semi.html">;</a>
+    
+
+    </div>
+  </div>
+
+<p />
+					<!-- I.7 -->
+<h2 id="section.E.8">E.8 The optional Double-Number word set</h2>
+
+<div class="wordHead" id="imp:double:2VALUE">
+  <div class="wordNumber">E.8.6.2.0435</div>
+  <div class="wordName">2VALUE</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+        <div class="rm">
+The implementation of <a href="core/TO.html">TO</a> to include <strong>2VALUE</strong>s
+      requires detailed knowledge of the host implementation of
+      <a href="core/VALUE.html">VALUE</a> and <a href="core/TO.html">TO</a>, which is the main reason why
+      <strong>2VALUE</strong> should be standardized.  The order in which
+      the two cells are stored in memory is not specified in the
+      definition for <strong>2VALUE</strong> but this reference implementation
+      has to assume one ordering &mdash; this is not intended to be
+      definitive.
+      <p />
+            <div class="quote">
+        <div class="tt">
+<a href="core/Colon.html">:</a> <strong>2VALUE</strong> <a href="core/p.html">(</a> x1 x2 -- ) <br />
+          &nbsp;&nbsp; <a href="core/CREATE.html">CREATE</a> <a href="core/Comma.html">,</a> <a href="core/Comma.html">,</a> <br />
+          &nbsp;&nbsp; <a href="core/DOES.html">DOES&gt;</a> <a href="core/TwoFetch.html">2@</a> <a href="core/p.html">(</a> -- x1 x2 ) <br />
+          <a href="core/Semi.html">;</a>
+          
+          </div>
+        </div>
+      <p />
+      The corresponding implementation of <a href="core/TO.html">TO</a> disregards the
+      issue that <a href="core/TO.html">TO</a> must also work for integer <a href="core/VALUE.html">VALUE</a>s
+      and locals.
+      <p />
+            <div class="quote">
+        <div class="tt">
+<a href="core/Colon.html">:</a> <a href="core/TO.html">TO</a> <a href="core/p.html">(</a> x1 x2 &quot;&lt;spaces&gt;name&quot; -- ) <br />
+          &nbsp;&nbsp; <a href="core/Tick.html">'</a> <a href="core/toBODY.html">&gt;BODY</a> <br />
+          &nbsp;&nbsp; <a href="core/STATE.html">STATE</a> <a href="core/Fetch.html">@</a> <a href="core/IF.html">IF</a> <br />
+          &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/POSTPONE.html">POSTPONE</a> <a href="double/TwoLITERAL.html">2LITERAL</a> <a href="core/POSTPONE.html">POSTPONE</a> <a href="core/TwoStore.html">2!</a> <br />
+          &nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a> <br />
+          &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/TwoStore.html">2!</a> <br />
+          &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <br />
+          <a href="core/Semi.html">;</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a>
+          
+          </div>
+        </div>
+      
+      </div>
+    </div>
+  </div>		<!-- I.8 -->
+<h2 id="section.E.10">E.10 The optional Exception word set</h2>
+
+<div class="wordHead" id="imp:exception:CATCH">
+  <div class="wordNumber">E.9.6.1.0875</div>
+  <div class="wordName">CATCH</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+        <div class="rm">
+This sample implementation of <strong>CATCH</strong> uses the non-standard
+      words described below.  They or their equivalents are available in many
+      systems.  Other implementation strategies, including directly saving the
+      value of <a href="core/DEPTH.html">DEPTH</a>, are possible if such words are not available.
+      <p />
+      <dl class="desc">
+      <dt><code>SP@</code></dt><dd> ( -- <em>addr</em> ) <br />
+      returns the address corresponding to the top of data stack.
+      <p />
+      </dd>
+      <dt><code>SP!</code></dt><dd> ( <em>addr</em> -- ) <br />
+      sets the stack pointer to <em>addr</em>, thus restoring the stack
+      depth to the same depth that existed just before <em>addr</em> was
+      acquired by executing <code>SP@</code>.
+      <p />
+      </dd>
+      <dt><code>RP@</code></dt><dd> ( -- <em>addr</em> ) <br />
+      returns the address corresponding to the top of return stack.
+      <p />
+      </dd>
+      <dt><code>RP!</code></dt><dd> ( <em>addr</em> -- ) <br />
+      sets the return stack pointer to <em>addr</em>, thus restoring the
+      return stack depth to the same depth that existed just before
+      <em>addr</em> was acquired by executing <code>RP@</code>.
+      </dd></dl>
+      <br class="clear" />
+
+      <p />
+            <div class="tt">
+<div class="tabbing">
+          <a href="core/VARIABLE.html">VARIABLE</a> HANDLER   0 HANDLER <a href="core/Store.html">!</a>   <a href="core/bs.html">\</a> <span class="rm">last exception handler</span> <br /><br />
+           <a href="core/Colon.html">:</a> <strong>CATCH</strong>   <a href="core/p.html">(</a> xt -- exception# | 0  <a href="core/bs.html">\</a> <span class="rm">return addr on stack</span> <br />
+          &nbsp;&nbsp;&nbsp;SP@ <a href="core/toR.html">&gt;R</a>					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/p.html">(</a> xt )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">save data stack pointer</span> <br />
+          &nbsp;&nbsp;&nbsp;HANDLER <a href="core/Fetch.html">@</a> <a href="core/toR.html">&gt;R</a>		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/p.html">(</a> xt )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">and previous handler</span> <br />
+          &nbsp;&nbsp;&nbsp;RP@ HANDLER <a href="core/Store.html">!</a>			&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/p.html">(</a> xt )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">set current handler</span> <br />
+          &nbsp;&nbsp;&nbsp;<a href="core/EXECUTE.html">EXECUTE</a>					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/p.html">(</a> )	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">execute returns if no</span> THROW <br />
+          &nbsp;&nbsp;&nbsp;<a href="core/Rfrom.html">R&gt;</a> HANDLER <a href="core/Store.html">!</a>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/p.html">(</a> )   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">restore previous handler</span> <br />
+          &nbsp;&nbsp;&nbsp;<a href="core/Rfrom.html">R&gt;</a> <a href="core/DROP.html">DROP</a>		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/p.html">(</a> )   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">discard saved stack ptr</span> <br />
+          &nbsp;&nbsp;&nbsp;	0								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/p.html">(</a> 0 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">normal completion</span> <br />
+          <a href="core/Semi.html">;</a>
+          <br />
+          
+          </div>
+        <p />
+                <div class="rm">
+In a multi-tasking system, the <code>HANDLER</code> variable should be in
+          the per-task variable area (i.e., a user variable).
+          <p />
+          This sample implementation does not explicitly handle the case in
+          which <strong>CATCH</strong> has never been called (i.e., the <a href="exception/ABORT.html">ABORT</a>
+          behavior). One solution would be to execute a <strong>CATCH</strong> within
+          <a href="core/QUIT.html">QUIT</a>, so that there is always an &quot;exception handler of last
+          resort&quot; present, as shown in <a href="implement.html#imp:core:QUIT">E.6.1.2050 QUIT</a>.
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:exception:THROW">
+  <div class="wordNumber">E.9.6.1.2275</div>
+  <div class="wordName">THROW</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <span class="rm">This is the counter part to <a href="implement.html#imp:exception:CATCH">E.9.6.1.0875 CATCH</a>.</span>
+    <p />
+    <div class="tabbing">
+       <a href="core/Colon.html">:</a> <strong>THROW</strong> <a href="core/p.html">(</a> ??? exception# -- ??? exception# ) <br />
+      &nbsp;&nbsp;&nbsp; <a href="core/qDUP.html">?DUP</a> <a href="core/IF.html">IF</a>				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/p.html">(</a> exc# )		&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> 0 THROW <span class="rm">is no-op</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HANDLER <a href="core/Fetch.html">@</a> RP!				&nbsp; <a href="core/p.html">(</a> exc# )		&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">restore prev return stack</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/Rfrom.html">R&gt;</a> HANDLER <a href="core/Store.html">!</a>		&nbsp;&nbsp; <a href="core/p.html">(</a> exc# )		&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">restore prev handler</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/Rfrom.html">R&gt;</a> <a href="core/SWAP.html">SWAP</a> <a href="core/toR.html">&gt;R</a>	&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/p.html">(</a> saved-sp )	 <a href="core/bs.html">\</a> exc# <span class="rm">on return stack</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SP! <a href="core/DROP.html">DROP</a> <a href="core/Rfrom.html">R&gt;</a>		&nbsp;&nbsp;&nbsp; <a href="core/p.html">(</a> exc# )		&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">restore stack</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/bs.html">\</a> <span class="rm">Return to the caller of CATCH because return</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/bs.html">\</a> <span class="rm">stack is restored to the state that existed</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/bs.html">\</a> <span class="rm">when CATCH began execution</span> <br />
+      &nbsp;&nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <br />
+      <a href="core/Semi.html">;</a>
+      <br />
+      
+      </div>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:exception:ABORT">
+  <div class="wordNumber">E.9.6.2.0670</div>
+  <div class="wordName">ABORT</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>ABORT</strong>   -1 <a href="exception/THROW.html">THROW</a>   <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>		<!-- I.9 -->
+<h2 id="section.E.12">E.12 The optional Facility word set</h2>
+
+<div class="wordHead" id="imp:facility:+FIELD">
+  <div class="wordNumber">E.10.6.2.0135</div>
+  <div class="wordName">+FIELD</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <span class="rm">Create a new field within a structure definition
+    of size <em>n</em> bytes.</span>
+    <p />
+    <a href="core/Colon.html">:</a> +FIELD&nbsp;&nbsp;<a href="core/bs.html">\</a> n &lt;&quot;name&quot;&gt; -- ; Exec: addr -- 'addr <br />
+    &nbsp;&nbsp; <a href="core/CREATE.html">CREATE</a> <a href="core/OVER.html">OVER</a> <a href="core/Comma.html">,</a> <a href="core/Plus.html">+</a> <br />
+    &nbsp;&nbsp; <a href="core/DOES.html">DOES&gt;</a> <a href="core/Fetch.html">@</a> <a href="core/Plus.html">+</a> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:facility:BEGIN-STRUCTURE">
+  <div class="wordNumber">E.10.6.2.0763</div>
+  <div class="wordName">BEGIN-STRUCTURE</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <span class="rm">Begin definition of a new structure. Use in the
+    form <strong>BEGIN-STRUCTURE</strong> &lt;<em>name</em>&gt;.  At run time
+    &lt;<em>name</em>&gt; returns the size of the structure.</span>
+    <p />
+    <a href="core/Colon.html">:</a> <strong>BEGIN-STRUCTURE</strong>&nbsp;&nbsp;<a href="core/bs.html">\</a> -- addr 0 ; -- size <br />
+    &nbsp;&nbsp; <a href="core/CREATE.html">CREATE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/HERE.html">HERE</a> 0  0 <a href="core/Comma.html">,</a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a>  mark stack, lay dummy <br />
+    &nbsp;&nbsp; <a href="core/DOES.html">DOES&gt;</a> <a href="core/Fetch.html">@</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/bs.html">\</a> -- rec-len <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:facility:EKEYtoFKEY">
+  <div class="wordNumber">E.10.6.2.1306.40</div>
+  <div class="wordName">EKEY&gt;FKEY</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <span class="rm">The implementation is closely tied to the implementation
+    of <a href="facility/EKEY.html">EKEY</a> and therefore unportable.</span>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:facility:END-STRUCTURE">
+  <div class="wordNumber">E.10.6.2.1336</div>
+  <div class="wordName">END-STRUCTURE</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <span class="rm">Terminate definition of a structure.</span>
+    <p />
+    <a href="core/Colon.html">:</a> <strong>END-STRUCTURE</strong>&nbsp;&nbsp;<a href="core/bs.html">\</a> addr n -- <br />
+    &nbsp;&nbsp; <a href="core/SWAP.html">SWAP</a> <a href="core/Store.html">!</a> <a href="core/Semi.html">;</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/bs.html">\</a> set len
+    
+    </div>
+  </div>			<!-- I.10 -->
+<h2 id="section.E.14">E.14 The optional File-Access word set</h2>
+
+<div class="wordHead" id="imp:file:INCLUDE">
+  <div class="wordNumber">E.11.6.2.1714</div>
+  <div class="wordName">INCLUDE</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>INCLUDE</strong> <a href="file/p.html">(</a> i*x &quot;name&quot; -- j*x ) <br />
+    &nbsp;&nbsp; <a href="core/PARSE-NAME.html">PARSE-NAME</a> <a href="file/INCLUDED.html">INCLUDED</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:file:REQUIRE">
+  <div class="wordNumber">E.11.6.2.2144.10</div>
+  <div class="wordName">REQUIRE</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>REQUIRE</strong> <a href="file/p.html">(</a> i*x &quot;name&quot; -- i*x ) <br />
+    &nbsp;&nbsp; <a href="core/PARSE-NAME.html">PARSE-NAME</a> <a href="file/REQUIRED.html">REQUIRED</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:file:REQUIRED">
+  <div class="wordNumber">E.11.6.2.2144.50</div>
+  <div class="wordName">REQUIRED</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+        <div class="rm">
+This implementation does not implement the requirements with
+      regard to <a href="core/MARKER.html">MARKER</a> and <a href="tools/FORGET.html">FORGET</a> (<strong>REQUIRED</strong>
+      only includes each file once, whether a marker was executed or
+      not), so it is not a correct implementation on systems that
+      support these words. It extends the definition of <a href="file/INCLUDED.html">INCLUDED</a>
+      to record the name of files which have been either included or
+      required previously. The names are recorded in a linked list
+      held in the <code>included-names</code> variable.
+      <p />
+            <div class="tt">
+<a href="core/Colon.html">:</a> save-mem	<a href="file/p.html">(</a> addr1 u -- addr2 u ) <a href="core/bs.html">\</a> gforth <br />
+        <a href="core/bs.html">\</a> <span class="rm">copy a memory block into a newly allocated region in the heap</span> <br />
+        &nbsp;&nbsp; <a href="core/SWAP.html">SWAP</a> <a href="core/toR.html">&gt;R</a> <br />
+        &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> <a href="memory/ALLOCATE.html">ALLOCATE</a> <a href="exception/THROW.html">THROW</a> <br />
+        &nbsp;&nbsp; <a href="core/SWAP.html">SWAP</a> <a href="core/TwoDUP.html">2DUP</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/ROT.html">ROT</a> <a href="core/ROT.html">ROT</a> <a href="core/MOVE.html">MOVE</a> <a href="core/Semi.html">;</a> <br />
+        <a href="core/Colon.html">:</a> name-add <a href="file/p.html">(</a> addr u listp -- ) <br />
+        &nbsp;&nbsp; <a href="core/toR.html">&gt;R</a> save-mem <a href="file/p.html">(</a> addr1 u ) <br />
+        &nbsp;&nbsp; 3 <a href="core/CELLS.html">CELLS</a> <a href="memory/ALLOCATE.html">ALLOCATE</a> <a href="exception/THROW.html">THROW</a> <a href="core/bs.html">\</a> allocate list node <br />
+        &nbsp;&nbsp; <a href="core/RFetch.html">R@</a> <a href="core/Fetch.html">@</a> <a href="core/OVER.html">OVER</a> <a href="core/Store.html">!</a> <a href="core/bs.html">\</a> <span class="rm">set next pointer</span> <br />
+        &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/Store.html">!</a> <a href="core/bs.html">\</a> <span class="rm">store current node in list var</span> <br />
+        &nbsp;&nbsp; <a href="core/CELLPlus.html">CELL+</a> <a href="core/TwoStore.html">2!</a> <a href="core/Semi.html">;</a> <br />
+        <a href="core/Colon.html">:</a> name-present? <a href="file/p.html">(</a> addr u list -- f ) <br />
+        &nbsp;&nbsp; <a href="core/ROT.html">ROT</a> <a href="core/ROT.html">ROT</a> <a href="core/TwotoR.html">2&gt;R</a> <a href="core/BEGIN.html">BEGIN</a> <a href="file/p.html">(</a> list R: addr u ) <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/DUP.html">DUP</a> <br />
+        &nbsp;&nbsp; <a href="core/WHILE.html">WHILE</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/DUP.html">DUP</a> <a href="core/CELLPlus.html">CELL+</a> <a href="core/TwoFetch.html">2@</a> <a href="core/TwoRFetch.html">2R@</a> <a href="string/COMPARE.html">COMPARE</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/IF.html">IF</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		<a href="core/DROP.html">DROP</a> <a href="core/TwoRfrom.html">2R&gt;</a> <a href="core/TwoDROP.html">2DROP</a> <a href="core/TRUE.html">TRUE</a> <a href="core/EXIT.html">EXIT</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/THEN.html">THEN</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/Fetch.html">@</a> <br />
+        &nbsp;&nbsp; <a href="core/REPEAT.html">REPEAT</a> <br />
+        &nbsp;&nbsp; <a href="file/p.html">(</a> <a href="core/DROP.html">DROP</a> 0 ) <a href="core/TwoRfrom.html">2R&gt;</a> <a href="core/TwoDROP.html">2DROP</a> <a href="core/Semi.html">;</a> <br />
+        <a href="core/Colon.html">:</a> name-join <a href="file/p.html">(</a> addr u list -- ) <br />
+        &nbsp;&nbsp; <a href="core/toR.html">&gt;R</a> <a href="core/TwoDUP.html">2DUP</a> <a href="core/RFetch.html">R@</a> <a href="core/Fetch.html">@</a> name-present? <a href="core/IF.html">IF</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/Rfrom.html">R&gt;</a> <a href="core/DROP.html">DROP</a> <a href="core/TwoDROP.html">2DROP</a> <br />
+        &nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/Rfrom.html">R&gt;</a> name-add <br />
+        &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <a href="core/Semi.html">;</a> <br />
+        <a href="core/VARIABLE.html">VARIABLE</a> included-names 0 included-names <a href="core/Store.html">!</a> <br />
+        <a href="core/Colon.html">:</a> included <a href="file/p.html">(</a> i*x addr u -- j*x ) <br />
+        &nbsp;&nbsp; <a href="core/TwoDUP.html">2DUP</a> included-names name-join <br />
+        &nbsp;&nbsp; <a href="file/INCLUDED.html">INCLUDED</a> <a href="core/Semi.html">;</a> <br />
+        <a href="core/Colon.html">:</a> <strong>REQUIRED</strong> <a href="file/p.html">(</a> i*x addr u -- i*x ) <br />
+        &nbsp;&nbsp; <a href="core/TwoDUP.html">2DUP</a> included-names <a href="core/Fetch.html">@</a> name-present? <a href="core/ZeroEqual.html">0=</a> <a href="core/IF.html">IF</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; included <br />
+        &nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/TwoDROP.html">2DROP</a> <br />
+        &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <a href="core/Semi.html">;</a>
+        
+        </div>
+      </div>
+    </div>
+  </div>			<!-- I.11 -->
+<h2 id="section.E.16">E.16 The optional Floating-Point word set</h2>
+
+<div class="wordHead" id="imp:floating:FtoS">
+  <div class="wordNumber">E.12.6.2.1471</div>
+  <div class="wordName">F&gt;S</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>F&gt;S</strong> <a href="core/p.html">(</a> r -- n ) <br />
+    &nbsp;&nbsp; <a href="floating/FtoD.html">F&gt;D</a> <a href="double/DtoS.html">D&gt;S</a> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:floating:FTRUNC">
+  <div class="wordNumber">E.12.6.2.1627</div>
+  <div class="wordName">FTRUNC</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>FTRUNC</strong>   <a href="core/p.html">(</a> r1 -- r2 ) <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="floating/FDUP.html">FDUP</a> <a href="floating/FZeroEqual.html">F0=</a> <a href="core/ZeroEqual.html">0=</a> <br />
+    &nbsp;&nbsp; <a href="core/IF.html">IF</a>	&nbsp;&nbsp; <a href="floating/FDUP.html">FDUP</a> <a href="floating/FZeroless.html">F0&lt;</a> <br />
+    &nbsp;&nbsp; <a href="core/IF.html">IF</a>	&nbsp;&nbsp; <a href="floating/FNEGATE.html">FNEGATE</a> <a href="floating/FLOOR.html">FLOOR</a> <a href="floating/FNEGATE.html">FNEGATE</a> <br />
+    &nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a>&nbsp;&nbsp; <a href="floating/FLOOR.html">FLOOR</a> <br />
+    &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/THEN.html">THEN</a>&nbsp;&nbsp; <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:floating:FVALUE">
+  <div class="wordNumber">E.12.6.2.1628</div>
+  <div class="wordName">FVALUE</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+        <div class="rm">
+The implementation of <strong>FVALUE</strong> requires detailed
+      knowledge of the host implementation of <a href="core/VALUE.html">VALUE</a> and
+      <a href="core/TO.html">TO</a>.
+      <p />
+            <div class="quote">
+        <div class="tt">
+<a href="core/VARIABLE.html">VARIABLE</a> %var <br />
+          <a href="core/Colon.html">:</a> <a href="core/TO.html">TO</a> 1 %var <a href="core/Store.html">!</a> <a href="core/Semi.html">;</a>
+          <p />
+          <a href="core/Colon.html">:</a> <strong>FVALUE</strong> <a href="core/p.html">(</a> F: r -- ) <a href="core/p.html">(</a> &quot;&lt;spaces&gt;name&quot; -- ) <br />
+          &nbsp;&nbsp; <a href="core/CREATE.html">CREATE</a> F, <br />
+          &nbsp;&nbsp; <a href="core/DOES.html">DOES&gt;</a> %var <a href="core/Fetch.html">@</a> <a href="core/IF.html">IF</a> <a href="floating/FStore.html">F!</a> <a href="core/ELSE.html">ELSE</a> <a href="floating/FFetch.html">F@</a> <a href="core/THEN.html">THEN</a> <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 %var <a href="core/Store.html">!</a> <a href="core/Semi.html">;</a>
+          <p />
+          <a href="core/Colon.html">:</a> <a href="core/VALUE.html">VALUE</a> <a href="core/p.html">(</a> x &quot;&lt;spaces&gt;name&quot; -- ) <br />
+          &nbsp;&nbsp; <a href="core/CREATE.html">CREATE</a> <a href="core/Comma.html">,</a> <br />
+          &nbsp;&nbsp; <a href="core/DOES.html">DOES&gt;</a> %var <a href="core/Fetch.html">@</a> <a href="core/IF.html">IF</a>  <a href="core/Store.html">!</a> <a href="core/ELSE.html">ELSE</a>  <a href="core/Fetch.html">@</a> <a href="core/THEN.html">THEN</a> <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 %var <a href="core/Store.html">!</a> <a href="core/Semi.html">;</a>
+          
+          </div>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:floating:StoF">
+  <div class="wordNumber">E.12.6.2.2175</div>
+  <div class="wordName">S&gt;F</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>S&gt;F</strong> <a href="core/p.html">(</a> n -- r ) <br />
+    &nbsp;&nbsp; <a href="core/StoD.html">S&gt;D</a> <a href="floating/DtoF.html">D&gt;F</a> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>	<!-- I.12 -->
+<h2 id="section.E.18">E.18 The optional Locals word set</h2>
+
+<div class="wordHead" id="imp:local:LOCALS">
+  <div class="wordNumber">E.13.6.2.1795</div>
+  <div class="wordName">LOCALS|</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>LOCALS|</strong> <a href="core/p.html">(</a> &quot;name...name |&quot; -- ) <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a> <br />
+    &nbsp;&nbsp;  <a href="core/BL.html">BL</a> <a href="core/WORD.html">WORD</a>   <a href="core/COUNT.html">COUNT</a> <a href="core/OVER.html">OVER</a> <a href="core/CFetch.html">C@</a> <br />
+    &nbsp;&nbsp;  <a href="core/BracketCHAR.html">[CHAR]</a> | <a href="core/Minus.html">-</a> <a href="core/OVER.html">OVER</a> 1 <a href="core/Minus.html">-</a> <a href="core/OR.html">OR</a>   <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;  <a href="local/LOCAL.html">(LOCAL)</a> <br />
+    &nbsp;&nbsp; <a href="core/REPEAT.html">REPEAT</a> <a href="core/TwoDROP.html">2DROP</a>   0 0 <a href="local/LOCAL.html">(LOCAL)</a> <br />
+    <a href="core/Semi.html">;</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:local:b:">
+  <div class="wordNumber">E.13.6.2.2550</div>
+  <div class="wordName">{:</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    12345 <a href="core/CONSTANT.html">CONSTANT</a> undefined-value
+    <p />
+    <a href="core/Colon.html">:</a> match-or-end? <a href="core/p.html">(</a> c-addr1 u1 c-addr2 u2 -- f ) <br />
+    &nbsp;&nbsp;&nbsp;2 <a href="core/PICK.html">PICK</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/toR.html">&gt;R</a> <a href="string/COMPARE.html">COMPARE</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/OR.html">OR</a> <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> scan-args <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/bs.html">\</a> 0 c-addr1 u1 -- c-addr1 u1 ... c-addrn un n c-addrn+1 un+1<br />
+    &nbsp;&nbsp;&nbsp;<a href="core/BEGIN.html">BEGIN</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/TwoDUP.html">2DUP</a> <a href="core/Sq.html">S&quot;</a> |&quot;    match-or-end? <a href="core/ZeroEqual.html">0=</a> <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/TwoDUP.html">2DUP</a> <a href="core/Sq.html">S&quot;</a> --&quot; match-or-end? <a href="core/ZeroEqual.html">0=</a> <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/TwoDUP.html">2DUP</a> <a href="core/Sq.html">S&quot;</a> :}&quot;  match-or-end? <a href="core/ZeroEqual.html">0=</a> <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/ROT.html">ROT</a> <a href="core/OnePlus.html">1+</a> <a href="core/PARSE-NAME.html">PARSE-NAME</a> <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/AGAIN.html">AGAIN</a> <a href="core/THEN.html">THEN</a> <a href="core/THEN.html">THEN</a> <a href="core/THEN.html">THEN</a> <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> scan-locals <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/bs.html">\</a> n c-addr1 u1 -- c-addr1 u1 ... c-addrn un n c-addrn+1 un+1 <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/TwoDUP.html">2DUP</a> <a href="core/Sq.html">S&quot;</a> |&quot; <a href="string/COMPARE.html">COMPARE</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/IF.html">IF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/EXIT.html">EXIT</a> <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/TwoDROP.html">2DROP</a> <a href="core/PARSE-NAME.html">PARSE-NAME</a> <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/BEGIN.html">BEGIN</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/TwoDUP.html">2DUP</a> <a href="core/Sq.html">S&quot;</a> --&quot; match-or-end? <a href="core/ZeroEqual.html">0=</a> <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/TwoDUP.html">2DUP</a> <a href="core/Sq.html">S&quot;</a> :}&quot;  match-or-end? <a href="core/ZeroEqual.html">0=</a> <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/ROT.html">ROT</a> <a href="core/OnePlus.html">1+</a> <a href="core/PARSE-NAME.html">PARSE-NAME</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/POSTPONE.html">POSTPONE</a> undefined-value <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/AGAIN.html">AGAIN</a> <a href="core/THEN.html">THEN</a> <a href="core/THEN.html">THEN</a> <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> scan-end <a href="core/p.html">(</a> c-addr1 u1 -- c-addr2 u2 ) <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/BEGIN.html">BEGIN</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/TwoDUP.html">2DUP</a> <a href="core/Sq.html">S&quot;</a> :}&quot; match-or-end? <a href="core/ZeroEqual.html">0=</a> <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/TwoDROP.html">2DROP</a> <a href="core/PARSE-NAME.html">PARSE-NAME</a> <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/REPEAT.html">REPEAT</a> <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> define-locals <a href="core/p.html">(</a> c-addr1 u1 ... c-addrn un n -- ) <br />
+    &nbsp;&nbsp;&nbsp;0 <a href="core/qDO.html">?DO</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="local/LOCAL.html">(LOCAL)</a> <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/LOOP.html">LOOP</a> <br />
+    &nbsp;&nbsp;&nbsp;0 0 <a href="local/LOCAL.html">(LOCAL)</a> <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> {: <a href="core/p.html">(</a> -- ) <br />
+    &nbsp;&nbsp;&nbsp;0 <a href="core/PARSE-NAME.html">PARSE-NAME</a> <br />
+    &nbsp;&nbsp;&nbsp;scan-args scan-locals scan-end <br />
+    &nbsp;&nbsp;&nbsp;<a href="core/TwoDROP.html">2DROP</a> define-locals <br />
+    <a href="core/Semi.html">;</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a>
+    
+    </div>
+  </div>					<!-- I.13 -->
+	<!-- I.14 -->
+<h2 id="section.E.20">E.20 The optional Programming-Tools word set</h2>
+
+<div class="wordHead" id="imp:tools:NtoR">
+  <div class="wordNumber">E.15.6.2.1908</div>
+  <div class="wordName">N&gt;R</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <span class="rm">This implementation depends on the return address being on
+    the return stack.</span>
+    <p />
+    <div class="tabbing">
+      <a href="core/Colon.html">:</a> <strong>N&gt;R</strong>           <a href="core/bs.html">\</a> xn .. x1 N -- ; R: -- x1 .. xn n <br />
+      <a href="core/bs.html">\</a> <span class="rm">Transfer N items and count to the return stack.</span>  <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/DUP.html">DUP</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> xn .. x1 N N -- <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/BEGIN.html">BEGIN</a>  <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/DUP.html">DUP</a>  <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/WHILE.html">WHILE</a>  <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/ROT.html">ROT</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/SWAP.html">SWAP</a> <a href="core/toR.html">&gt;R</a> <a href="core/toR.html">&gt;R</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/bs.html">\</a> xn .. N N -- ; R: .. x1 -- <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/OneMinus.html">1-</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> xn .. N 'N -- ; R: .. x1 --  <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/REPEAT.html">REPEAT</a> <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/DROP.html">DROP</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> N -- ; R: x1 .. xn -- <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/Rfrom.html">R&gt;</a> <a href="core/SWAP.html">SWAP</a> <a href="core/toR.html">&gt;R</a> <a href="core/toR.html">&gt;R</a>  <br />
+      <a href="core/Semi.html">;</a>
+      <br />
+      
+      </div>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:tools:NRfrom">
+  <div class="wordNumber">E.15.6.2.1940</div>
+  <div class="wordName">NR&gt;</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <span class="rm">This implementation depends on the return address being on
+    the return stack.</span>
+    <p />
+    <div class="tabbing">
+      <a href="core/Colon.html">:</a> <strong>NR&gt;</strong> <a href="core/bs.html">\</a> -- xn .. x1 N ; R: x1 .. xn N -- <br />
+      <a href="core/bs.html">\</a> <span class="rm">Pull N items and count off the return stack.</span>  <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/Rfrom.html">R&gt;</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/SWAP.html">SWAP</a> <a href="core/toR.html">&gt;R</a> <a href="core/DUP.html">DUP</a> <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/BEGIN.html">BEGIN</a>  <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/DUP.html">DUP</a>  <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/WHILE.html">WHILE</a>  <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/Rfrom.html">R&gt;</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/SWAP.html">SWAP</a> <a href="core/toR.html">&gt;R</a> -ROT <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/OneMinus.html">1-</a>  <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/REPEAT.html">REPEAT</a> <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/DROP.html">DROP</a>  <br />
+      <a href="core/Semi.html">;</a>
+      <br />
+      
+      </div>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:tools:SYNONYM">
+  <div class="wordNumber">E.15.6.2.2264</div>
+  <div class="wordName">SYNONYM</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+        <div class="rm">
+The implementation of <strong>SYNONYM</strong> requires detailed knowledge
+      of the host implementation, which is one reason why it should be
+      standardized.  The implementation below is imperfect and specific
+      to VFX Forth, in particular <code>HIDE</code>, <code>REVEAL</code> and
+      <code>IMMEDIATE?</code> are non-standard words.
+      <p />
+            <div class="quote">
+        <div class="tt">
+<a href="core/Colon.html">:</a> <strong>SYNONYM</strong> <a href="core/bs.html">\</a> &quot;newname&quot; &quot;oldname&quot; -- <br />
+          <a href="core/bs.html">\</a> <span class="rm">Create a new definition which redirects to an existing one.</span> <br />
+          &nbsp;&nbsp; <a href="core/CREATE.html">CREATE</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a> <br />
+          &nbsp;&nbsp;&nbsp;&nbsp; HIDE <a href="core/Tick.html">'</a> <a href="core/Comma.html">,</a> REVEAL <br />
+          &nbsp;&nbsp; <a href="core/DOES.html">DOES&gt;</a> <br />
+          &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/Fetch.html">@</a>  <a href="tools/STATE.html">STATE</a> <a href="core/Fetch.html">@</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/OVER.html">OVER</a> IMMEDIATE? <a href="core/OR.html">OR</a> <br />
+          &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/IF.html">IF</a> <a href="core/EXECUTE.html">EXECUTE</a> <a href="core/ELSE.html">ELSE</a> <a href="core/COMPILEComma.html">COMPILE,</a> <a href="core/THEN.html">THEN</a> <br />
+          <a href="core/Semi.html">;</a>
+          
+          </div>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:tools:[DEFINED]">
+  <div class="wordNumber">E.15.6.2.2530.30</div>
+  <div class="wordName">[DEFINED]</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>[DEFINED]</strong> <a href="core/BL.html">BL</a> <a href="core/WORD.html">WORD</a> <a href="core/FIND.html">FIND</a> <a href="core/NIP.html">NIP</a> <a href="core/Zerone.html">0&lt;&gt;</a> <a href="core/Semi.html">;</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:tools:[ELSE]">
+  <div class="wordNumber">E.15.6.2.2531</div>
+  <div class="wordName">[ELSE]</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <div class="tabbing">
+      
+      <a href="core/Colon.html">:</a> <strong>[ELSE]</strong> <a href="core/p.html">(</a> -- ) <br />
+      &nbsp;&nbsp;&nbsp; 1 <a href="core/BEGIN.html">BEGIN</a>																		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/bs.html">\</a> level <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a>   <a href="core/BL.html">BL</a> <a href="core/WORD.html">WORD</a> <a href="core/COUNT.html">COUNT</a>   <a href="core/DUP.html">DUP</a>   <a href="core/WHILE.html">WHILE</a>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/bs.html">\</a> level adr len <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/TwoDUP.html">2DUP</a> <a href="core/Sq.html">S&quot;</a> [IF]&quot;  <a href="string/COMPARE.html">COMPARE</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/IF.html">IF</a>			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/bs.html">\</a> level adr len <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/TwoDROP.html">2DROP</a> <a href="core/OnePlus.html">1+</a>														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		<a href="core/bs.html">\</a> level' <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a>																	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/bs.html">\</a> level adr len <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/TwoDUP.html">2DUP</a> <a href="core/Sq.html">S&quot;</a> [ELSE]&quot; <a href="string/COMPARE.html">COMPARE</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/IF.html">IF</a>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		<a href="core/bs.html">\</a> level adr len <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/TwoDROP.html">2DROP</a> <a href="core/OneMinus.html">1-</a> <a href="core/DUP.html">DUP</a> <a href="core/IF.html">IF</a> <a href="core/OnePlus.html">1+</a> <a href="core/THEN.html">THEN</a>		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		<a href="core/bs.html">\</a> level' <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/ELSE.html">ELSE</a>																	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		<a href="core/bs.html">\</a> level adr len <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/Sq.html">S&quot;</a> [THEN]&quot; <a href="string/COMPARE.html">COMPARE</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/IF.html">IF</a>				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		<a href="core/bs.html">\</a> level <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/OneMinus.html">1-</a>																&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			<a href="core/bs.html">\</a> level' <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/THEN.html">THEN</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <a href="core/qDUP.html">?DUP</a> <a href="core/ZeroEqual.html">0=</a>   <a href="core/IF.html">IF</a> <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a>		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/bs.html">\</a> level' <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/REPEAT.html">REPEAT</a> <a href="core/TwoDROP.html">2DROP</a>														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/bs.html">\</a> level <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/REFILL.html">REFILL</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/UNTIL.html">UNTIL</a>													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/bs.html">\</a> level <br />
+      &nbsp;&nbsp;&nbsp; <a href="core/DROP.html">DROP</a> <br />
+      <a href="core/Semi.html">;</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a>
+      <br />
+      
+      </div>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:tools:[IF]">
+  <div class="wordNumber">E.15.6.2.2532</div>
+  <div class="wordName">[IF]</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>[IF]</strong> <a href="core/p.html">(</a> flag -- ) <br />
+    &nbsp;&nbsp; <a href="core/ZeroEqual.html">0=</a> <a href="core/IF.html">IF</a> <a href="core/POSTPONE.html">POSTPONE</a> <a href="tools/BracketELSE.html">[ELSE]</a> <a href="core/THEN.html">THEN</a> <br />
+    <a href="core/Semi.html">;</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:tools:[THEN]">
+  <div class="wordNumber">E.15.6.2.2533</div>
+  <div class="wordName">[THEN]</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>[THEN]</strong> <a href="core/p.html">(</a> -- ) <a href="core/Semi.html">;</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:tools:[UNDEFINED]">
+  <div class="wordNumber">E.15.6.2.2534</div>
+  <div class="wordName">[UNDEFINED]</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>[UNDEFINED]</strong> <a href="core/BL.html">BL</a> <a href="core/WORD.html">WORD</a> <a href="core/FIND.html">FIND</a> <a href="core/NIP.html">NIP</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/Semi.html">;</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a>
+    
+    </div>
+  </div>	<!-- I.15 -->
+<h2 id="section.E.22">E.22 The optional Search-Order word set</h2>
+
+<div class="wordHead" id="imp:search:DEFINITIONS">
+  <div class="wordNumber">E.16.6.1.1180</div>
+  <div class="wordName">DEFINITIONS</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> discard <a href="core/p.html">(</a> x1 ... xn u -- ) \ <span class="rm">Drop u+1 stack items</span> <br />
+    &nbsp;&nbsp; 0 <a href="core/qDO.html">?DO</a> <a href="core/DROP.html">DROP</a> <a href="core/LOOP.html">LOOP</a> <br />
+    <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> <strong>DEFINITIONS</strong> <a href="core/p.html">(</a> -- ) <br />
+    &nbsp;&nbsp; <a href="search/GET-ORDER.html">GET-ORDER</a> <a href="core/SWAP.html">SWAP</a>  <a href="search/SET-CURRENT.html">SET-CURRENT</a> discard <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:search:FIND">
+  <div class="wordNumber">E.16.6.1.1550</div>
+  <div class="wordName">FIND</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <span class="rm">Assuming <div>
+    <div class="tt">
+#order
+        </div>
+      </div> and <div>
+    <div class="tt">
+ context
+        </div>
+      </div> are defined as per <a href="implement.html#imp:search:GET-ORDER">E.16.6.1.1647 GET-ORDER</a>.</span>
+    <p />
+    <div class="tabbing">
+      <a href="core/Colon.html">:</a> <strong>FIND</strong> <a href="core/p.html">(</a> c-addr -- c-addr 0 | xt 1 | xt -1 )  <br />
+      &nbsp;&nbsp;&nbsp;0 														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/p.html">(</a> c-addr 0 ) <br />
+      &nbsp;&nbsp;&nbsp;#order <a href="core/Fetch.html">@</a> 0 <a href="core/qDO.html">?DO</a>  <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/OVER.html">OVER</a> <a href="core/COUNT.html">COUNT</a>							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/p.html">(</a> c-addr 0 c-addr' u ) <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/I.html">I</a> <a href="core/CELLS.html">CELLS</a> context <a href="core/Plus.html">+</a> <a href="core/Fetch.html">@</a>		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/p.html">(</a> c-addr 0 c-addr' u wid ) <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="search/SEARCH-WORDLIST.html">SEARCH-WORDLIST</a>								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/p.html">(</a> c-addr 0; 0 | w 1 | q -1 ) <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/qDUP.html">?DUP</a> <a href="core/IF.html">IF</a>								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/p.html">(</a> c-addr 0; w 1 | w -1 )  <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/TwoSWAP.html">2SWAP</a> <a href="core/TwoDROP.html">2DROP</a> <a href="core/LEAVE.html">LEAVE</a>			&nbsp;&nbsp;		<a href="core/p.html">(</a> w 1 | w -1 )  <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/THEN.html">THEN</a>											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/p.html">(</a> c-addr 0 )  <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="core/LOOP.html">LOOP</a>												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/p.html">(</a> c-addr 0 | w 1 | w -1 )  <br />
+      &nbsp;&nbsp;&nbsp;<a href="core/Semi.html">;</a>
+      <br />
+      
+      </div>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:search:GET-ORDER">
+  <div class="wordNumber">E.16.6.1.1647</div>
+  <div class="wordName">GET-ORDER</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <span class="rm">Here is a very simple search order implementation:</span>
+    <p />
+    <a href="core/VARIABLE.html">VARIABLE</a> #order
+    <p />
+    <a href="core/CREATE.html">CREATE</a> context    16 <a href="core/p.html">(</a> wordlists ) <a href="core/CELLS.html">CELLS</a> <a href="core/ALLOT.html">ALLOT</a>
+    <p />
+    <a href="core/Colon.html">:</a> <strong>GET-ORDER</strong> <a href="core/p.html">(</a> -- wid1 ... widn n ) <br />
+    &nbsp;&nbsp; #order <a href="core/Fetch.html">@</a> 0 <a href="core/qDO.html">?DO</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; #order <a href="core/Fetch.html">@</a> <a href="core/I.html">I</a> <a href="core/Minus.html">-</a> <a href="core/OneMinus.html">1-</a> <a href="core/CELLS.html">CELLS</a> context <a href="core/Plus.html">+</a> <a href="core/Fetch.html">@</a> <br />
+    &nbsp;&nbsp; <a href="core/LOOP.html">LOOP</a> <br />
+    &nbsp;&nbsp; #order <a href="core/Fetch.html">@</a> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:search:SET-ORDER">
+  <div class="wordNumber">E.16.6.1.2197</div>
+  <div class="wordName">SET-ORDER</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <span class="rm">This is the complement of <a href="implement.html#imp:search:GET-ORDER">E.16.6.1.1647 GET-ORDER</a>.</span>
+    <p />
+    <a href="core/Colon.html">:</a> <strong>SET-ORDER</strong> <a href="core/p.html">(</a> wid1 ... widn n -0 ) <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> -1 <a href="core/Equal.html">=</a> <a href="core/IF.html">IF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/DROP.html">DROP</a> &lt;<em><span class="rm">push system default word lists and n</span></em>&gt; <br />
+    &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> #order <a href="core/Store.html">!</a> <br />
+    &nbsp;&nbsp; 0 <a href="core/qDO.html">?DO</a>   <a href="core/I.html">I</a> <a href="core/CELLS.html">CELLS</a> context <a href="core/Plus.html">+</a> <a href="core/Store.html">!</a>   <a href="core/LOOP.html">LOOP</a> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:search:ALSO">
+  <div class="wordNumber">E.16.6.2.0715</div>
+  <div class="wordName">ALSO</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>ALSO</strong> <a href="core/p.html">(</a> -- ) <br />
+    &nbsp;&nbsp; <a href="search/GET-ORDER.html">GET-ORDER</a> <a href="core/OVER.html">OVER</a> <a href="core/SWAP.html">SWAP</a> <a href="core/OnePlus.html">1+</a> <a href="search/SET-ORDER.html">SET-ORDER</a> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:search:FORTH">
+  <div class="wordNumber">E.16.6.2.1590</div>
+  <div class="wordName">FORTH</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> (wordlist) <a href="core/p.html">(</a> wid &quot;&lt;name&gt;&quot; &ndash; ; ) <br />
+    &nbsp;&nbsp; <a href="core/CREATE.html">CREATE</a> <a href="core/Comma.html">,</a> <br />
+    &nbsp;&nbsp; <a href="core/DOES.html">DOES&gt;</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/Fetch.html">@</a>  <a href="core/toR.html">&gt;R</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="search/GET-ORDER.html">GET-ORDER</a> <a href="core/NIP.html">NIP</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/Rfrom.html">R&gt;</a> <a href="core/SWAP.html">SWAP</a> <a href="search/SET-ORDER.html">SET-ORDER</a> <br />
+    <a href="core/Semi.html">;</a>
+    <p />
+    <a href="search/FORTH-WORDLIST.html">FORTH-WORDLIST</a> (wordlist) <strong>FORTH</strong>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:search:ONLY">
+  <div class="wordNumber">E.16.6.2.1965</div>
+  <div class="wordName">ONLY</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>ONLY</strong> <a href="core/p.html">(</a> -- ) -1 <a href="search/SET-ORDER.html">SET-ORDER</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:search:PREVIOUS">
+  <div class="wordNumber">E.16.6.2.2037</div>
+  <div class="wordName">PREVIOUS</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>PREVIOUS</strong> <a href="core/p.html">(</a> -- )
+    <a href="search/GET-ORDER.html">GET-ORDER</a> <a href="core/NIP.html">NIP</a> <a href="core/OneMinus.html">1-</a> <a href="search/SET-ORDER.html">SET-ORDER</a>
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>		<!-- I.16 -->
+<h2 id="section.E.24">E.24 The optional String word set</h2>
+
+<div class="wordHead" id="imp:string:REPLACES">
+  <div class="wordNumber">E.17.6.2.2141</div>
+  <div class="wordName">REPLACES</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/DECIMAL.html">DECIMAL</a>
+    <p />
+    <a href="tools/BracketUNDEFINED.html">[UNDEFINED]</a> place <a href="tools/BracketIF.html">[IF]</a> <br />
+    &nbsp;&nbsp; <a href="core/Colon.html">:</a> place &nbsp;&nbsp; <a href="core/bs.html">\</a>  c-addr1 u c-addr2 -- <br />
+    &nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">Copy the string described by <em>c-addr<em><sub>1</sub></em> u</em> as a counted</span> <br />
+    &nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">string at the memory address described by <em>c-addr<em><sub>2</sub></em></em>.</span> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/TwoDUP.html">2DUP</a> <a href="core/TwotoR.html">2&gt;R</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; 1 <a href="core/CHARS.html">CHARS</a> <a href="core/Plus.html">+</a> <a href="core/SWAP.html">SWAP</a> <a href="core/MOVE.html">MOVE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/TwoRfrom.html">2R&gt;</a> <a href="core/CStore.html">C!</a> <br />
+    &nbsp;&nbsp; <a href="core/Semi.html">;</a> <br />
+    <a href="tools/BracketTHEN.html">[THEN]</a>
+    <p />
+    <a href="core/Colon.html">:</a> &quot;/COUNTED-STRING&quot; <a href="core/Sq.html">S&quot;</a> /COUNTED-STRING&quot; <a href="core/Semi.html">;</a> <br />
+    &quot;/COUNTED-STRING&quot; <a href="core/ENVIRONMENTq.html">ENVIRONMENT?</a> <a href="core/ZeroEqual.html">0=</a> <a href="tools/BracketIF.html">[IF]</a> 256 <a href="tools/BracketTHEN.html">[THEN]</a> <br />
+    <a href="core/CHARS.html">CHARS</a> <a href="core/CONSTANT.html">CONSTANT</a> string-max
+    <p />
+    <a href="search/WORDLIST.html">WORDLIST</a> <a href="core/CONSTANT.html">CONSTANT</a> wid-subst <br />
+    <a href="core/bs.html">\</a> <span class="rm">Wordlist ID of the wordlist used to hold substitution names and replacement text.</span>
+    <p />
+    <a href="tools/BracketDEFINED.html">[DEFINED]</a> VFXforth <a href="tools/BracketIF.html">[IF]</a> <a href="core/bs.html">\</a> <span class="rm"><strong>VFX Forth</strong></span> <br />
+    &nbsp;&nbsp; <a href="core/Colon.html">:</a> makeSubst	<a href="core/bs.html">\</a> c-addr len -- c-addr <br />
+    &nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">Given a name string create a substution and storage space.</span> <br />
+    &nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">Return the address of the buffer for the substitution text.</span> <br />
+    &nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">This word requires system specific knowledge of the host Forth.</span> <br />
+    &nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">Some systems may need to perform case conversion here.</span> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="search/GET-CURRENT.html">GET-CURRENT</a> <a href="core/toR.html">&gt;R</a> wid-subst <a href="search/SET-CURRENT.html">SET-CURRENT</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; ($create) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">like <a href="core/CREATE.html">CREATE</a> but takes c-addr/len</span> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/Rfrom.html">R&gt;</a> <a href="search/SET-CURRENT.html">SET-CURRENT</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/HERE.html">HERE</a>  string-max <a href="core/ALLOT.html">ALLOT</a>  0 <a href="core/OVER.html">OVER</a> <a href="core/CStore.html">C!</a>	<a href="core/bs.html">\</a> <span class="rm">create buffer space</span> <br />
+    &nbsp;&nbsp; <a href="core/Semi.html">;</a> <br />
+    <a href="tools/BracketTHEN.html">[THEN]</a>
+    <p />
+    <a href="tools/BracketDEFINED.html">[DEFINED]</a> (WID-CREATE) <a href="tools/BracketIF.html">[IF]</a> <a href="core/bs.html">\</a> <span class="rm"><strong>SwiftForth</strong></span> <br />
+    &nbsp;&nbsp; <a href="core/Colon.html">:</a> makeSubst <a href="core/bs.html">\</a> c-addr len -- c-addr <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; wid-subst (WID-CREATE) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">like <a href="core/CREATE.html">CREATE</a> but takes c-addr/len/wid</span> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; LAST <a href="core/Fetch.html">@</a> &gt;CREATE <a href="core/Store.html">!</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/HERE.html">HERE</a>  string-max <a href="core/ALLOT.html">ALLOT</a>  0 <a href="core/OVER.html">OVER</a> <a href="core/CStore.html">C!</a> <a href="core/bs.html">\</a> <span class="rm">create buffer space</span> <br />
+    &nbsp;&nbsp; <a href="core/Semi.html">;</a> <br />
+    <a href="tools/BracketTHEN.html">[THEN]</a>
+    <p />
+    <a href="core/Colon.html">:</a> findSubst <a href="core/bs.html">\</a> c-addr len -- xt flag | 0 <br />
+    <a href="core/bs.html">\</a> <span class="rm">Given a name string, find the substitution.</span> <br />
+    <a href="core/bs.html">\</a> <span class="rm">Return <em>xt</em> and <em>flag</em> if found, or just zero if not found.</span> <br />
+    <a href="core/bs.html">\</a> <span class="rm">Some systems may need to perform case conversion here.</span> <br />
+    &nbsp;&nbsp; wid-subst <a href="search/SEARCH-WORDLIST.html">SEARCH-WORDLIST</a> <br />
+    <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> <strong>REPLACES</strong> <a href="core/bs.html">\</a> text tlen name nlen -- <br />
+    <a href="core/bs.html">\</a> <span class="rm">Define the string <em>text/tlen</em> as the text to substitute for the substitution named <em>name/nlen</em>.</span> <br />
+    <a href="core/bs.html">\</a> <span class="rm">If the substitution does not exist it is created.</span> <br />
+    &nbsp;&nbsp; <a href="core/TwoDUP.html">2DUP</a> findSubst <a href="core/IF.html">IF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/NIP.html">NIP</a> <a href="core/NIP.html">NIP</a>  <a href="core/EXECUTE.html">EXECUTE</a> &nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">get buffer address</span> <br />
+    &nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; makeSubst <br />
+    &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; place &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">copy as counted string</span> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:string:SUBSTITUTE">
+  <div class="wordNumber">E.17.6.2.2255</div>
+  <div class="wordName">SUBSTITUTE</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <span class="rm">Assuming <a href="implement.html#imp:string:REPLACES">E.17.6.2.2141 REPLACES</a> has been defined.</span>
+    <p />
+    <a href="tools/BracketUNDEFINED.html">[UNDEFINED]</a> bounds <a href="tools/BracketIF.html">[IF]</a> <br />
+    &nbsp;&nbsp; <a href="core/Colon.html">:</a> bounds &nbsp;&nbsp; <a href="core/bs.html">\</a> addr len -- addr+len addr <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/OVER.html">OVER</a> <a href="core/Plus.html">+</a> <a href="core/SWAP.html">SWAP</a><br />
+    &nbsp;&nbsp; <a href="core/Semi.html">;</a> <br />
+    <a href="tools/BracketTHEN.html">[THEN]</a>
+    <p />
+    <a href="tools/BracketUNDEFINED.html">[UNDEFINED]</a> -rot <a href="tools/BracketIF.html">[IF]</a> <br />
+    &nbsp;&nbsp; <a href="core/Colon.html">:</a> -rot &nbsp;&nbsp; <a href="core/bs.html">\</a> a b c -- c a b <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/ROT.html">ROT</a> <a href="core/ROT.html">ROT</a> <br />
+    &nbsp;&nbsp; <a href="core/Semi.html">;</a> <br />
+    <a href="tools/BracketTHEN.html">[THEN]</a>
+    <p />
+    <a href="core/CHAR.html">CHAR</a> % <a href="core/CONSTANT.html">CONSTANT</a> delim
+    &nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">Character used as the substitution name delimiter.</span> <br />
+    string-max <a href="core/BUFFERColon.html">BUFFER:</a> Name	<!-- \word{bs} -{}- addr \\ -->
+     <a href="core/bs.html">\</a> <span class="rm">Holds substitution name as a counted string.</span> <br />
+    <a href="core/VARIABLE.html">VARIABLE</a> DestLen <!-- \word{bs} -{}- addr \\ -->
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">Maximum length of the destination buffer.</span> <br />
+    <a href="double/TwoVARIABLE.html">2VARIABLE</a> Dest <!-- \word{bs} -{}- addr \\ -->
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">Holds destination string current length and address.</span> <br />
+    <a href="core/VARIABLE.html">VARIABLE</a> SubstErr <!-- \word{bs} -{}- addr \\ -->
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">Holds zero or an error code.</span>
+    <p />
+    <a href="core/Colon.html">:</a> addDest <a href="core/bs.html">\</a> char -- <br />
+    <a href="core/bs.html">\</a> <span class="rm">Add the character to the destination string.</span> <br />
+    &nbsp;&nbsp; Dest <a href="core/Fetch.html">@</a> DestLen <a href="core/Fetch.html">@</a> <a href="core/less.html">&lt;</a> <a href="core/IF.html">IF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; Dest <a href="core/TwoFetch.html">2@</a> <a href="core/Plus.html">+</a> <a href="core/CStore.html">C!</a>  1 <a href="core/CHARS.html">CHARS</a> Dest <a href="core/PlusStore.html">+!</a> <br />
+    &nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/DROP.html">DROP</a> -1 SubstErr <a href="core/Store.html">!</a> <br />
+    &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <br />
+    <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> formName <a href="core/bs.html">\</a> c-addr len -- c-addr' len' <br />
+    <a href="core/bs.html">\</a> <span class="rm">Given a source string pointing at a leading delimiter, place the name string in the name buffer.</span> <br />
+    &nbsp;&nbsp; 1 <a href="string/DivSTRING.html">/STRING</a> <a href="core/TwoDUP.html">2DUP</a> delim scan <a href="core/toR.html">&gt;R</a> <a href="core/DROP.html">DROP</a>				  <a href="core/bs.html">\</a> <span class="rm">find length of residue</span> <br />
+    &nbsp;&nbsp; <a href="core/TwoDUP.html">2DUP</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/Minus.html">-</a> <a href="core/DUP.html">DUP</a> <a href="core/toR.html">&gt;R</a> Name place &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">save name in buffer</span> <br />
+    &nbsp;&nbsp; <a href="core/Rfrom.html">R&gt;</a> 1 <a href="core/CHARS.html">CHARS</a> <a href="core/Plus.html">+</a> <a href="string/DivSTRING.html">/STRING</a>						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">step over name and trailing <code>%</code></span> <br />
+    <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> &gt;dest <a href="core/bs.html">\</a> c-addr len -- <br />
+    <a href="core/bs.html">\</a> <span class="rm">Add a string to the output string.</span> <br />
+    &nbsp;&nbsp; bounds <a href="core/qDO.html">?DO</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/I.html">I</a> <a href="core/CFetch.html">C@</a> addDest <br />
+    &nbsp;&nbsp; 1 <a href="core/CHARS.html">CHARS</a> <a href="core/PlusLOOP.html">+LOOP</a> <br />
+    <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> processName <a href="core/bs.html">\</a> -- flag <br />
+    <a href="core/bs.html">\</a> <span class="rm">Process the last substitution name. Return true if found, 0 if not found.</span> <br />
+    &nbsp;&nbsp; Name <a href="core/COUNT.html">COUNT</a> findSubst <a href="core/DUP.html">DUP</a> <a href="core/toR.html">&gt;R</a> <a href="core/IF.html">IF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/EXECUTE.html">EXECUTE</a> <a href="core/COUNT.html">COUNT</a> &gt;dest <br />
+    &nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; delim addDest  Name <a href="core/COUNT.html">COUNT</a> &gt;dest  delim addDest <br />
+    &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/Rfrom.html">R&gt;</a> <br />
+    <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/Colon.html">:</a> <strong>SUBSTITUTE</strong> <a href="core/bs.html">\</a> src slen dest dlen -- dest dlen' n <br />
+    <a href="core/bs.html">\</a> <span class="rm">Expand the source string using substitutions.</span> <br />
+    <a href="core/bs.html">\</a> <span class="rm">Note that this version is simplistic, performs no error checking,</span> <br />
+    <a href="core/bs.html">\</a> <span class="rm">and requires a global buffer and global variables.</span> <br />
+    &nbsp;&nbsp; Destlen <a href="core/Store.html">!</a>  0 Dest <a href="core/TwoStore.html">2!</a>  0 -rot <a href="core/bs.html">\</a> -- 0 src slen <br />
+    &nbsp;&nbsp; 0 SubstErr <a href="core/Store.html">!</a> <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/DUP.html">DUP</a> 0 <a href="core/more.html">&gt;</a> <br />
+    &nbsp;&nbsp; <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/OVER.html">OVER</a> <a href="core/CFetch.html">C@</a> delim <a href="core/ne.html">&lt;&gt;</a> <a href="core/IF.html">IF</a>									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">character not <code>%</code></span> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/OVER.html">OVER</a> <a href="core/CFetch.html">C@</a> addDest  1 <a href="string/DivSTRING.html">/STRING</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/OVER.html">OVER</a> 1 <a href="core/CHARS.html">CHARS</a> <a href="core/Plus.html">+</a> <a href="core/CFetch.html">C@</a> delim <a href="core/Equal.html">=</a> <a href="core/IF.html">IF</a>	&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm"><code>%%</code> for one output <code>%</code></span> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		delim addDest  2 <a href="string/DivSTRING.html">/STRING</a>													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">add one <code>%</code> to output</span> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/ELSE.html">ELSE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		formName processName <a href="core/IF.html">IF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			<a href="core/ROT.html">ROT</a> <a href="core/OnePlus.html">1+</a> -rot														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">count substitutions</span> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		<a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/REPEAT.html">REPEAT</a> <br />
+    &nbsp;&nbsp; <a href="core/TwoDROP.html">2DROP</a> Dest <a href="core/TwoFetch.html">2@</a>  <a href="core/ROT.html">ROT</a> SubstErr <a href="core/Fetch.html">@</a> <a href="core/IF.html">IF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;	<a href="core/DROP.html">DROP</a>  SubstErr <a href="core/Fetch.html">@</a> <br />
+    &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:string:UNESCAPE">
+  <div class="wordNumber">E.17.6.2.2375</div>
+  <div class="wordName">UNESCAPE</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>UNESCAPE</strong> <a href="core/bs.html">\</a> c-addr1 len1 c-addr2 -- c-addr2 len2 <br />
+    <a href="core/bs.html">\</a> <span class="rm">Replace each '<code>%</code>' character in the input string <em>c-addr<em><sub>1</sub></em> len<em><sub>1</sub></em></em> with two '<code>%</code>' characters.</span> <br />
+    <a href="core/bs.html">\</a> <span class="rm">The output is represented by <em>c-addr<em><sub>2</sub></em> len<em><sub>2</sub></em></em>.</span> <br />
+    <a href="core/bs.html">\</a> <span class="rm">If you pass a string through <strong>UNESCAPE</strong> and then <a href="string/SUBSTITUTE.html">SUBSTITUTE</a>, you get the original string.</span> <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> <a href="core/TwoSWAP.html">2SWAP</a>  <a href="core/OVER.html">OVER</a> <a href="core/Plus.html">+</a> <a href="core/SWAP.html">SWAP</a> <a href="core/qDO.html">?DO</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/I.html">I</a> <a href="core/CFetch.html">C@</a> <a href="core/BracketCHAR.html">[CHAR]</a> % <a href="core/Equal.html">=</a> <a href="core/IF.html">IF</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="core/BracketCHAR.html">[CHAR]</a> % <a href="core/OVER.html">OVER</a> <a href="core/CStore.html">C!</a> <a href="core/OnePlus.html">1+</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/I.html">I</a> <a href="core/CFetch.html">C@</a> <a href="core/OVER.html">OVER</a> <a href="core/CStore.html">C!</a> <a href="core/OnePlus.html">1+</a> <br />
+    &nbsp;&nbsp; <a href="core/LOOP.html">LOOP</a> <br />
+    &nbsp;&nbsp; <a href="core/OVER.html">OVER</a> <a href="core/Minus.html">-</a> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>				<!-- I.17 -->
+<h2 id="section.E.25">E.25 The optional Extended-Character word set</h2> <!-- I.18 -->
+<a name="imp:xchar"></a>
+<p />
+This reference implementation assumes the UTF-8 character encoding
+is being used.
+<p />
+
+
+<div class="wordHead" id="imp:xchar:X-SIZE">
+  <div class="wordNumber">E.18.6.1.2486.50</div>
+  <div class="wordName">X-SIZE</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>X-SIZE</strong> <a href="core/p.html">(</a> xc-addr u1 -- u2 ) <br />
+    &nbsp;&nbsp; <a href="core/ZeroEqual.html">0=</a>         <a href="core/IF.html">IF</a> <a href="core/DROP.html">DROP</a> 0 <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">length of UTF-8 char starting at u8-addr (accesses only u8-addr)</span> <br />
+    &nbsp;&nbsp; <a href="core/CFetch.html">C@</a> <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> $80 <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/DROP.html">DROP</a> 1 <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> $c0 <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> -77 <a href="exception/THROW.html">THROW</a>   <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> $e0 <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/DROP.html">DROP</a> 2 <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> $f0 <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/DROP.html">DROP</a> 3 <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> $f8 <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/DROP.html">DROP</a> 4 <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> $fc <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/DROP.html">DROP</a> 5 <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> $fe <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/DROP.html">DROP</a> 6 <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; -77 <a href="exception/THROW.html">THROW</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XC!+">
+  <div class="wordNumber">E.18.6.1.2487.10</div>
+  <div class="wordName">XC!+</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>XC!+</strong> <a href="core/p.html">(</a> xchar xc-addr -- xc-addr' ) <br />
+    &nbsp;&nbsp; <a href="core/OVER.html">OVER</a> $80 <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/TUCK.html">TUCK</a> <a href="core/CStore.html">C!</a> <a href="core/CHARPlus.html">CHAR+</a> <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <a href="core/bs.html">\</a> <span class="rm">special case ASCII</span> <br />
+    &nbsp;&nbsp; <a href="core/toR.html">&gt;R</a> 0 <a href="core/SWAP.html">SWAP</a> $3F <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a> <a href="core/TwoDUP.html">2DUP</a> <a href="core/Umore.html">U&gt;</a> <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/TwoDiv.html">2/</a> <a href="core/toR.html">&gt;R</a> <a href="core/DUP.html">DUP</a> $3F <a href="core/AND.html">AND</a> $80 <a href="core/OR.html">OR</a> <a href="core/SWAP.html">SWAP</a> 6 <a href="core/RSHIFT.html">RSHIFT</a> <a href="core/Rfrom.html">R&gt;</a> <br />
+    &nbsp;&nbsp; <a href="core/REPEAT.html">REPEAT</a> $7F <a href="core/XOR.html">XOR</a> <a href="core/TwoTimes.html">2*</a> <a href="core/OR.html">OR</a> <a href="core/Rfrom.html">R&gt;</a> <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a> <a href="core/OVER.html">OVER</a> $80 <a href="core/Uless.html">U&lt;</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/WHILE.html">WHILE</a> <a href="core/TUCK.html">TUCK</a> <a href="core/CStore.html">C!</a> <a href="core/CHARPlus.html">CHAR+</a> <a href="core/REPEAT.html">REPEAT</a> <a href="core/NIP.html">NIP</a> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XC!+q">
+  <div class="wordNumber">E.18.6.1.2487.15</div>
+  <div class="wordName">XC!+?</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>XC!+?</strong> <a href="core/p.html">(</a> xchar xc-addr u -- xc-addr' u' flag ) <br />
+    &nbsp;&nbsp; <a href="core/toR.html">&gt;R</a> <a href="core/OVER.html">OVER</a> <a href="xchar/XC-SIZE.html">XC-SIZE</a> <a href="core/RFetch.html">R@</a> <a href="core/OVER.html">OVER</a> <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/p.html">(</a> xchar xc-addr1 len r: u1 ) <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/bs.html">\</a> <span class="rm">not enough space</span> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/DROP.html">DROP</a> <a href="core/NIP.html">NIP</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/FALSE.html">FALSE</a> <br />
+    &nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/toR.html">&gt;R</a> <a href="xchar/XCStorePlus.html">XC!+</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/SWAP.html">SWAP</a> <a href="core/Minus.html">-</a> <a href="core/TRUE.html">TRUE</a> <br />
+    &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XC,">
+  <div class="wordNumber">E.18.6.1.2487.20</div>
+  <div class="wordName">XC,</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>XC,</strong> <a href="core/p.html">(</a> xchar -- ) <a href="core/HERE.html">HERE</a> <a href="xchar/XCStorePlus.html">XC!+</a> DP <a href="core/Store.html">!</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XC-SIZE">
+  <div class="wordNumber">E.18.6.1.2487.25</div>
+  <div class="wordName">XC-SIZE</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>XC-SIZE</strong> <a href="core/p.html">(</a> xchar -- n ) <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> $80 <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/DROP.html">DROP</a> 1 <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <a href="core/bs.html">\</a> <span class="rm">special case ASCII</span> <br />
+    &nbsp;&nbsp; $800  2 <a href="core/toR.html">&gt;R</a> <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a> <a href="core/TwoDUP.html">2DUP</a> U&gt;= <a href="core/WHILE.html">WHILE</a>  5 <a href="core/LSHIFT.html">LSHIFT</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/OnePlus.html">1+</a> <a href="core/toR.html">&gt;R</a> <a href="core/DUP.html">DUP</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/UNTIL.html">UNTIL</a> <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; <a href="core/TwoDROP.html">2DROP</a> <a href="core/Rfrom.html">R&gt;</a> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XC@+">
+  <div class="wordNumber">E.18.6.1.2487.35</div>
+  <div class="wordName">XC@+</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>XC@+</strong> <a href="core/p.html">(</a> xc-addr -- xc-addr' u ) <br />
+    &nbsp;&nbsp; <a href="core/COUNT.html">COUNT</a> <a href="core/DUP.html">DUP</a> $80 <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a>  <a href="core/bs.html">\</a> <span class="rm">special case ASCII</span> <br />
+    &nbsp;&nbsp; $7F <a href="core/AND.html">AND</a> $40 <a href="core/toR.html">&gt;R</a> <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a> <a href="core/DUP.html">DUP</a> <a href="core/RFetch.html">R@</a> <a href="core/AND.html">AND</a> <a href="core/WHILE.html">WHILE</a> <a href="core/RFetch.html">R@</a> <a href="core/XOR.html">XOR</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; 6 <a href="core/LSHIFT.html">LSHIFT</a> <a href="core/Rfrom.html">R&gt;</a> 5 <a href="core/LSHIFT.html">LSHIFT</a> <a href="core/toR.html">&gt;R</a> <a href="core/toR.html">&gt;R</a> <a href="core/COUNT.html">COUNT</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; $3F <a href="core/AND.html">AND</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/OR.html">OR</a> <br />
+    &nbsp;&nbsp; <a href="core/REPEAT.html">REPEAT</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/DROP.html">DROP</a> <br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XCHAR+">
+  <div class="wordNumber">E.18.6.1.2487.40</div>
+  <div class="wordName">XCHAR+</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>XCHAR+</strong> <a href="core/p.html">(</a> xc-addr -- xc-addr' )  <a href="xchar/XCFetchPlus.html">XC@+</a> <a href="core/DROP.html">DROP</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XEMIT">
+  <div class="wordNumber">E.18.6.1.2488.10</div>
+  <div class="wordName">XEMIT</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>XEMIT</strong> <a href="core/p.html">(</a> xchar -- ) <br />
+    &nbsp;&nbsp; <a href="core/DUP.html">DUP</a> $80 <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/EMIT.html">EMIT</a> <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <a href="core/bs.html">\</a> <span class="rm">special case ASCII</span> <br />
+    &nbsp;&nbsp; 0 <a href="core/SWAP.html">SWAP</a> $3F <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a> <a href="core/TwoDUP.html">2DUP</a> <a href="core/Umore.html">U&gt;</a> <a href="core/WHILE.html">WHILE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/TwoDiv.html">2/</a> <a href="core/toR.html">&gt;R</a> <a href="core/DUP.html">DUP</a> $3F <a href="core/AND.html">AND</a> $80 <a href="core/OR.html">OR</a> <a href="core/SWAP.html">SWAP</a> 6 <a href="core/RSHIFT.html">RSHIFT</a> <a href="core/Rfrom.html">R&gt;</a> <br />
+    &nbsp;&nbsp; <a href="core/REPEAT.html">REPEAT</a> $7F <a href="core/XOR.html">XOR</a> <a href="core/TwoTimes.html">2*</a> <a href="core/OR.html">OR</a> <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a> <a href="core/DUP.html">DUP</a> $80 <a href="core/Uless.html">U&lt;</a> <a href="core/ZeroEqual.html">0=</a> <a href="core/WHILE.html">WHILE</a> <a href="core/EMIT.html">EMIT</a> <a href="core/REPEAT.html">REPEAT</a> <a href="core/DROP.html">DROP</a><br />
+    <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XKEY">
+  <div class="wordNumber">E.18.6.1.2488.30</div>
+  <div class="wordName">XKEY</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>XKEY</strong> <a href="core/p.html">(</a> -- xchar ) <br />
+    &nbsp;&nbsp; <a href="core/KEY.html">KEY</a> <a href="core/DUP.html">DUP</a> $80 <a href="core/Uless.html">U&lt;</a> <a href="core/IF.html">IF</a> <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <a href="core/bs.html">\</a> <span class="rm">special case ASCII</span> <br />
+    &nbsp;&nbsp; $7F <a href="core/AND.html">AND</a> $40 <a href="core/toR.html">&gt;R</a> <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a> <a href="core/DUP.html">DUP</a> <a href="core/RFetch.html">R@</a> <a href="core/AND.html">AND</a> <a href="core/WHILE.html">WHILE</a> <a href="core/RFetch.html">R@</a> <a href="core/XOR.html">XOR</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; 6 <a href="core/LSHIFT.html">LSHIFT</a> <a href="core/Rfrom.html">R&gt;</a> 5 <a href="core/LSHIFT.html">LSHIFT</a> <a href="core/toR.html">&gt;R</a> <a href="core/toR.html">&gt;R</a> <a href="core/KEY.html">KEY</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; $3F <a href="core/AND.html">AND</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/OR.html">OR</a> <br />
+    &nbsp;&nbsp; <a href="core/REPEAT.html">REPEAT</a> <a href="core/Rfrom.html">R&gt;</a> <a href="core/DROP.html">DROP</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:+X/STRING">
+  <div class="wordNumber">E.18.6.2.0145</div>
+  <div class="wordName">+X/STRING</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>+X/STRING</strong> <a href="core/p.html">(</a> xc-addr1 u1 -- xc-addr2 u2 ) <br />
+    &nbsp;&nbsp; <a href="core/OVER.html">OVER</a> <a href="core/DUP.html">DUP</a> <a href="xchar/XCHARPlus.html">XCHAR+</a> <a href="core/SWAP.html">SWAP</a> <a href="core/Minus.html">-</a> <a href="string/DivSTRING.html">/STRING</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:-TRAILING-GARBAGE">
+  <div class="wordNumber">E.18.6.2.0175</div>
+  <div class="wordName">-TRAILING-GARBAGE</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>-TRAILING-GARBAGE</strong> <a href="core/p.html">(</a> xc-addr u1 -- xc-addr u2 ) <br />
+    &nbsp;&nbsp; <a href="core/TwoDUP.html">2DUP</a> <a href="core/Plus.html">+</a> <a href="core/DUP.html">DUP</a> <a href="xchar/XCHARMinus.html">XCHAR-</a> <a href="core/p.html">(</a> addr u1 end1 end2 ) <br />
+    &nbsp;&nbsp; <a href="core/TwoDUP.html">2DUP</a> <a href="core/DUP.html">DUP</a> <a href="core/OVER.html">OVER</a> <a href="core/OVER.html">OVER</a> <a href="core/Minus.html">-</a> <a href="xchar/X-SIZE.html">X-SIZE</a> <a href="core/Plus.html">+</a> <a href="core/Equal.html">=</a> <a href="core/IF.html">IF</a> <a href="core/bs.html">\</a> <span class="rm">last xchar ok</span> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/TwoDROP.html">2DROP</a> <br />
+    &nbsp;&nbsp; <a href="core/ELSE.html">ELSE</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/NIP.html">NIP</a> <a href="core/NIP.html">NIP</a> <a href="core/OVER.html">OVER</a> <a href="core/Minus.html">-</a> <br />
+    &nbsp;&nbsp; <a href="core/THEN.html">THEN</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:CHAR">
+  <div class="wordNumber">E.18.6.2.0895</div>
+  <div class="wordName">CHAR</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>CHAR</strong> <a href="core/p.html">(</a> &quot;name&quot; -- xchar )
+    <a href="core/BL.html">BL</a> <a href="core/WORD.html">WORD</a> <a href="core/COUNT.html">COUNT</a> <a href="core/DROP.html">DROP</a> <a href="xchar/XCFetchPlus.html">XC@+</a> <a href="core/NIP.html">NIP</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:X-WIDTH">
+  <div class="wordNumber">E.18.6.2.2486.70</div>
+  <div class="wordName">X-WIDTH</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>X-WIDTH</strong> <a href="core/p.html">(</a> xc-addr u -- n ) <br />
+    &nbsp;&nbsp; 0 <a href="core/ROT.html">ROT</a> <a href="core/ROT.html">ROT</a> <a href="core/OVER.html">OVER</a> <a href="core/Plus.html">+</a> <a href="core/SWAP.html">SWAP</a> <a href="core/qDO.html">?DO</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/I.html">I</a> <a href="xchar/XCFetchPlus.html">XC@+</a> <a href="core/SWAP.html">SWAP</a> <a href="core/toR.html">&gt;R</a> <a href="xchar/XC-WIDTH.html">XC-WIDTH</a> <a href="core/Plus.html">+</a> <br />
+    &nbsp;&nbsp; <a href="core/Rfrom.html">R&gt;</a> <a href="core/I.html">I</a> <a href="core/Minus.html">-</a> <a href="core/PlusLOOP.html">+LOOP</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XC-WIDTH">
+  <div class="wordNumber">E.18.6.2.2487.30</div>
+  <div class="wordName">XC-WIDTH</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> wc, <a href="core/p.html">(</a> n low high -- )  <a href="core/OnePlus.html">1+</a> <a href="core/Comma.html">,</a> <a href="core/Comma.html">,</a> <a href="core/Comma.html">,</a> <a href="core/Semi.html">;</a>
+    <p />
+    <a href="core/CREATE.html">CREATE</a> wc-table <a href="core/bs.html">\</a> <span class="rm">derived from wcwidth source code, for UCS32</span> <br />
+    0  0300  0357 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  035D  036F wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0483  0486 wc,<br />
+    0  0488  0489 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0591  05A1 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  05A3  05B9 wc,<br />
+    0  05BB  05BD wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  05BF  05BF wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  05C1  05C2 wc,<br />
+    0  05C4  05C4 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0600  0603 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0610  0615 wc,<br />
+    0  064B  0658 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0670  0670 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  06D6  06E4 wc,<br />
+    0  06E7  06E8 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  06EA  06ED wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  070F  070F wc,<br />
+    0  0711  0711 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0730  074A wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  07A6  07B0 wc,<br />
+    0  0901  0902 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  093C  093C wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0941  0948 wc,<br />
+    0  094D  094D wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0951  0954 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0962  0963 wc,<br />
+    0  0981  0981 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  09BC  09BC wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  09C1  09C4 wc,<br />
+    0  09CD  09CD wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  09E2  09E3 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0A01  0A02 wc,<br />
+    0  0A3C  0A3C wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0A41  0A42 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0A47  0A48 wc,<br />
+    0  0A4B  0A4D wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0A70  0A71 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0A81  0A82 wc,<br />
+    0  0ABC  0ABC wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0AC1  0AC5 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0AC7  0AC8 wc,<br />
+    0  0ACD  0ACD wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0AE2  0AE3 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0B01  0B01 wc,<br />
+    0  0B3C  0B3C wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0B3F  0B3F wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0B41  0B43 wc,<br />
+    0  0B4D  0B4D wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0B56  0B56 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0B82  0B82 wc,<br />
+    0  0BC0  0BC0 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0BCD  0BCD wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0C3E  0C40 wc,<br />
+    0  0C46  0C48 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0C4A  0C4D wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0C55  0C56 wc,<br />
+    0  0CBC  0CBC wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0CBF  0CBF wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0CC6  0CC6 wc,<br />
+    0  0CCC  0CCD wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0D41  0D43 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0D4D  0D4D wc,<br />
+    0  0DCA  0DCA wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0DD2  0DD4 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0DD6  0DD6 wc,<br />
+    0  0E31  0E31 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0E34  0E3A wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0E47  0E4E wc,<br />
+    0  0EB1  0EB1 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0EB4  0EB9 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0EBB  0EBC wc,<br />
+    0  0EC8  0ECD wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0F18  0F19 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0F35  0F35 wc,<br />
+    0  0F37  0F37 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0F39  0F39 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0F71  0F7E wc,<br />
+    0  0F80  0F84 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0F86  0F87 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0F90  0F97 wc,<br />
+    0  0F99  0FBC wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  0FC6  0FC6 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  102D  1030 wc,<br />
+    0  1032  1032 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  1036  1037 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  1039  1039 wc,<br />
+    0  1058  1059 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    1  0000  1100 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    2  1100  115f wc,<br />
+    0  1160  11FF wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  1712  1714 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  1732  1734 wc,<br />
+    0  1752  1753 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  1772  1773 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  17B4  17B5 wc,<br />
+    0  17B7  17BD wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  17C6  17C6 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  17C9  17D3 wc,<br />
+    0  17DD  17DD wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  180B  180D wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  18A9  18A9 wc,<br />
+    0  1920  1922 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  1927  1928 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  1932  1932 wc,<br />
+    0  1939  193B wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  200B  200F wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  202A  202E wc,<br />
+    0  2060  2063 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  206A  206F wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  20D0  20EA wc,<br />
+    2  2329  232A wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  302A  302F wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    2  2E80  303E wc,<br />
+    0  3099  309A wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    2  3040  A4CF wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    2  AC00  D7A3 wc,<br />
+    2  F900  FAFF wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  FB1E  FB1E wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  FE00  FE0F wc,<br />
+    0  FE20  FE23 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    2  FE30  FE6F wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  FEFF  FEFF wc,<br />
+    2  FF00  FF60 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    2  FFE0  FFE6 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0  FFF9  FFFB wc,<br />
+    0 1D167 1D169 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0 1D173 1D182 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0 1D185 1D18B wc,<br />
+    0 1D1AA 1D1AD wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    2 20000 2FFFD wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    2 30000 3FFFD wc,<br />
+    0 E0001 E0001 wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0 E0020 E007F wc,&nbsp;&nbsp;&nbsp;&nbsp;
+    0 E0100 E01EF wc,<br />
+    <a href="core/HERE.html">HERE</a> wc-table <a href="core/Minus.html">-</a> <a href="core/CONSTANT.html">CONSTANT</a> #wc-table
+    <p />
+    <a href="core/bs.html">\</a> <span class="rm">inefficient table walk:</span>
+    <p />
+    <a href="core/Colon.html">:</a> <strong>XC-WIDTH</strong> <a href="core/p.html">(</a> xchar -- n ) <br />
+    &nbsp;&nbsp; wc-table #wc-table <a href="core/OVER.html">OVER</a> <a href="core/Plus.html">+</a> <a href="core/SWAP.html">SWAP</a> <a href="core/qDO.html">?DO</a> <br />
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="core/DUP.html">DUP</a> <a href="core/I.html">I</a> <a href="core/TwoFetch.html">2@</a> <a href="core/WITHIN.html">WITHIN</a> <a href="core/IF.html">IF</a>
+    <a href="core/DROP.html">DROP</a> <a href="core/I.html">I</a> 2 <a href="core/CELLS.html">CELLS</a> <a href="core/Plus.html">+</a> <a href="core/Fetch.html">@</a> <a href="core/UNLOOP.html">UNLOOP</a> <a href="core/EXIT.html">EXIT</a> <a href="core/THEN.html">THEN</a> <br />
+    &nbsp;&nbsp; 3 <a href="core/CELLS.html">CELLS</a> <a href="core/PlusLOOP.html">+LOOP</a> <a href="core/DROP.html">DROP</a> 1 <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XCHAR-">
+  <div class="wordNumber">E.18.6.2.2487.45</div>
+  <div class="wordName">XCHAR-</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>XCHAR-</strong> <a href="core/p.html">(</a> xc-addr -- xc-addr' ) <br />
+    &nbsp;&nbsp; <a href="core/BEGIN.html">BEGIN</a>  1 <a href="core/CHARS.html">CHARS</a> <a href="core/Minus.html">-</a> <a href="core/DUP.html">DUP</a> <a href="core/CFetch.html">C@</a> $C0 <a href="core/AND.html">AND</a> $80 <a href="core/ne.html">&lt;&gt;</a> <a href="core/UNTIL.html">UNTIL</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XHOLD">
+  <div class="wordNumber">E.18.6.2.2488.20</div>
+  <div class="wordName">XHOLD</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/CREATE.html">CREATE</a> xholdbuf 8 <a href="core/ALLOT.html">ALLOT</a>
+    <p />
+    <a href="core/Colon.html">:</a> <strong>XHOLD</strong> <a href="core/p.html">(</a> xchar -- )
+    xholdbuf <a href="core/TUCK.html">TUCK</a> <a href="xchar/XCStorePlus.html">XC!+</a> <a href="core/OVER.html">OVER</a> <a href="core/Minus.html">-</a> <a href="core/HOLDS.html">HOLDS</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:XSTRING-">
+  <div class="wordNumber">E.18.6.2.2495</div>
+  <div class="wordName">X\STRING-</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>X\STRING-</strong> <a href="core/p.html">(</a> xc-addr u -- xc-addr u' ) <br />
+    &nbsp;&nbsp; <a href="core/OVER.html">OVER</a> <a href="core/Plus.html">+</a> <a href="xchar/XCHARMinus.html">XCHAR-</a> <a href="core/OVER.html">OVER</a> <a href="core/Minus.html">-</a> <a href="core/Semi.html">;</a>
+    
+    </div>
+  </div>
+
+<div class="wordHead" id="imp:xchar:[CHAR]">
+  <div class="wordNumber">E.18.6.2.2520</div>
+  <div class="wordName">[CHAR]</div>
+</div>
+<div class="wordBody">
+  <div class="implement">
+
+    <a href="core/Colon.html">:</a> <strong>[CHAR]</strong> <a href="core/p.html">(</a> &quot;name&quot; -- rt:xchar ) <br />
+    &nbsp;&nbsp; <a href="xchar/CHAR.html">CHAR</a> <a href="core/POSTPONE.html">POSTPONE</a> <a href="core/LITERAL.html">LITERAL</a> <a href="core/Semi.html">;</a> <a href="core/IMMEDIATE.html">IMMEDIATE</a>
+    
+
+
+    </div>
+  </div>
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Reference Implementations</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html" class="current">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-sec" class="scroll-bar" style="width: 255px;">
+        <li role="menuitem"><a href="#section.E.1">Introduction</a></li>
+        <li role="menuitem"><a href="#section.E.6">The Core word set</a></li>
+        <li role="menuitem"><a href="#section.E.7">Block word set</a></li>
+        <li role="menuitem"><a href="#section.E.8">Double-Number word set</a></li>
+        <li role="menuitem"><a href="#section.E.9">Exception word set</a></li>
+        <li role="menuitem"><a href="#section.E.10">Exception word set</a></li>
+        <li role="menuitem"><a href="#section.E.11">File-Access word set</a></li>
+        <li role="menuitem"><a href="#section.E.12">Facility word set</a></li>
+        <li role="menuitem"><a href="#section.E.13">Locals word set</a></li>
+        <li role="menuitem"><a href="#section.E.14">File-Access word set</a></li>
+        <li role="menuitem"><a href="#section.E.15">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="#section.E.16">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="#section.E.17">String word set</a></li>
+        <li role="menuitem"><a href="#section.E.18">Locals word set</a></li>
+        <li role="menuitem"><a href="#section.E.20">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="#section.E.22">Search-Order word set</a></li>
+        <li role="menuitem"><a href="#section.E.24">String word set</a></li>
+        <li role="menuitem"><a href="#section.E.25">Extended-Character word set</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: EKEYFKEY</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="facility:EKEYtoFKEY">
+  <div class="wordNumber">10.6.2.1306.40</div>
+  <div class="wordName">EKEY&gt;FKEY</div>
+  <div class="wordEnglish">e-key-to-f-key</div>
+  <div class="wordList">FACILITY EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>x</em> -- <em>u flag</em> )
+      <p />
+      If the keyboard event <em>x</em> corresponds to a keypress in the
+      implementation-defined special key set, return that key's id
+      <em>u</em> and <em>true</em>. Otherwise return <em>x</em> and
+      <em>false</em>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Note:</div>
+    <div class="sec">
+
+
+      The keyboard may lack some of the keys, or the capability to report
+      them. Programs should be written such that they also work (although
+      less conveniently or with less functionality) if these key numbers
+      cannot be produced.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+
+      <a href="../facility/EKEY.html">10.6.2.1305 EKEY</a>,
+      <a href="../facility/K-ALT-MASK.html">10.6.2.1740.01 K-ALT-MASK</a>,
+      <a href="../facility/K-CTRL-MASK.html">10.6.2.1740.02 K-CTRL-MASK</a>, 
+      <a href="../facility/K-DELETE.html">10.6.2.1740.03 K-DELETE</a>,
+      <a href="../facility/K-DOWN.html">10.6.2.1740.04 K-DOWN</a>,
+      <a href="../facility/K-END.html">10.6.2.1740.05 K-END</a>, 
+      <a href="../facility/K-FOne.html">10.6.2.1740.06 K-F1</a>,
+      <a href="../facility/K-FOneZero.html">10.6.2.1740.07 K-F10</a>,
+      <a href="../facility/K-FOneOne.html">10.6.2.1740.08 K-F11</a>, 
+      <a href="../facility/K-FOneTwo.html">10.6.2.1740.09 K-F12</a>,
+      <a href="../facility/K-FTwo.html">10.6.2.1740.10 K-F2</a>,
+      <a href="../facility/K-F3.html">10.6.2.1740.11 K-F3</a>, 
+      <a href="../facility/K-F4.html">10.6.2.1740.12 K-F4</a>,
+      <a href="../facility/K-F5.html">10.6.2.1740.13 K-F5</a>,
+      <a href="../facility/K-F6.html">10.6.2.1740.14 K-F6</a>, 
+      <a href="../facility/K-F7.html">10.6.2.1740.15 K-F7</a>,
+      <a href="../facility/K-F8.html">10.6.2.1740.16 K-F8</a>,
+      <a href="../facility/K-F9.html">10.6.2.1740.17 K-F9</a>, 
+      <a href="../facility/K-HOME.html">10.6.2.1740.18 K-HOME</a>,
+      <a href="../facility/K-INSERT.html">10.6.2.1740.19 K-INSERT</a>,
+      <a href="../facility/K-LEFT.html">10.6.2.1740.20 K-LEFT</a>, 
+      <a href="../facility/K-NEXT.html">10.6.2.1740.21 K-NEXT</a>,
+      <a href="../facility/K-PRIOR.html">10.6.2.1740.22 K-PRIOR</a>,
+      <a href="../facility/K-RIGHT.html">10.6.2.1740.23 K-RIGHT</a>, 
+      <a href="../facility/K-SHIFT-MASK.html">10.6.2.1740.24 K-SHIFT-MASK</a>,
+      <a href="../facility/K-UP.html">10.6.2.1740.25 K-UP</a>, 
+      <a href="../rationale.html#rat:facility:EKEYtoFKEY">A.10.6.2.1306.40 EKEY&gt;FKEY</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.10.6.2.---- EKEY>FKEY -->
+      <a href="../facility/EKEY.html">EKEY</a> produces an abstract cell type for a keyboard
+      event (e.g., a keyboard scan code).  <strong>EKEY&gt;FKEY</strong> checks
+      if such an event corresponds to a special (non-graphic) key
+      press, and if so, returns a code for the special key press.
+      The encoding of special keys (returned by <strong>EKEY&gt;FKEY</strong>)
+      may be different from the encoding of these keys as keyboard
+      events (input to <strong>EKEY&gt;FKEY</strong>).
+      <p />
+      Typical Use:
+      <p />
+            <div class="quote">
+
+        ... <a href="../facility/EKEY.html">EKEY</a> <strong>EKEY&gt;FKEY</strong> <a href="../core/IF.html">IF</a> <br />
+        &nbsp;&nbsp; <a href="../core/CASE.html">CASE</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="../facility/K-UP.html">K-UP</a> <a href="../core/OF.html">OF</a> ... <a href="../core/ENDOF.html">ENDOF</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="../facility/K-FOne.html">K-F1</a> <a href="../core/OF.html">OF</a> ... <a href="../core/ENDOF.html">ENDOF</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="../facility/K-LEFT.html">K-LEFT</a> <a href="../facility/K-SHIFT-MASK.html">K-SHIFT-MASK</a> <a href="../core/OR.html">OR</a>
+        <a href="../facility/K-CTRL-MASK.html">K-CTRL-MASK</a> <a href="../core/OR.html">OR</a>
+        <a href="../core/OF.html">OF</a> ... <a href="../core/ENDOF.html">ENDOF</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; ... <br />
+        &nbsp;&nbsp; <a href="../core/ENDCASE.html">ENDCASE</a> <br />
+        <a href="../core/ELSE.html">ELSE</a> <br />
+        &nbsp;&nbsp; ... <br />
+        <a href="../core/THEN.html">THEN</a>
+        
+        </div>
+      <p />
+      The codes for the special keys are system-dependent, but this
+      standard provides words for getting the key codes for a number
+      of keys:
+      <p />
+      <div class="center">
+
+        <table class="center">
+        <tr valign="top"><td colspan="5"><hr /></td></tr>
+        <tr valign="top"><td>Word </td><td>Key </td><td class="c">&nbsp;&nbsp;&nbsp;&nbsp; </td><td>Word </td><td>Key </td></tr>
+        <tr valign="top"><td colspan="5"><hr /></td></tr>
+        <tr valign="top"><td><a href="../facility/K-FOne.html">K-F1</a>		</td><td>F1	</td><td class="c"></td><td><a href="../facility/K-LEFT.html">K-LEFT</a>	</td><td>cursor left	</td></tr>
+        <tr valign="top"><td><a href="../facility/K-FTwo.html">K-F2</a>		</td><td>F2	</td><td class="c"></td><td><a href="../facility/K-RIGHT.html">K-RIGHT</a>	</td><td>cursor right	</td></tr>
+        <tr valign="top"><td><a href="../facility/K-F3.html">K-F3</a>		</td><td>F3	</td><td class="c"></td><td><a href="../facility/K-UP.html">K-UP</a>		</td><td>cursor up		</td></tr>
+        <tr valign="top"><td><a href="../facility/K-F4.html">K-F4</a>		</td><td>F4	</td><td class="c"></td><td><a href="../facility/K-DOWN.html">K-DOWN</a>	</td><td>cursor down	</td></tr>
+        <tr valign="top"><td><a href="../facility/K-F5.html">K-F5</a>		</td><td>F5	</td><td class="c"></td><td><a href="../facility/K-HOME.html">K-HOME</a>	</td><td>home or Pos1	</td></tr>
+        <tr valign="top"><td><a href="../facility/K-F6.html">K-F6</a>		</td><td>F6	</td><td class="c"></td><td><a href="../facility/K-END.html">K-END</a>	</td><td>End			</td></tr>
+        <tr valign="top"><td><a href="../facility/K-F7.html">K-F7</a>		</td><td>F7	</td><td class="c"></td><td><a href="../facility/K-PRIOR.html">K-PRIOR</a>	</td><td>PgUp or Prior	</td></tr>
+        <tr valign="top"><td><a href="../facility/K-F8.html">K-F8</a>		</td><td>F8	</td><td class="c"></td><td><a href="../facility/K-NEXT.html">K-NEXT</a>	</td><td>PgDn or Next	</td></tr>
+        <tr valign="top"><td><a href="../facility/K-F9.html">K-F9</a>		</td><td>F9	</td><td class="c"></td><td><a href="../facility/K-INSERT.html">K-INSERT</a>	</td><td>Insert		</td></tr>
+        <tr valign="top"><td><a href="../facility/K-FOneZero.html">K-F10</a>	</td><td>F10	</td><td class="c"></td><td><a href="../facility/K-DELETE.html">K-DELETE</a>	</td><td>Delete		</td></tr>
+        <tr valign="top"><td><a href="../facility/K-FOneOne.html">K-F11</a>	</td><td>F11	</td></tr>
+        <tr valign="top"><td><a href="../facility/K-FOneTwo.html">K-F12</a>	</td><td>F12	</td></tr>
+        <tr valign="top"><td colspan="5"><hr /></td></tr>
+        <tr valign="top"><td></td></tr>
+        </table>
+        
+        </div>
+      <p />
+      In addition, you can get codes for shifted variants of these
+      keys by <a href="../core/OR.html">OR</a>ing with <a href="../facility/K-SHIFT-MASK.html">K-SHIFT-MASK</a>, <a href="../facility/K-CTRL-MASK.html">K-CTRL-MASK</a>
+      and/or <a href="../facility/K-ALT-MASK.html">K-ALT-MASK</a>, e.g. <a href="../facility/K-CTRL-MASK.html">K-CTRL-MASK</a>
+      <a href="../facility/K-ALT-MASK.html">K-ALT-MASK</a> <a href="../core/OR.html">OR</a> <a href="../facility/K-DELETE.html">K-DELETE</a> <a href="../core/OR.html">OR</a>.
+      The masks for the shift keys are:
+      <p />
+      <div class="center">
+
+        <table class="center">
+        <tr valign="top"><td colspan="2"><hr /></td></tr>
+        <tr valign="top"><td>Word 				</td><td>Key	</td></tr>
+        <tr valign="top"><td colspan="2"><hr /></td></tr>
+        <tr valign="top"><td><a href="../facility/K-SHIFT-MASK.html">K-SHIFT-MASK</a>	</td><td>Shift	</td></tr>
+        <tr valign="top"><td><a href="../facility/K-CTRL-MASK.html">K-CTRL-MASK</a>	</td><td>Ctrl	</td></tr>
+        <tr valign="top"><td><a href="../facility/K-ALT-MASK.html">K-ALT-MASK</a>	</td><td>Alt	</td></tr>
+        <tr valign="top"><td colspan="2"><hr /></td></tr>
+        <tr valign="top"><td></td></tr>
+        </table>
+        
+        </div>
+      <p />
+      Note that not all of these keys are available on all systems, and not
+      all combinations of keys and shift keys are available.  Therefore
+      programs should be written such that they continue to work (although
+      less conveniently or with less functionality) if these key combinations
+      cannot be produced.
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+ <!-- I.10.6.2.--- EKEY>FKEY -->
+      <span class="rm">The implementation is closely tied to the implementation
+      of <a href="../facility/EKEY.html">EKEY</a> and therefore unportable.</span>
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+ <!-- T.10.6.2.---- EKEY>FKEY -->
+            <div class="tt">
+<a href="../core/Colon.html">:</a> TFKEY&quot; <a href="../core/p.html">(</a> &quot;ccc&lt;quote&gt;&quot; -- u flag ) <br />
+        &nbsp;&nbsp;&nbsp; <a href="../core/CR.html">CR</a> <a href="../core/Dotq.html">.&quot;</a> Please press &quot; <a href="../core/POSTPONE.html">POSTPONE</a> <a href="../core/Dotq.html">.&quot;</a> <a href="../facility/EKEY.html">EKEY</a> <strong>EKEY&gt;FKEY</strong> <a href="../core/Semi.html">;</a>
+        <p />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;left&gt;&quot;&nbsp; -&gt; <a href="../facility/K-LEFT.html">K-LEFT</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;right&gt;&quot; -&gt; <a href="../facility/K-RIGHT.html">K-RIGHT</a>&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;up&gt;&quot;&nbsp;&nbsp;&nbsp; -&gt; <a href="../facility/K-UP.html">K-UP</a>&nbsp;&nbsp;&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;down&gt;&quot;&nbsp; -&gt; <a href="../facility/K-DOWN.html">K-DOWN</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;home&gt;&quot;&nbsp; -&gt; <a href="../facility/K-HOME.html">K-HOME</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;end&gt;&quot;&nbsp;&nbsp; -&gt; <a href="../facility/K-END.html">K-END</a>&nbsp;&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;prior&gt;&quot; -&gt; <a href="../facility/K-PRIOR.html">K-PRIOR</a>&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;next&gt;&quot;&nbsp; -&gt; <a href="../facility/K-NEXT.html">K-NEXT</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span>
+        <p />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F1&gt;&quot;&nbsp; -&gt; <a href="../facility/K-FOne.html">K-F1</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F2&gt;&quot;&nbsp; -&gt; <a href="../facility/K-FTwo.html">K-F2</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F3&gt;&quot;&nbsp; -&gt; <a href="../facility/K-F3.html">K-F3</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F4&gt;&quot;&nbsp; -&gt; <a href="../facility/K-F4.html">K-F4</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F5&gt;&quot;&nbsp; -&gt; <a href="../facility/K-F5.html">K-F5</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F6&gt;&quot;&nbsp; -&gt; <a href="../facility/K-F6.html">K-F6</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F7&gt;&quot;&nbsp; -&gt; <a href="../facility/K-F7.html">K-F7</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F8&gt;&quot;&nbsp; -&gt; <a href="../facility/K-F8.html">K-F8</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F9&gt;&quot;&nbsp; -&gt; <a href="../facility/K-F9.html">K-F9</a>&nbsp;&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F10&gt;&quot; -&gt; <a href="../facility/K-FOneZero.html">K-F10</a>&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F11&gt;&quot; -&gt; <a href="../facility/K-FOneOne.html">K-F11</a>&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;F11&gt;&quot; -&gt; <a href="../facility/K-FOneTwo.html">K-F12</a>&nbsp;&lt;TRUE&gt; }T</span>
+        <p />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;shift-left&gt;&quot; -&gt; <a href="../facility/K-LEFT.html">K-LEFT</a>&nbsp;<a href="../facility/K-SHIFT-MASK.html">K-SHIFT-MASK</a>&nbsp;<a href="../core/OR.html">OR</a>&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;ctrl-left&gt;&quot;&nbsp; -&gt; <a href="../facility/K-LEFT.html">K-LEFT</a>&nbsp;<a href="../facility/K-CTRL-MASK.html">K-CTRL-MASK</a>&nbsp;&nbsp;<a href="../core/OR.html">OR</a>&nbsp;&lt;TRUE&gt; }T</span> <br />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;alt-left&gt;&quot;&nbsp;&nbsp; -&gt; <a href="../facility/K-LEFT.html">K-LEFT</a>&nbsp;<a href="../facility/K-ALT-MASK.html">K-ALT-MASK</a>&nbsp;&nbsp;&nbsp;<a href="../core/OR.html">OR</a>&nbsp;&lt;TRUE&gt; }T</span>
+        <p />
+        <span class="tt">T{ TFKEY&quot;&nbsp;&lt;a&gt;&quot;&nbsp;<a href="../core/SWAP.html">SWAP</a>&nbsp;<a href="../facility/EKEYtoCHAR.html">EKEY&gt;CHAR</a> -&gt; &lt;FALSE&gt;&nbsp;CHAR&nbsp;a&nbsp;&lt;TRUE&gt; }T</span> <br />
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Facility word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html" class="current">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../facility.html#section.10.1">Introduction</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">EKEY&gt;FKEY</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="AT-XY.html">AT-XY</a></li>
+        <li role="menuitem"><a href="KEYq.html">KEY?</a></li>
+        <li role="menuitem"><a href="PAGE.html">PAGE</a></li>
+        <li role="menuitem"><a href="PlusFIELD.html">+FIELD</a></li>
+        <li role="menuitem"><a href="BEGIN-STRUCTURE.html">BEGIN-STRUCTURE</a></li>
+        <li role="menuitem"><a href="CFIELDColon.html">CFIELD:</a></li>
+        <li role="menuitem"><a href="EKEY.html">EKEY</a></li>
+        <li role="menuitem"><a href="EKEYtoCHAR.html">EKEY&gt;CHAR</a></li>
+        <li role="menuitem"><a href="EKEYtoFKEY.html" class="current">EKEY&gt;FKEY</a></li>
+        <li role="menuitem"><a href="EKEYq.html">EKEY?</a></li>
+        <li role="menuitem"><a href="EMITq.html">EMIT?</a></li>
+        <li role="menuitem"><a href="END-STRUCTURE.html">END-STRUCTURE</a></li>
+        <li role="menuitem"><a href="FIELDColon.html">FIELD:</a></li>
+        <li role="menuitem"><a href="K-ALT-MASK.html">K-ALT-MASK</a></li>
+        <li role="menuitem"><a href="K-CTRL-MASK.html">K-CTRL-MASK</a></li>
+        <li role="menuitem"><a href="K-DELETE.html">K-DELETE</a></li>
+        <li role="menuitem"><a href="K-DOWN.html">K-DOWN</a></li>
+        <li role="menuitem"><a href="K-END.html">K-END</a></li>
+        <li role="menuitem"><a href="K-FOne.html">K-F1</a></li>
+        <li role="menuitem"><a href="K-FOneZero.html">K-F10</a></li>
+        <li role="menuitem"><a href="K-FOneOne.html">K-F11</a></li>
+        <li role="menuitem"><a href="K-FOneTwo.html">K-F12</a></li>
+        <li role="menuitem"><a href="K-FTwo.html">K-F2</a></li>
+        <li role="menuitem"><a href="K-F3.html">K-F3</a></li>
+        <li role="menuitem"><a href="K-F4.html">K-F4</a></li>
+        <li role="menuitem"><a href="K-F5.html">K-F5</a></li>
+        <li role="menuitem"><a href="K-F6.html">K-F6</a></li>
+        <li role="menuitem"><a href="K-F7.html">K-F7</a></li>
+        <li role="menuitem"><a href="K-F8.html">K-F8</a></li>
+        <li role="menuitem"><a href="K-F9.html">K-F9</a></li>
+        <li role="menuitem"><a href="K-HOME.html">K-HOME</a></li>
+        <li role="menuitem"><a href="K-INSERT.html">K-INSERT</a></li>
+        <li role="menuitem"><a href="K-LEFT.html">K-LEFT</a></li>
+        <li role="menuitem"><a href="K-NEXT.html">K-NEXT</a></li>
+        <li role="menuitem"><a href="K-PRIOR.html">K-PRIOR</a></li>
+        <li role="menuitem"><a href="K-RIGHT.html">K-RIGHT</a></li>
+        <li role="menuitem"><a href="K-SHIFT-MASK.html">K-SHIFT-MASK</a></li>
+        <li role="menuitem"><a href="K-UP.html">K-UP</a></li>
+        <li role="menuitem"><a href="MS.html">MS</a></li>
+        <li role="menuitem"><a href="TIMEandDATE.html">TIME&amp;DATE</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

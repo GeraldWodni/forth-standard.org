@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: +FIELD</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="facility:+FIELD">
+  <div class="wordNumber">10.6.2.0135</div>
+  <div class="wordName">+FIELD</div>
+  <div class="wordEnglish">plus-field</div>
+  <div class="wordList">FACILITY EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>n<sub>1</sub> n<sub>2</sub> &quot;&lt;spaces&gt;name&quot;</em> -- <em>n<sub>3</sub></em> )
+      <p />
+      Skip leading space delimiters.  Parse <em>name</em> delimited
+      by a space.  Create a definition for <em>name</em> with the
+      execution semantics defined below.  Return <em>n<sub>3</sub></em> =
+      <em>n<sub>1</sub></em> + <em>n<sub>2</sub></em> where <em>n<sub>1</sub></em> is the offset
+      in the data structure before <strong>+FIELD</strong> executes, and
+      <em>n<sub>2</sub></em> is the size of the data to be added to the data
+      structure. <em>n<sub>1</sub></em> and <em>n<sub>2</sub></em> are in address units.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname"><em>name</em> Execution:</div>
+    <div class="sec">
+
+
+      ( <em>addr<sub>1</sub></em> -- <em>addr<sub>2</sub></em> )
+      <p />
+      Add <em>n<sub>1</sub></em> to <em>addr<sub>1</sub></em> giving <em>addr<sub>2</sub></em>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../facility/BEGIN-STRUCTURE.html">10.6.2.0763 BEGIN-STRUCTURE</a>,
+      <a href="../facility/END-STRUCTURE.html">10.6.2.1336 END-STRUCTURE</a>, <br />
+      <a href="../facility/CFIELDColon.html">10.6.2.0893 CFIELD:</a>,
+      <a href="../facility/FIELDColon.html">10.6.2.1518 FIELD:</a>,
+      <a href="../floating/FFIELDColon.html">12.6.2.1517 FFIELD:</a>, <br />
+      <a href="../floating/SFFIELDColon.html">12.6.2.2206.40 SFFIELD:</a>,
+      <a href="../floating/DFFIELDColon.html">12.6.2.1207.40 DFFIELD:</a>,
+      <a href="../rationale.html#rat:facility:+FIELD">A.10.6.2.0135 +FIELD</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.10.6.2.---- +FIELD -->
+      <strong>+FIELD</strong> is not required to align items.  This is
+      deliberate and allows the construction of unaligned data
+      structures for communication with external elements such
+      as a hardware register map or protocol packet.
+      Field alignment has been left to the appropriate
+      <em>x</em><code>FIELD:</code> definition.
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+ <!-- I.10.6.2.---- +FIELD -->
+      <span class="rm">Create a new field within a structure definition
+      of size <em>n</em> bytes.</span>
+      <p />
+      <a href="../core/Colon.html">:</a> +FIELD&nbsp;&nbsp;<a href="../core/bs.html">\</a> n &lt;&quot;name&quot;&gt; -- ; Exec: addr -- 'addr <br />
+      &nbsp;&nbsp; <a href="../core/CREATE.html">CREATE</a> <a href="../core/OVER.html">OVER</a> <a href="../core/Comma.html">,</a> <a href="../core/Plus.html">+</a> <br />
+      &nbsp;&nbsp; <a href="../core/DOES.html">DOES&gt;</a> <a href="../core/Fetch.html">@</a> <a href="../core/Plus.html">+</a> <br />
+      <a href="../core/Semi.html">;</a>
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Facility word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html" class="current">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../facility.html#section.10.1">Introduction</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../facility.html#section.10.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">+FIELD</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="AT-XY.html">AT-XY</a></li>
+        <li role="menuitem"><a href="KEYq.html">KEY?</a></li>
+        <li role="menuitem"><a href="PAGE.html">PAGE</a></li>
+        <li role="menuitem"><a href="PlusFIELD.html" class="current">+FIELD</a></li>
+        <li role="menuitem"><a href="BEGIN-STRUCTURE.html">BEGIN-STRUCTURE</a></li>
+        <li role="menuitem"><a href="CFIELDColon.html">CFIELD:</a></li>
+        <li role="menuitem"><a href="EKEY.html">EKEY</a></li>
+        <li role="menuitem"><a href="EKEYtoCHAR.html">EKEY&gt;CHAR</a></li>
+        <li role="menuitem"><a href="EKEYtoFKEY.html">EKEY&gt;FKEY</a></li>
+        <li role="menuitem"><a href="EKEYq.html">EKEY?</a></li>
+        <li role="menuitem"><a href="EMITq.html">EMIT?</a></li>
+        <li role="menuitem"><a href="END-STRUCTURE.html">END-STRUCTURE</a></li>
+        <li role="menuitem"><a href="FIELDColon.html">FIELD:</a></li>
+        <li role="menuitem"><a href="K-ALT-MASK.html">K-ALT-MASK</a></li>
+        <li role="menuitem"><a href="K-CTRL-MASK.html">K-CTRL-MASK</a></li>
+        <li role="menuitem"><a href="K-DELETE.html">K-DELETE</a></li>
+        <li role="menuitem"><a href="K-DOWN.html">K-DOWN</a></li>
+        <li role="menuitem"><a href="K-END.html">K-END</a></li>
+        <li role="menuitem"><a href="K-FOne.html">K-F1</a></li>
+        <li role="menuitem"><a href="K-FOneZero.html">K-F10</a></li>
+        <li role="menuitem"><a href="K-FOneOne.html">K-F11</a></li>
+        <li role="menuitem"><a href="K-FOneTwo.html">K-F12</a></li>
+        <li role="menuitem"><a href="K-FTwo.html">K-F2</a></li>
+        <li role="menuitem"><a href="K-F3.html">K-F3</a></li>
+        <li role="menuitem"><a href="K-F4.html">K-F4</a></li>
+        <li role="menuitem"><a href="K-F5.html">K-F5</a></li>
+        <li role="menuitem"><a href="K-F6.html">K-F6</a></li>
+        <li role="menuitem"><a href="K-F7.html">K-F7</a></li>
+        <li role="menuitem"><a href="K-F8.html">K-F8</a></li>
+        <li role="menuitem"><a href="K-F9.html">K-F9</a></li>
+        <li role="menuitem"><a href="K-HOME.html">K-HOME</a></li>
+        <li role="menuitem"><a href="K-INSERT.html">K-INSERT</a></li>
+        <li role="menuitem"><a href="K-LEFT.html">K-LEFT</a></li>
+        <li role="menuitem"><a href="K-NEXT.html">K-NEXT</a></li>
+        <li role="menuitem"><a href="K-PRIOR.html">K-PRIOR</a></li>
+        <li role="menuitem"><a href="K-RIGHT.html">K-RIGHT</a></li>
+        <li role="menuitem"><a href="K-SHIFT-MASK.html">K-SHIFT-MASK</a></li>
+        <li role="menuitem"><a href="K-UP.html">K-UP</a></li>
+        <li role="menuitem"><a href="MS.html">MS</a></li>
+        <li role="menuitem"><a href="TIMEandDATE.html">TIME&amp;DATE</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

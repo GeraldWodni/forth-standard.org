@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: Usage requirements</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.3">3 Usage requirements</h1>
+<a name="usage"></a>
+<p />
+A system shall provide all of the words defined in
+<strong><a href="core.html#wordlist:core">6.1 Core words</a></strong>. It may also provide any
+words defined in the optional word sets and extensions word
+sets. No standard word provided by a system shall alter the
+system state in a way that changes the effect of execution of
+any other standard word except as provided in this standard.
+A system may contain non-standard extensions, provided that
+they are consistent with the requirements of this standard.
+<p />
+The implementation of a system may use words and techniques
+outside the scope of this standard.
+<p />
+A system need not provide all words in executable form. The
+implementation may provide definitions, including definitions
+of words in the Core word set, in source form only. If so,
+the mechanism for adding the definitions to the dictionary
+is implementation defined.
+<p />
+A program that requires a system to provide words or techniques
+not defined in this standard has an environmental dependency.
+<p />
+<h2 id="section.3.1">3.1 Data types</h2> <!-- 3.1 -->
+<a name="usage:data"></a>
+<p />
+A data type identifies the set of permissible values for a
+data object. It is not a property of a particular storage
+location or position on a stack. Moving a data object shall
+not affect its type.
+<p />
+No data-type checking is required of a system. An ambiguous
+condition exists if an incorrectly typed data object is
+encountered.
+<p />
+Table <a href="usage.html#table:datatypes">3.1</a> summarizes the data types used
+throughout this standard. Multiple instances of the same
+type in the description of a definition are suffixed with
+a sequence digit subscript to distinguish them.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 3.1: Data types</div>
+  <a name="table:datatypes"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>Symbol</em> </td><td><em>Data type</em> </td><td class="r"><em>Size on stack</em> </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>flag</em>		</td><td>flag								</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>true</em>		</td><td>true flag							</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>false</em>		</td><td>false flag						</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>char</em>		</td><td>character							</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>n</em>			</td><td>signed number						</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>+n</em>			</td><td>non-negative number				</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>u</em>			</td><td>unsigned number					</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>u | n</em><sup>[1]</sup>
+  </td><td>number							</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>x</em>			</td><td>unspecified cell					</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>xt</em>			</td><td>execution token					</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>addr</em>		</td><td>address							</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>a-addr</em>		</td><td>aligned address					</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>c-addr</em>		</td><td>character-aligned address			</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>ior</em>			</td><td>error result						</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>d</em>			</td><td>double-cell signed number			</td><td class="r">2 cells </td></tr>
+  <tr valign="top"><td><em>+d</em>			</td><td>double-cell non-negative number	</td><td class="r">2 cells </td></tr>
+  <tr valign="top"><td><em>ud</em>			</td><td>double-cell unsigned number		</td><td class="r">2 cells </td></tr>
+  <tr valign="top"><td><em>d | ud</em><sup>[2]</sup>
+  </td><td>double-cell number				</td><td class="r">2 cells </td></tr>
+  <tr valign="top"><td><em>xd</em>			</td><td>unspecified cell pair				</td><td class="r">2 cells </td></tr>
+  <tr valign="top"><td><em>colon-sys</em>	</td><td>definition compilation			</td><td class="r">implementation dependent </td></tr>
+  <tr valign="top"><td><em>do-sys</em>		</td><td>do-loop structures				</td><td class="r">implementation dependent </td></tr>
+  <tr valign="top"><td><em>case-sys</em>	</td><td><a href="core/CASE.html">CASE</a> structures			</td><td class="r">implementation dependent </td></tr>
+  <tr valign="top"><td><em>of-sys</em>		</td><td><a href="core/OF.html">OF</a> structures				</td><td class="r">implementation dependent </td></tr>
+  <tr valign="top"><td><em>orig</em>		</td><td>control-flow origins				</td><td class="r">implementation dependent </td></tr>
+  <tr valign="top"><td><em>dest</em>		</td><td>control-flow destinations			</td><td class="r">implementation dependent </td></tr>
+  <tr valign="top"><td><em>loop-sys</em>	</td><td>loop-control parameters			</td><td class="r">implementation dependent </td></tr>
+  <tr valign="top"><td><em>nest-sys</em>	</td><td>definition cells					</td><td class="r">implementation dependent </td></tr>
+  <tr valign="top"><td><em>i * x, j * x, k * x</em><sup>[3]</sup>
+  </td><td>any data type						</td><td class="r">0 or more cells </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td></td></tr>
+  </table>
+  <p />
+  <table class="center">
+  <tr valign="top"><td><sup>[1]</sup> </td><td style="width: 40em">May be either a signed number or an unsigned number
+  depending on context. </td></tr>
+  <tr valign="top"><td><sup>[2]</sup> </td><td style="width: 40em">May be either a double-cell signed number or a double-cell
+  unsigned number depending on context.</td></tr>
+  <tr valign="top"><td><sup>[3]</sup> </td><td style="width: 40em">May be an undetermined number of stack entries of
+  unspecified type. For examples of use, see
+  <a href="core/EXECUTE.html">6.1.1370 EXECUTE</a>, <a href="core/QUIT.html">6.1.2050 QUIT</a>.
+  </table>
+  
+  </div>
+<h3 id="subsection.3.1.1">3.1.1 Data-type relationships</h3> <!-- 3.1.1 -->
+<a name="usage:type"></a>
+<p />
+Some of the data types are subtypes of other data types. A data
+type <em>i</em> is a subtype of type <em>j</em> if and only if the
+members of <em>i</em> are a subset of the members of <em>j</em>. The
+following list represents the subtype relationships using the
+phrase &quot;<em>i</em> <em>&rArr;</em> <em>j</em>&quot; to denote &quot;<em>i</em>
+is a subtype of <em>j</em>&quot;. The subtype relationship is transitive;
+if <em>i</em> <em>&rArr;</em> <em>j</em> and <em>j</em> <em>&rArr;</em>
+<em>k</em> then <em>i</em> <em>&rArr;</em> <em>k</em>:
+<p />
+<div class="quote">
+
+  <em>+n</em> <em>&rArr;</em> <em>u</em> <em>&rArr;</em> <em>x</em>; <br />
+  <em>+n</em> <em>&rArr;</em> <em>n</em> <em>&rArr;</em> <em>x</em>; <br />
+  <em>char</em> <em>&rArr;</em> <em>+n</em>; <br />
+  <em>a-addr</em> <em>&rArr;</em> <em>c-addr</em>
+  <em>&rArr;</em> <em>addr</em>
+  <em>&rArr;</em> <em>u</em>; <br />
+  <em>flag</em> <em>&rArr;</em> <em>x</em>; <br />
+  <em>xt</em> <em>&rArr;</em> <em>x</em>; <br />
+  <em>ior</em> <em>&rArr;</em> <em>n</em> <em>&rArr;</em> <em>x</em>; <br />
+  <em>+d</em> <em>&rArr;</em> <em>d</em> <em>&rArr;</em> <em>xd</em>; <br />
+  <em>+d</em> <em>&rArr;</em> <em>ud</em> <em>&rArr;</em> <em>xd</em>.
+  
+  </div>
+<p />
+Any Forth definition that accepts an argument of type <em>i</em>
+shall also accept an argument that is a subtype of <em>i</em>.
+<p />
+
+<h3 id="subsection.3.1.2">3.1.2 Character types</h3> <!-- 3.1.2 -->
+<a name="usage:char"></a>
+<p />
+Characters shall have the following properties:
+<ul>
+<li> be at least one address unit wide; 
+</li>
+<li> contain at least eight bits; 
+</li>
+<li> be of fixed width; 
+</li>
+<li> have a size less than or equal to cell size; 
+</li>
+<li> be unsigned.
+</li>
+</ul>
+<p />
+The characters provided by a system shall include the graphic
+characters {32 ... 126}, which represent graphic forms
+as shown in table <a href="usage.html#table:ASCII">3.2</a>.
+<p />
+<h4 id="subsubsection.3.1.2.1">3.1.2.1 Graphic characters</h4> <!-- 3.1.2.1 -->
+<a name="usage:ASCII"></a>
+<p />
+A graphic character is one that is normally displayed (e.g.,
+A, #, &amp;, 6). These values and graphics, shown in table
+<a href="usage.html#table:ASCII">3.2</a>, are taken directly from ANS X3.4-1974 (ASCII)
+and ISO 646-1983, International Reference Version (IRV). The
+graphic forms of characters outside the hex range {20 ...
+7E} are implementation defined. Programs that use the graphic hex
+24 (the currency sign) have an environmental dependency.
+<p />
+The graphic representation of characters is not restricted to
+particular type fonts or styles. The graphics here are examples.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 3.2: Standard graphic characters</div>
+  <a name="table:ASCII"></a>
+  
+  <table class="center">
+  <tr valign="top"><td colspan="30"><hr /></td></tr>
+  <tr valign="top"><td class="c">Hex </td><td>&nbsp;</td><td class="c">IRV </td><td>&nbsp;</td><td class="c">ASCII </td><td class="c">Hex </td><td>&nbsp;</td><td class="c">IRV </td><td>&nbsp;</td><td class="c">ASCII </td><td class="c">Hex </td><td>&nbsp;</td><td class="c">IRV </td><td>&nbsp;</td><td class="c">ASCII </td><td class="c">Hex </td><td>&nbsp;</td><td class="c">IRV </td><td>&nbsp;</td><td class="c">ASCII </td><td class="c">Hex </td><td>&nbsp;</td><td class="c">IRV </td><td>&nbsp;</td><td class="c">ASCII </td><td class="c">Hex </td><td>&nbsp;</td><td class="c">IRV </td><td>&nbsp;</td><td class="c">ASCII </td></tr>
+  <tr valign="top"><td colspan="30"><hr /></td></tr>
+  <tr valign="top"><td class="c">20</td><td>&nbsp;</td><td class="c"></td><td>&nbsp;</td><td class="c"></td><td class="c">30</td><td>&nbsp;</td><td class="c">0 </td><td>&nbsp;</td><td class="c">0	</td><td class="c">40</td><td>&nbsp;</td><td class="c">@ </td><td>&nbsp;</td><td class="c">@	</td><td class="c">50</td><td>&nbsp;</td><td class="c">P </td><td>&nbsp;</td><td class="c">P	</td><td class="c">60</td><td>&nbsp;</td><td class="c"><code>`</code> </td><td>&nbsp;</td><td class="c"><code>`</code>
+  </td><td class="c">70</td><td>&nbsp;</td><td class="c">p </td><td>&nbsp;</td><td class="c">p	</td></tr>
+  <tr valign="top"><td class="c">21</td><td>&nbsp;</td><td class="c">! </td><td>&nbsp;</td><td class="c">!	</td><td class="c">31</td><td>&nbsp;</td><td class="c">1 </td><td>&nbsp;</td><td class="c">1	</td><td class="c">41</td><td>&nbsp;</td><td class="c">A </td><td>&nbsp;</td><td class="c">A	</td><td class="c">51</td><td>&nbsp;</td><td class="c">Q </td><td>&nbsp;</td><td class="c">Q	</td><td class="c">61</td><td>&nbsp;</td><td class="c">a </td><td>&nbsp;</td><td class="c">a	</td><td class="c">71</td><td>&nbsp;</td><td class="c">q </td><td>&nbsp;</td><td class="c">q	</td></tr>
+  <tr valign="top"><td class="c">22</td><td>&nbsp;</td><td class="c"><code>"</code> </td><td>&nbsp;</td><td class="c"><code>"</code>
+  </td><td class="c">32</td><td>&nbsp;</td><td class="c">2 </td><td>&nbsp;</td><td class="c">2	</td><td class="c">42</td><td>&nbsp;</td><td class="c">B </td><td>&nbsp;</td><td class="c">B	</td><td class="c">52</td><td>&nbsp;</td><td class="c">R </td><td>&nbsp;</td><td class="c">R	</td><td class="c">62</td><td>&nbsp;</td><td class="c">b </td><td>&nbsp;</td><td class="c">b	</td><td class="c">72</td><td>&nbsp;</td><td class="c">r </td><td>&nbsp;</td><td class="c">r	</td></tr>
+  <tr valign="top"><td class="c">23</td><td>&nbsp;</td><td class="c"># </td><td>&nbsp;</td><td class="c"># </td><td class="c">33</td><td>&nbsp;</td><td class="c">3 </td><td>&nbsp;</td><td class="c">3	</td><td class="c">43</td><td>&nbsp;</td><td class="c">C </td><td>&nbsp;</td><td class="c">C	</td><td class="c">53</td><td>&nbsp;</td><td class="c">S </td><td>&nbsp;</td><td class="c">S	</td><td class="c">63</td><td>&nbsp;</td><td class="c">c </td><td>&nbsp;</td><td class="c">c	</td><td class="c">73</td><td>&nbsp;</td><td class="c">s </td><td>&nbsp;</td><td class="c">s	</td></tr>
+  <tr valign="top"><td class="c">24</td><td>&nbsp;</td><td class="c">&curren;  </td><td>&nbsp;</td><td class="c">$ </td><td class="c">34</td><td>&nbsp;</td><td class="c">4 </td><td>&nbsp;</td><td class="c">4	</td><td class="c">44</td><td>&nbsp;</td><td class="c">D </td><td>&nbsp;</td><td class="c">D	</td><td class="c">54</td><td>&nbsp;</td><td class="c">T </td><td>&nbsp;</td><td class="c">T	</td><td class="c">63</td><td>&nbsp;</td><td class="c">d </td><td>&nbsp;</td><td class="c">d	</td><td class="c">74</td><td>&nbsp;</td><td class="c">t </td><td>&nbsp;</td><td class="c">t	</td></tr>
+  <tr valign="top"><td class="c">25</td><td>&nbsp;</td><td class="c">% </td><td>&nbsp;</td><td class="c">% </td><td class="c">35</td><td>&nbsp;</td><td class="c">5 </td><td>&nbsp;</td><td class="c">5	</td><td class="c">45</td><td>&nbsp;</td><td class="c">E </td><td>&nbsp;</td><td class="c">E	</td><td class="c">55</td><td>&nbsp;</td><td class="c">U </td><td>&nbsp;</td><td class="c">U	</td><td class="c">64</td><td>&nbsp;</td><td class="c">e </td><td>&nbsp;</td><td class="c">e	</td><td class="c">75</td><td>&nbsp;</td><td class="c">u </td><td>&nbsp;</td><td class="c">u	</td></tr>
+  <tr valign="top"><td class="c">26</td><td>&nbsp;</td><td class="c">&amp; </td><td>&nbsp;</td><td class="c">&amp; </td><td class="c">36</td><td>&nbsp;</td><td class="c">6 </td><td>&nbsp;</td><td class="c">6	</td><td class="c">46</td><td>&nbsp;</td><td class="c">F </td><td>&nbsp;</td><td class="c">F	</td><td class="c">56</td><td>&nbsp;</td><td class="c">V </td><td>&nbsp;</td><td class="c">V	</td><td class="c">65</td><td>&nbsp;</td><td class="c">f </td><td>&nbsp;</td><td class="c">f	</td><td class="c">76</td><td>&nbsp;</td><td class="c">v </td><td>&nbsp;</td><td class="c">v	</td></tr>
+  <tr valign="top"><td class="c">27</td><td>&nbsp;</td><td class="c">'  </td><td>&nbsp;</td><td class="c">'	</td><td class="c">37</td><td>&nbsp;</td><td class="c">7 </td><td>&nbsp;</td><td class="c">7	</td><td class="c">47</td><td>&nbsp;</td><td class="c">G </td><td>&nbsp;</td><td class="c">G	</td><td class="c">57</td><td>&nbsp;</td><td class="c">W </td><td>&nbsp;</td><td class="c">W	</td><td class="c">66</td><td>&nbsp;</td><td class="c">g </td><td>&nbsp;</td><td class="c">g	</td><td class="c">77</td><td>&nbsp;</td><td class="c">w </td><td>&nbsp;</td><td class="c">w	</td></tr>
+  <tr valign="top"><td class="c">28</td><td>&nbsp;</td><td class="c">(  </td><td>&nbsp;</td><td class="c">(	</td><td class="c">38</td><td>&nbsp;</td><td class="c">8 </td><td>&nbsp;</td><td class="c">8	</td><td class="c">48</td><td>&nbsp;</td><td class="c">H </td><td>&nbsp;</td><td class="c">H	</td><td class="c">58</td><td>&nbsp;</td><td class="c">X </td><td>&nbsp;</td><td class="c">X	</td><td class="c">67</td><td>&nbsp;</td><td class="c">h </td><td>&nbsp;</td><td class="c">h	</td><td class="c">78</td><td>&nbsp;</td><td class="c">x </td><td>&nbsp;</td><td class="c">x	</td></tr>
+  <tr valign="top"><td class="c">29</td><td>&nbsp;</td><td class="c">)  </td><td>&nbsp;</td><td class="c">)	</td><td class="c">39</td><td>&nbsp;</td><td class="c">9 </td><td>&nbsp;</td><td class="c">9	</td><td class="c">49</td><td>&nbsp;</td><td class="c">I </td><td>&nbsp;</td><td class="c">I	</td><td class="c">59</td><td>&nbsp;</td><td class="c">Y </td><td>&nbsp;</td><td class="c">Y	</td><td class="c">68</td><td>&nbsp;</td><td class="c">i </td><td>&nbsp;</td><td class="c">i	</td><td class="c">79</td><td>&nbsp;</td><td class="c">y </td><td>&nbsp;</td><td class="c">y	</td></tr>
+  <tr valign="top"><td class="c">2A</td><td>&nbsp;</td><td class="c">*  </td><td>&nbsp;</td><td class="c">*	</td><td class="c">3A</td><td>&nbsp;</td><td class="c">: </td><td>&nbsp;</td><td class="c">:	</td><td class="c">4A</td><td>&nbsp;</td><td class="c">J </td><td>&nbsp;</td><td class="c">J	</td><td class="c">5A</td><td>&nbsp;</td><td class="c">Z </td><td>&nbsp;</td><td class="c">Z	</td><td class="c">69</td><td>&nbsp;</td><td class="c">j </td><td>&nbsp;</td><td class="c">j	</td><td class="c">7A</td><td>&nbsp;</td><td class="c">z </td><td>&nbsp;</td><td class="c">z	</td></tr>
+  <tr valign="top"><td class="c">2B</td><td>&nbsp;</td><td class="c">+  </td><td>&nbsp;</td><td class="c">+	</td><td class="c">3B</td><td>&nbsp;</td><td class="c">; </td><td>&nbsp;</td><td class="c">;	</td><td class="c">4B</td><td>&nbsp;</td><td class="c">K </td><td>&nbsp;</td><td class="c">K	</td><td class="c">5B</td><td>&nbsp;</td><td class="c">[ </td><td>&nbsp;</td><td class="c">[	</td><td class="c">6A</td><td>&nbsp;</td><td class="c">k </td><td>&nbsp;</td><td class="c">k	</td><td class="c">7B</td><td>&nbsp;</td><td class="c">{</td><td>&nbsp;</td><td class="c">{	</td></tr>
+  <tr valign="top"><td class="c">2C</td><td>&nbsp;</td><td class="c">,  </td><td>&nbsp;</td><td class="c">,	</td><td class="c">3C</td><td>&nbsp;</td><td class="c"><em><</em></td><td>&nbsp;</td><td class="c"><em><</em>	</td><td class="c">4C</td><td>&nbsp;</td><td class="c">L </td><td>&nbsp;</td><td class="c">L	</td><td class="c">5C</td><td>&nbsp;</td><td class="c"><code>\</code> </td><td>&nbsp;</td><td class="c"><code>\</code>
+  </td><td class="c">6C</td><td>&nbsp;</td><td class="c">l </td><td>&nbsp;</td><td class="c">l	</td><td class="c">7C</td><td>&nbsp;</td><td class="c"><code>|</code> </td><td>&nbsp;</td><td class="c"><code>|</code> </td></tr>
+  <tr valign="top"><td class="c">2D</td><td>&nbsp;</td><td class="c">-  </td><td>&nbsp;</td><td class="c">-	</td><td class="c">3D</td><td>&nbsp;</td><td class="c">= </td><td>&nbsp;</td><td class="c">=	</td><td class="c">4D</td><td>&nbsp;</td><td class="c">M </td><td>&nbsp;</td><td class="c">M	</td><td class="c">5D</td><td>&nbsp;</td><td class="c">] </td><td>&nbsp;</td><td class="c">]	</td><td class="c">6D</td><td>&nbsp;</td><td class="c">m </td><td>&nbsp;</td><td class="c">m	</td><td class="c">7D</td><td>&nbsp;</td><td class="c">}</td><td>&nbsp;</td><td class="c">}	</td></tr>
+  <tr valign="top"><td class="c">2E</td><td>&nbsp;</td><td class="c">.  </td><td>&nbsp;</td><td class="c">.	</td><td class="c">3E</td><td>&nbsp;</td><td class="c"><em>></em></td><td>&nbsp;</td><td class="c"><em>></em>	</td><td class="c">4E</td><td>&nbsp;</td><td class="c">N </td><td>&nbsp;</td><td class="c">N	</td><td class="c">5E</td><td>&nbsp;</td><td class="c"><code>^</code> </td><td>&nbsp;</td><td class="c"><code>^</code>
+  </td><td class="c">6E</td><td>&nbsp;</td><td class="c">n </td><td>&nbsp;</td><td class="c">n	</td><td class="c">7E</td><td>&nbsp;</td><td class="c"><code>~</code> </td><td>&nbsp;</td><td class="c"><code>~</code> </td></tr>
+  <tr valign="top"><td class="c">2F</td><td>&nbsp;</td><td class="c">/  </td><td>&nbsp;</td><td class="c">/	</td><td class="c">3F</td><td>&nbsp;</td><td class="c">? </td><td>&nbsp;</td><td class="c">?	</td><td class="c">4F</td><td>&nbsp;</td><td class="c">O </td><td>&nbsp;</td><td class="c">O	</td><td class="c">5F</td><td>&nbsp;</td><td class="c">_ </td><td>&nbsp;</td><td class="c">_</td><td class="c">6F</td><td>&nbsp;</td><td class="c">o </td><td>&nbsp;</td><td class="c">o	</td></tr>
+  <tr valign="top"><td colspan="30"><hr /></td></tr>
+  <tr valign="top"><td class="c"></td></tr>
+  </table>
+  
+  </div>
+<h4 id="subsubsection.3.1.2.2">3.1.2.2 Control characters</h4> <!-- 3.1.2.2 -->
+<a name="usage:control"></a>
+<p />
+All non-graphic characters included in the implementation-defined
+character set are defined in this standard as control characters.
+In particular, the characters {0 ... 31}, which could be
+included in the implementation-defined character set, are control
+characters.
+<p />
+Programs that require the ability to send or receive control
+characters have an environmental dependency.
+<p />
+<h4 id="subsubsection.3.1.2.3">3.1.2.3 Primitive Character</h4> <!-- 3.1.2.3 -->
+<a name="usage:pchar"></a>
+<p />
+A primitive character (pchar) is a character with no restrictions on
+its contents.  Unless otherwise stated, a &quot;character&quot; refers to a
+primitive character.
+<p />
+<h3 id="subsection.3.1.3">3.1.3 Single-cell types</h3> <!-- 3.1.3 -->
+<a name="usage:cell"></a>
+<p />
+The implementation-defined fixed size of a cell is specified in
+address units and the corresponding number of bits.
+See <strong><a href="port.html#port:hardware">D.2 Hardware peculiarities</a></strong>.
+<p />
+Cells shall be at least one address unit wide and contain at least
+sixteen bits. The size of a cell shall be an integral multiple of
+the size of a character. Data-stack elements, return-stack elements,
+addresses, execution tokens, flags, and integers are one cell wide.
+<p />
+<h4 id="subsubsection.3.1.3.1">3.1.3.1 Flags</h4> <!-- 3.1.3.1 -->
+<a name="usage:flags"></a>
+<p />
+Flags may have one of two logical states, <em>true</em> or <em>false</em>.
+Programs that use flags as arithmetic operands have an environmental
+dependency. A true flag returned by a standard word shall be a
+single-cell value with all bits set. A false flag returned by a
+standard word shall be a single-cell value with all bits clear.
+<p />
+<h4 id="subsubsection.3.1.3.2">3.1.3.2 Integers</h4> <!-- 3.1.3.2 -->
+The implementation-defined range of signed integers shall include
+{-32767 ... +32767}. The implementation-defined range of
+non-negative integers shall include {0 ... 32767}. The
+implementation-defined range of unsigned integers shall include
+{0 ... 65535}.
+<p />
+<h4 id="subsubsection.3.1.3.3">3.1.3.3 Addresses</h4> <!-- 3.1.3.3 -->
+<a name="usage:addr"></a>
+<p />
+An address identifies a location in data space with a size of one
+address unit, which a program may fetch from or store into except
+for the restrictions established in this standard. The size of an
+address unit is specified in bits. Each distinct address value
+identifies exactly one such storage element.
+See <strong><a href="usage.html#usage:dataspace">3.3.3 Data space</a></strong>.
+<p />
+The set of character-aligned addresses, addresses at which a
+character can be accessed, is an implementation-defined subset of
+all addresses. Adding the size of a character to a character-aligned
+address shall produce another character-aligned address.
+<p />
+The set of aligned addresses is an implementation-defined subset
+of character-aligned addresses. Adding the size of a cell to an
+aligned address shall produce another aligned address.
+<p />
+<h4 id="subsubsection.3.1.3.4">3.1.3.4 Counted strings</h4> <!-- 3.1.3.4 -->
+<a name="usage:cstring"></a>
+<p />
+A counted string in memory is identified by the address
+(<em>c-addr</em>) of its length character.
+<p />
+The length character of a counted string shall contain a binary
+representation of the number of data characters, between zero and
+the implementation-defined maximum length for a counted string.
+The maximum length of a counted string shall be at least 255.
+<p />
+<h4 id="subsubsection.3.1.3.5">3.1.3.5 Execution tokens</h4> <!-- 3.1.3.5 -->
+Different definitions may have the same execution token if the
+definitions are equivalent.
+<p />
+<h4 id="subsubsection.3.1.3.6">3.1.3.6 Error results</h4> <!-- 3.1.3.6 -->
+<a name="usage:ior"></a>
+<p />
+A value of zero indicates that the operation completed successfully;
+other values are in the range {-4095 ... -1} and represent a
+valid <a href="exception/THROW.html">THROW</a> code.
+<p />
+The meanings of values in the range {-255 ... -1} are defined
+by table <strong><a href="exception.html#table:throw">9.1 <code>[exception]{THROW</code> code assignments</a></strong>.  Values in
+the range {-4095 ... -256} and their meanings are implementation
+defined.
+<p />
+A word that returns an <em>ior</em> will not <a href="exception/THROW.html">THROW</a>
+that <em>ior</em> as an exception, but indicates the exception through
+the <em>ior</em>.
+This allows a program to take appropriate actions, which may include
+throwing the exception.
+<p />
+<h3 id="subsection.3.1.4">3.1.4 Cell-pair types</h3> <!-- 3.1.4 -->
+<a name="usage:2cell"></a>
+<p />
+A cell pair in memory consists of a sequence of two contiguous
+cells. The cell at the lower address is the first cell, and its
+address is used to identify the cell pair. Unless otherwise
+specified, a cell pair on a stack consists of the first cell
+immediately above the second cell.
+<p />
+<h4 id="subsubsection.3.1.4.1">3.1.4.1 Double-cell integers</h4> <!-- 3.1.4.1 -->
+On the stack, the cell containing the most significant part of a
+double-cell integer shall be above the cell containing the least
+significant part.
+<p />
+The implementation-defined range of double-cell signed integers
+shall include {-2147483647 ...  +2147483647}.
+<p />
+The implementation-defined range of double-cell non-negative
+integers shall include {0 ... 2147483647}.
+<p />
+The implementation-defined range of double-cell unsigned integers
+shall include {0 ... 4294967295}. Placing the single-cell
+integer zero on the stack above a single-cell unsigned integer
+produces a double-cell unsigned integer with the same value.
+See <strong><a href="usage.html#usage:number">3.2.1.1 Internal number representation</a></strong>.
+<p />
+<h4 id="subsubsection.3.1.4.2">3.1.4.2 Character strings</h4> <!-- 3.1.4.2 -->
+A string is specified by a cell pair (<em>c-addr u</em>) representing
+its starting address and length in characters.
+<p />
+<h3 id="subsection.3.1.5">3.1.5 System types</h3> <!-- 3.1.5 -->
+The system data types specify permitted word combinations during
+compilation and execution.
+<p />
+<h4 id="subsubsection.3.1.5.1">3.1.5.1 System-compilation types</h4> <!-- 3.1.5.1 -->
+These data types denote zero or more items on the control-flow stack
+(see <a href="usage.html#usage:controlstack">3.2.3.2</a>). The possible presence of such items
+on the data stack means that any items already there shall be
+unavailable to a program until the control-flow-stack items are
+consumed.
+<p />
+The implementation-dependent data generated upon beginning to compile
+a definition and consumed at its close is represented by the symbol
+<em>colon-sys</em> throughout this standard.
+<p />
+The implementation-dependent data generated upon beginning to
+compile a do-loop structure such as <a href="core/DO.html">DO</a> ... <a href="core/LOOP.html">LOOP</a>
+and consumed at its close is represented by the symbol <em>do-sys</em>
+throughout this standard.
+<p />
+The implementation-dependent data generated upon beginning to
+compile a <a href="core/CASE.html">CASE</a> ... <a href="core/ENDCASE.html">ENDCASE</a> structure and consumed
+at its close is represented by the symbol <em>case-sys</em> throughout
+this standard.
+<p />
+The implementation-dependent data generated upon beginning to
+compile an <a href="core/OF.html">OF</a> ... <a href="core/ENDOF.html">ENDOF</a> structure and consumed
+at its close is represented by the symbol <em>of-sys</em> throughout
+this standard.
+<p />
+The implementation-dependent data generated and consumed by executing
+the other standard control-flow words is represented by the symbols
+<em>orig</em> and <em>dest</em> throughout this standard.
+<p />
+<h4 id="subsubsection.3.1.5.2">3.1.5.2 System-execution types</h4> <!-- 3.1.5.2 -->
+These data types denote zero or more items on the return stack.
+Their possible presence means that any items already on the return
+stack shall be unavailable to a program until the system-execution
+items are consumed.
+<p />
+The implementation-dependent data generated upon beginning to
+execute a definition and consumed upon exiting it is represented
+by the symbol <em>nest-sys</em> throughout this standard.
+<p />
+The implementation-dependent loop-control parameters used to
+control the execution of do-loops are represented by the symbol
+<em>loop-sys</em> throughout this standard. Loop-control parameters
+shall be available inside the do-loop for words that use or change
+these parameters, words such as <a href="core/I.html">I</a>, <a href="core/J.html">J</a>, <a href="core/LEAVE.html">LEAVE</a>
+and <a href="core/UNLOOP.html">UNLOOP</a>.
+<p />
+<h2 id="section.3.2">3.2 The implementation environment</h2> <!-- 3.2 ======================= -->
+<h3 id="subsection.3.2.1">3.2.1 Numbers</h3> <!-- 3.2.1 -->
+<h4 id="subsubsection.3.2.1.1">3.2.1.1 Internal number representation</h4> <!-- 3.2.1.1 -->
+<a name="usage:number"></a>
+<p />
+This standard allows one's complement, two's complement, or
+sign-magnitude number representations and arithmetic. Arithmetic
+zero is represented as the value of a single cell with all bits
+clear.
+<p />
+The representation of a number as a compiled literal or in memory
+is implementation dependent.
+<p />
+<h4 id="subsubsection.3.2.1.2">3.2.1.2 Digit conversion</h4> <!-- 3.2.1.2 -->
+<a name="usage:digits"></a>
+<p />
+Numbers shall be represented externally by using characters from
+the standard character set. Conversion between the internal and
+external forms of a digit shall behave as follows:
+<p />
+The value in <a href="core/BASE.html">BASE</a> is the radix for number conversion. A
+digit has a value ranging from zero to one less than the contents
+of <a href="core/BASE.html">BASE</a>. The digit with the value zero corresponds to the
+character &quot;0&quot;. This representation of digits proceeds through
+the character set to the decimal value nine corresponding to the
+character &quot;9&quot;. For digits beginning with the decimal value ten
+the graphic characters beginning with the character &quot;A&quot; are used.
+This correspondence continues up to and including the digit with
+the decimal value thirty-five which is represented by the character
+&quot;Z&quot;. The characters &quot;a&quot; though to &quot;z&quot; should be treated the
+same as &quot;A&quot; though &quot;Z&quot;, with &quot;a&quot; having the value ten and
+&quot;z&quot; the value thirty-five.  The conversion of digits outside this
+range is implementation defined.
+<p />
+<h4 id="subsubsection.3.2.1.3">3.2.1.3 Free-field number display</h4> <!-- 3.2.1.3 -->
+<a name="usage:dot"></a>
+<p />
+Free-field number display uses the characters described in digit
+conversion, without leading zeros, in a field the exact size of
+the converted string plus a trailing space. If a number is zero,
+the least significant digit is not considered a leading zero. If
+the number is negative, a leading minus sign is displayed.
+<p />
+Number display may use the pictured numeric output string buffer
+to hold partially converted strings (see <strong><a href="usage.html#usage:transient">3.3.3.6 Other transient regions</a></strong>).
+<p />
+<h3 id="subsection.3.2.2">3.2.2 Arithmetic</h3> <!-- 3.2.2 -->
+<h4 id="subsubsection.3.2.2.1">3.2.2.1 Integer division</h4> <!-- 3.2.2.1 -->
+<a name="usage:div"></a>
+<p />
+Division produces a quotient <em>q</em> and a remainder <em>r</em>
+by dividing operand <em>a</em> by operand <em>b</em>. Division
+operations return <em>q, r</em>, or both. The identity
+<em>b &times; q + r = a</em> shall hold for all <em>a</em> and <em>b</em>.
+<p />
+When unsigned integers are divided and the remainder is not zero,
+<em>q</em> is the largest integer less than the true quotient.
+<p />
+When signed integers are divided, the remainder is not zero, and
+<em>a</em> and <em>b</em> have the same sign, <em>q</em> is the largest
+integer less than the true quotient. If only one operand is
+negative, whether <em>q</em> is rounded toward negative infinity
+(floored division) or rounded towards zero (symmetric division) is
+implementation defined.
+<p />
+Floored division is integer division in which the remainder carries
+the sign of the divisor or is zero, and the quotient is rounded to
+its arithmetic floor. Symmetric division is integer division in
+which the remainder carries the sign of the dividend or is zero and
+the quotient is the mathematical quotient &quot;rounded towards zero&quot;
+or &quot;truncated&quot;. Examples of each are shown in tables
+<a href="usage.html#table:floor">3.3</a> and <a href="usage.html#table:round">3.4</a>.
+<p />
+In cases where the operands differ in sign and the rounding
+direction matters, a program shall either include code generating
+the desired form of division, not relying on the
+implementation-defined default result, or have an environmental
+dependency on the desired rounding direction.
+<p />
+
+<div class="center">
+
+    <div class="minipage" style="width: 24em">
+
+    <div class="center">
+
+      <div class="caption">Table 3.3: Floored Division Example</div>
+      <p />
+      <a name="table:floor"></a>
+      <table class="center">
+      <tr valign="top"><td colspan="12"><hr /></td></tr>
+      <tr valign="top"><td colspan="3" class="c">Dividend </td><td colspan="3" class="c">Divisor </td><td colspan="3" class="c">Remainder </td><td colspan="3" class="c">Quotient </td></tr>
+      <tr valign="top"><td colspan="12"><hr /></td></tr>
+      <tr valign="top"><td></td><td class="r">10 </td><td></td><td></td><td class="r">7 </td><td></td><td></td><td class="r">3 </td><td></td><td></td><td class="r">1 </td></tr>
+      <tr valign="top"><td></td><td class="r">-10 </td><td></td><td></td><td class="r">7 </td><td></td><td></td><td class="r">4 </td><td></td><td></td><td class="r">-2 </td></tr>
+      <tr valign="top"><td></td><td class="r">10 </td><td></td><td></td><td class="r">-7 </td><td></td><td></td><td class="r">-4 </td><td></td><td></td><td class="r">-2 </td></tr>
+      <tr valign="top"><td></td><td class="r">-10 </td><td></td><td></td><td class="r">-7 </td><td></td><td></td><td class="r">-3 </td><td></td><td></td><td class="r">1 </td></tr>
+      <tr valign="top"><td colspan="12"><hr /></td></tr>
+      <tr valign="top"><td></td></tr>
+      </table>
+      
+      </div>
+      
+    </div>
+    <div class="minipage" style="width: 24em">
+
+    <div class="center">
+
+      <div class="caption">Table 3.3: Symmetric Division Example</div>
+      <a name="table:round"></a>
+      <table class="center">
+      <tr valign="top"><td colspan="12"><hr /></td></tr>
+      <tr valign="top"><td colspan="3" class="c">Dividend </td><td colspan="3" class="c">Divisor </td><td colspan="3" class="c">Remainder </td><td colspan="3" class="c">Quotient </td></tr>
+      <tr valign="top"><td colspan="12"><hr /></td></tr>
+      <tr valign="top"><td></td><td class="r">10 </td><td></td><td></td><td class="r">7 </td><td></td><td></td><td class="r">3 </td><td></td><td></td><td class="r">1 </td></tr>
+      <tr valign="top"><td></td><td class="r">-10 </td><td></td><td></td><td class="r">7 </td><td></td><td></td><td class="r">-3 </td><td></td><td></td><td class="r">-1 </td></tr>
+      <tr valign="top"><td></td><td class="r">10 </td><td></td><td></td><td class="r">-7 </td><td></td><td></td><td class="r">3 </td><td></td><td></td><td class="r">-1 </td></tr>
+      <tr valign="top"><td></td><td class="r">-10 </td><td></td><td></td><td class="r">-7 </td><td></td><td></td><td class="r">-3 </td><td></td><td></td><td class="r">1 </td></tr>
+      <tr valign="top"><td colspan="12"><hr /></td></tr>
+      <tr valign="top"><td></td></tr>
+      </table>
+      
+      </div>
+      
+    </div>
+  <br class="clear" />
+  
+  </div>
+<h4 id="subsubsection.3.2.2.2">3.2.2.2 Other integer operations</h4> <!-- 3.2.2.2 -->
+<a name="usage:intops"></a>
+<p />
+In all integer arithmetic operations, both overflow and underflow
+shall be ignored. The value returned when either overflow or
+underflow occurs is implementation defined.
+<p />
+<h3 id="subsection.3.2.3">3.2.3 Stacks</h3> <!-- 3.2.3 -->
+<h4 id="subsubsection.3.2.3.1">3.2.3.1 Data stack</h4> <!-- 3.2.3.1 -->
+<a name="usage:datastack"></a>
+<p />
+Objects on the data stack shall be one cell wide.
+<p />
+<h4 id="subsubsection.3.2.3.2">3.2.3.2 Control-flow stack</h4> <!-- 3.2.3.2 -->
+<a name="usage:controlstack"></a>
+<p />
+The control-flow stack is a last-in, first out list whose elements
+define the permissible matchings of control-flow words and the
+restrictions imposed on data-stack usage during the compilation of
+control structures.
+<p />
+The elements of the control-flow stack are system-compilation data
+types.
+<p />
+The control-flow stack may, but need not, physically exist in an
+implementation. If it does exist, it may be, but need not be,
+implemented using the data stack. The format of the control-flow
+stack is implementation defined.
+<p />
+<h4 id="subsubsection.3.2.3.3">3.2.3.3 Return stack</h4> <!-- 3.2.3.3 -->
+<a name="usage:returnstack"></a>
+<p />
+Items on the return stack shall consist of one or more cells. A
+system may use the return stack in an implementation-dependent
+manner during the compilation of definitions, during the execution
+of do-loops, and for storing run-time nesting information.
+<p />
+A program may use the return stack for temporary storage during the
+execution of a definition subject to the following restrictions:
+<p />
+<ul>
+<li> A program shall not access values on the return stack
+(using <a href="core/RFetch.html">R@</a>, <a href="core/Rfrom.html">R&gt;</a>, <a href="core/TwoRFetch.html">2R@</a>, <a href="core/TwoRfrom.html">2R&gt;</a>
+or <a href="tools/NRfrom.html">NR&gt;</a>) that it did not place there using
+<a href="core/toR.html">&gt;R</a>,	<a href="core/TwotoR.html">2&gt;R</a> or <a href="tools/NtoR.html">N&gt;R</a>;
+<p />
+</li>
+<li> A program shall not access from within a do-loop values
+placed on the return stack before the loop was entered;
+<p />
+</li>
+<li> All values placed on the return stack within a do-loop
+shall be removed before <a href="core/I.html">I</a>, <a href="core/J.html">J</a>, <a href="core/LOOP.html">LOOP</a>,
+<a href="core/PlusLOOP.html">+LOOP</a>, <a href="core/UNLOOP.html">UNLOOP</a>, or <a href="core/LEAVE.html">LEAVE</a> is executed;
+<p />
+</li>
+<li> All values placed on the return stack within a definition
+shall be removed before the definition is terminated or
+before <a href="core/EXIT.html">EXIT</a> is executed.
+</li>
+</ul>
+<p />
+<h3 id="subsection.3.2.4">3.2.4 Operator terminal</h3> <!-- 3.2.4 -->
+See <strong><a href="intro.html#intro:exclusions">1.2.2 Exclusions</a></strong>.
+<p />
+<h4 id="subsubsection.3.2.4.1">3.2.4.1 User input device</h4> <!-- 3.2.4.1 -->
+<a name="usage:input"></a>
+<p />
+The method of selecting the user input device is implementation
+defined.
+<p />
+The method of indicating the end of an input line of text is
+implementation defined.
+<p />
+<h4 id="subsubsection.3.2.4.2">3.2.4.2 User output device</h4> <!-- 3.2.4.2 -->
+<a name="usage:output"></a>
+<p />
+The method of selecting the user output device is implementation
+defined.
+<p />
+<h3 id="subsection.3.2.5">3.2.5 Mass storage</h3> <!-- 3.2.5 -->
+<a name="usage:mass"></a>
+<p />
+A system need not provide any standard words for accessing mass
+storage.
+<p />
+<h3 id="subsection.3.2.6">3.2.6 Environmental queries</h3> <!-- 3.2.6 -->
+<a name="usage:env"></a>
+<p />
+The name spaces for <a href="core/ENVIRONMENTq.html">ENVIRONMENT?</a> and definitions are
+disjoint. Names of definitions that are the same as
+<a href="core/ENVIRONMENTq.html">ENVIRONMENT?</a> strings shall not impair the operation of
+<a href="core/ENVIRONMENTq.html">ENVIRONMENT?</a>. Table <a href="usage.html#table:env">3.5</a> contains
+the valid input strings and corresponding returned value for
+inquiring about the programming environment with
+<a href="core/ENVIRONMENTq.html">ENVIRONMENT?</a>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 3.4: Environmental Query Strings</div>
+  <a name="table:env"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td colspan="2">String  Value data type </td><td class="c">Constant? </td><td style="width: 21em">Meaning </td></tr>
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td style="width: 11em"><code>/COUNTED-STRING</code>	</td><td class="r"><em>n</em>		</td><td class="c">yes
+  </td><td style="width: 21em">maximum size of a counted string, in characters </td></tr>
+  <tr valign="top"><td style="width: 11em"><code>/HOLD</code>					</td><td class="r"><em>n</em>		</td><td class="c">yes
+  </td><td style="width: 21em">size of the pictured numeric output string buffer,
+  in characters </td></tr>
+  <tr valign="top"><td style="width: 11em"><code>/PAD</code>					</td><td class="r"><em>n</em>		</td><td class="c">yes
+  </td><td style="width: 21em">size of the scratch area pointed to by <a href="core/PAD.html">PAD</a>,
+  in characters </td></tr>
+  <tr valign="top"><td style="width: 11em"><code>ADDRESS-UNIT-BITS</code>	</td><td class="r"><em>n</em>		</td><td class="c">yes
+  </td><td style="width: 21em">size of one address unit, in bits </td></tr>
+  <tr valign="top"><td style="width: 11em"><code>FLOORED</code>				</td><td class="r"><em>flag</em>	</td><td class="c">yes
+  </td><td style="width: 21em">true if floored division is the default </td></tr>
+  <tr valign="top"><td style="width: 11em"><code>MAX-CHAR</code>				</td><td class="r"><em>u</em>		</td><td class="c">yes
+  </td><td style="width: 21em">maximum value of any character in the
+  implementation-defined character set </td></tr>
+  <tr valign="top"><td style="width: 11em"><code>MAX-D</code>					</td><td class="r"><em>d</em>		</td><td class="c">yes
+  </td><td style="width: 21em">largest usable signed double number </td></tr>
+  <tr valign="top"><td style="width: 11em"><code>MAX-N</code>					</td><td class="r"><em>n</em>		</td><td class="c">yes
+  </td><td style="width: 21em">largest usable signed integer </td></tr>
+  <tr valign="top"><td style="width: 11em"><code>MAX-U</code>					</td><td class="r"><em>u</em>		</td><td class="c">yes
+  </td><td style="width: 21em">largest usable unsigned integer </td></tr>
+  <tr valign="top"><td style="width: 11em"><code>MAX-UD</code>				</td><td class="r"><em>ud</em>		</td><td class="c">yes
+  </td><td style="width: 21em">largest usable unsigned double number </td></tr>
+  <tr valign="top"><td style="width: 11em"><code>RETURN-STACK-CELLS</code>	</td><td class="r"><em>n</em>		</td><td class="c">yes
+  </td><td style="width: 21em">maximum size of the return stack, in cells </td></tr>
+  <tr valign="top"><td style="width: 11em"><code>STACK-CELLS</code>			</td><td class="r"><em>n</em>		</td><td class="c">yes
+  </td><td style="width: 21em">maximum size of the data stack, in cells </td></tr>
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td style="width: 11em"></td></tr>
+  </table>
+  
+  </div>
+If an environmental query (using <a href="core/ENVIRONMENTq.html">ENVIRONMENT?</a>) returns
+<em>false</em> (i.e., unknown) in response to a string, subsequent
+queries using the same string may return <em>true</em>. If a query
+returns <em>true</em> (i.e., known) in response to a string,
+subsequent queries with the same string shall also return
+<em>true</em>. If a query designated as constant in the above table
+returns <em>true</em> and a value in response to a string,
+subsequent queries with the same string shall return <em>true</em>
+and the same value.
+<p />
+<h3 id="subsection.3.2.7">3.2.7 Obsolescent Environmental Queries</h3> <!-- 3.2.7 -->
+<a name="usage:obsolete"></a>
+This standard designates the practice of using <a href="core/ENVIRONMENTq.html">ENVIRONMENT?</a>
+to inquire whether a given word set is present as obsolescent.  If
+such a query, as listed in table <a href="usage.html#table:obsolete">3.6</a>, returns
+<em>true</em>, the word set is present in the form defined by Forth 94.
+As these queries will be withdrawn from future revisions of the
+standard their use in new programs is discouraged.
+<p />
+See <strong><a href="rationale.html#rat:obsolete">A.3.2.7 Obsolescent Environmental Queries</a></strong>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 3.5: Obsolescent Environmental Query Strings</div>
+  <a name="table:obsolete"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="6"><hr /></td></tr>
+  <tr valign="top"><td colspan="2">String  Value data type </td><td>&nbsp;&nbsp;</td><td class="c">Constant? </td><td>&nbsp;&nbsp;</td><td style="width: 27.5em">Meaning </td></tr>
+  <tr valign="top"><td colspan="6"><hr /></td></tr>
+  <tr valign="top"><td style="width: 10em"><code>CORE</code>		</td><td class="r"><em>flag</em> </td><td>&nbsp;&nbsp;</td><td class="c">no
+  </td><td>&nbsp;&nbsp;</td><td style="width: 27.5em">true if complete core word set of Forth 94 is present </td></tr>
+  <tr valign="top"><td style="width: 10em"></td><td class="r"></td><td>&nbsp;&nbsp;</td><td class="c"></td><td>&nbsp;&nbsp;</td><td style="width: 27.5em">(i.e., not a subset as defined in <a href="label.html#label:system">5.1.1</a>) </td></tr>
+  <tr valign="top"><td style="width: 10em"><code>CORE-EXT</code>	</td><td class="r"><em>flag</em> </td><td>&nbsp;&nbsp;</td><td class="c">no
+  </td><td>&nbsp;&nbsp;</td><td style="width: 27.5em">true if the core extensions word set of Forth 94 is present </td></tr>
+  <tr valign="top"><td style="width: 10em"><code>BLOCK</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 block word set present.</td></tr>
+  <tr valign="top"><td><code>BLOCK-EXT</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 block extensions word set present.</td></tr>
+  <tr valign="top"><td style="width: 10em"><code>DOUBLE</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 double number word set present.</td></tr>
+  <tr valign="top"><td><code>DOUBLE-EXT</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 double number extensions word set present.</td></tr>
+  <tr valign="top"><td style="width: 10em"><code>EXCEPTION</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 exception word set present.</td></tr>
+  <tr valign="top"><td><code>EXCEPTION-EXT</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 exception extensions word set present.</td></tr>
+  <tr valign="top"><td style="width: 10em"><code>FACILITY</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 facility word set present.</td></tr>
+  <tr valign="top"><td><code>FACILITY-EXT</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 facility extensions word set present.</td></tr>
+  <tr valign="top"><td style="width: 10em"><code>FILE</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 file word set present.</td></tr>
+  <tr valign="top"><td><code>FILE-EXT</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 file extensions word set present.</td></tr>
+  <tr valign="top"><td style="width: 10em"><code>FLOATING</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 floating-point word set present.</td></tr>
+  <tr valign="top"><td><code>FLOATING-EXT</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 floating-point extensions word set present.</td></tr>
+  <tr valign="top"><td style="width: 10em"><code>LOCALS</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 locals word set present.</td></tr>
+  <tr valign="top"><td><code>LOCALS-EXT</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 locals extensions word set present.</td></tr>
+  <tr valign="top"><td style="width: 10em"><code>MEMORY-ALLOC</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 memory-allocation word set present.</td></tr>
+  <tr valign="top"><td><code>MEMORY-ALLOC-EXT</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 memory-allocation extensions word set present.</td></tr>
+  <tr valign="top"><td style="width: 10em"><code>TOOLS</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 programming-tools word set present.</td></tr>
+  <tr valign="top"><td><code>TOOLS-EXT</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 programming-tools extensions word set present.</td></tr>
+  <tr valign="top"><td style="width: 10em"><code>SEARCH-ORDER</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 search-order word set present.</td></tr>
+  <tr valign="top"><td><code>SEARCH-ORDER-EXT</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 search-order extensions word set present.</td></tr>
+  <tr valign="top"><td style="width: 10em"><code>STRING</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 string word set present.</td></tr>
+  <tr valign="top"><td><code>STRING-EXT</code></td><td><em>flag</em></td><td></td><td class="c">no</td><td></td><td>Forth 94 string extensions word set present.</td></tr>
+  <tr valign="top"><td colspan="6"><hr /></td></tr>
+  <tr valign="top"><td style="width: 10em"></td></tr>
+  </table>
+  
+  </div>
+<h2 id="section.3.3">3.3 The Forth dictionary</h2> <!-- 3.3 ================================ -->
+<a name="usage:dict"></a>
+<p />
+Forth words are organized into a structure called the dictionary.
+While the form of this structure is not specified by the standard,
+it can be described as consisting of three logical parts:
+a name space, a code space, and a data space. The logical separation
+of these parts does not require their physical separation.
+<p />
+A program shall not fetch from or store into locations outside data
+space. An ambiguous condition exists if a program addresses name
+space or code space.
+<p />
+<h3 id="subsection.3.3.1">3.3.1 Name space</h3> <!-- 3.3.1 -->
+The relationship between name space and data space is implementation
+dependent.
+<p />
+<h4 id="subsubsection.3.3.1.1">3.3.1.1 Word lists</h4> <!-- 3.3.1.1 -->
+The structure of a word list is implementation dependent. When
+duplicate names exist in a word list, the latest-defined duplicate
+shall be the one found during a search for the name.
+<p />
+<h4 id="subsubsection.3.3.1.2">3.3.1.2 Definition names</h4> <!-- 3.3.1.2 -->
+<a name="usage:names"></a>
+<p />
+Definition names shall contain {1 ... 31} characters.
+A system may allow or prohibit the creation of definition names
+containing non-standard characters.  A system may allow the creation
+of definition names longer than 31 characters.  Programs with
+definition names longer than 31 characters have an environmental
+dependency.
+<p />
+Programs that use lower case for standard definition names or depend
+on the case-sensitivity properties of a system have an environmental
+dependency.
+<p />
+A program shall not create definition names containing non-graphic
+characters.
+<p />
+<h3 id="subsection.3.3.2">3.3.2 Code space</h3> <!-- 3.3.2 -->
+The relationship between code space and data space is implementation
+dependent.
+<p />
+<h3 id="subsection.3.3.3">3.3.3 Data space</h3> <!-- 3.3.3 -->
+<a name="usage:dataspace"></a>
+<p />
+Data space is the only logical area of the dictionary for which
+standard words are provided to allocate and access regions of
+memory. These regions are: contiguous regions, variables,
+text-literal regions, input buffers, and other transient regions,
+each of which is described in the following sections. A program may
+read from or write into these regions unless otherwise specified.
+<p />
+<h4 id="subsubsection.3.3.3.1">3.3.3.1 Address alignment</h4> <!-- 3.3.3.1 -->
+<a name="usage:aaddr"></a>
+<p />
+Most addresses are cell aligned (indicated by <em>a-addr</em>) or character
+aligned (<em>c-addr</em>).
+<a href="core/ALIGNED.html">ALIGNED</a>, <a href="core/CHARPlus.html">CHAR+</a>, and arithmetic operations can alter
+the alignment state of an address on the stack. <a href="core/CHARPlus.html">CHAR+</a> applied
+to an aligned address returns a character-aligned address that can
+only be used to access characters. Applying <a href="core/CHARPlus.html">CHAR+</a> to a
+character-aligned address produces the succeeding character-aligned
+address. Adding or subtracting an arbitrary number to an address can
+produce an unaligned address that shall not be used to fetch or
+store anything. The only way to find the next aligned address is
+with <a href="core/ALIGNED.html">ALIGNED</a>.
+An ambiguous condition exists when memory is accessed using an
+address that is not aligned according to the requirements for
+the accessed type.
+<p />
+The definitions of <a href="core/CREATE.html">6.1.1000 CREATE</a> and
+<a href="core/VARIABLE.html">6.1.2410 VARIABLE</a> require that the definitions created
+by them return aligned addresses.
+<p />
+After definitions are compiled or the word <a href="core/ALIGN.html">ALIGN</a> is executed
+the data-space pointer is guaranteed to be aligned.
+<p />
+<h4 id="subsubsection.3.3.3.2">3.3.3.2 Contiguous regions</h4> <!-- 3.3.3.2 -->
+<a name="usage:contiguous"></a>
+<p />
+A system guarantees that a region of data space allocated using
+<a href="core/ALLOT.html">ALLOT</a>, <a href="core/Comma.html">,</a> (comma), <a href="core/CComma.html">C,</a> (c-comma), and
+<a href="core/ALIGN.html">ALIGN</a> shall be contiguous with the last region allocated
+with one of the above words, unless the restrictions in the
+following paragraphs apply. The data-space pointer <a href="core/HERE.html">HERE</a>
+always identifies the beginning of the next data-space region to be
+allocated. As successive allocations are made, the data-space
+pointer increases. A program may perform address arithmetic within
+contiguously allocated regions. The last region of data space
+allocated using the above operators may be released by allocating a
+corresponding negatively-sized region using <a href="core/ALLOT.html">ALLOT</a>, subject
+to the restrictions of the following paragraphs.
+<p />
+<a href="core/CREATE.html">CREATE</a> establishes the beginning of a contiguous region of
+data space, whose starting address is returned by the <a href="core/CREATE.html">CREATE</a>d
+definition. This region is terminated by compiling the next
+definition.
+<p />
+Since an implementation is free to allocate data space for use by
+code, the above operators need not produce contiguous regions of
+data space if definitions are added to or removed from the
+dictionary between allocations. An ambiguous condition exists if
+deallocated memory contains definitions.
+<p />
+<h4 id="subsubsection.3.3.3.3">3.3.3.3 Variables</h4> <!-- 3.3.3.3 -->
+<a name="usage:var"></a>
+<p />
+The region allocated for a variable may be non-contiguous with
+regions subsequently allocated with  <a href="core/Comma.html">,</a> (comma) or
+<a href="core/ALLOT.html">ALLOT</a>. For example, in:
+<div class="quote">
+
+  <a href="core/VARIABLE.html">VARIABLE</a> X   1 <a href="core/CELLS.html">CELLS</a> <a href="core/ALLOT.html">ALLOT</a>
+  
+  </div>
+the region <code>X</code> and the region <a href="core/ALLOT.html">ALLOT</a>ted could be
+non-contiguous.
+<p />
+Some system-provided variables, such as <a href="core/STATE.html">STATE</a>, are
+restricted to read-only access.
+<p />
+<h4 id="subsubsection.3.3.3.4">3.3.3.4 Text-literal regions</h4> <!-- 3.3.3.4 -->
+<a name="usage:"literal"></a>
+<p />
+The text-literal regions, specified by strings compiled with
+<a href="core/Sq.html">S&quot;</a>, <a href="core/Seq.html">S\&quot;</a> and <a href="core/Cq.html">C&quot;</a>, may be read-only.
+<p />
+A program shall not store into the text-literal regions created
+by <a href="core/Sq.html">S&quot;</a>, <a href="core/Seq.html">S\&quot;</a> and <a href="core/Cq.html">C&quot;</a> nor into any read-only
+system variable or read-only transient regions.
+<p />
+<h4 id="subsubsection.3.3.3.5">3.3.3.5 Input buffers</h4> <!-- 3.3.3.5 -->
+<a name="usage:inbuf"></a>
+<p />
+The address, length, and content of the input buffer may be
+transient. A program shall not write into the input buffer. In the
+absence of any optional word sets providing alternative input
+sources, the input buffer is either the terminal-input buffer, used
+by <a href="core/QUIT.html">QUIT</a> to hold one line from the user input device, or a
+buffer specified by <a href="core/EVALUATE.html">EVALUATE</a>. In all cases, <a href="core/SOURCE.html">SOURCE</a>
+returns the beginning address and length in characters of the
+current input buffer.
+<p />
+The minimum size of the terminal-input buffer shall be 80
+characters.
+<p />
+The address and length returned by <a href="core/SOURCE.html">SOURCE</a>, the string
+returned by <a href="core/PARSE.html">PARSE</a>, and directly computed input-buffer
+addresses are valid only until the text interpreter does I/O to
+refill the input buffer or the input source is changed.
+<p />
+A program may modify the size of the parse area by changing the
+contents of <a href="core/toIN.html">&gt;IN</a> within the limits imposed by this standard.
+For example, if the contents of <a href="core/toIN.html">&gt;IN</a> are saved before a
+parsing operation and restored afterwards, the text that was parsed
+will be available again for subsequent parsing operations. The
+extent of permissible repositioning using this method depends on the
+input source (see <strong><a href="block.html#block:buffers">7.3.2 Block buffer regions</a></strong>
+and <strong><a href="file.html#file:source">11.3.3 Input source</a></strong>).
+<p />
+A program may directly examine the input buffer using its address
+and length as returned by <a href="core/SOURCE.html">SOURCE</a>; the beginning of the parse
+area within the input buffer is indexed by the number in <a href="core/toIN.html">&gt;IN</a>.
+The values are valid for a limited time. An ambiguous condition
+exists if a program modifies the contents of the input buffer.
+<p />
+<h4 id="subsubsection.3.3.3.6">3.3.3.6 Other transient regions</h4> <!-- 3.3.3.6 -->
+<a name="usage:transient"></a>
+<p />
+The data space regions identified by <a href="core/PAD.html">PAD</a>, <a href="core/WORD.html">WORD</a>, and
+<a href="core/num-end.html">#&gt;</a> (the pictured numeric output string buffer) may be
+transient. Their addresses and contents may become invalid after:
+<p />
+<ul>
+<li> a definition is created via a defining word;
+</li>
+<li> definitions are compiled with <a href="core/Colon.html">:</a> or <a href="core/ColonNONAME.html">:NONAME</a>;
+</li>
+<li> data space is allocated using <a href="core/ALLOT.html">ALLOT</a>, <a href="core/Comma.html">,</a> (comma),
+<a href="core/CComma.html">C,</a> (c-comma), or <a href="core/ALIGN.html">ALIGN</a>.
+</li>
+</ul>
+<p />
+The previous contents of the regions identified by <a href="core/WORD.html">WORD</a> and
+<a href="core/num-end.html">#&gt;</a> may be invalid after each use of these words. Further,
+the regions returned by <a href="core/WORD.html">WORD</a> and <a href="core/num-end.html">#&gt;</a> may overlap in
+memory. Consequently, use of one of these words can corrupt a region
+returned earlier by a different word. The other words that construct
+pictured numeric output strings (<a href="core/num-start.html">&lt;#</a>, <a href="core/num.html">#</a>, <a href="core/numS.html">#S</a>,
+<a href="core/HOLD.html">HOLD</a>, <a href="core/HOLDS.html">HOLDS</a>, <a href="xchar/XHOLD.html">XHOLD</a>)  may also modify
+the contents of these regions. Words that display numbers may be
+implemented using pictured numeric output words. Consequently, <a href="core/d.html">.</a>
+(dot), <a href="core/DotR.html">.R</a>, <a href="tools/DotS.html">.S</a>, <a href="tools/q.html">?</a>, <a href="double/Dd.html">D.</a>,
+<a href="double/DDotR.html">D.R</a>, <a href="core/Ud.html">U.</a>, <a href="core/UDotR.html">U.R</a> could also corrupt the
+regions.
+<p />
+The size of the scratch area whose address is returned by <a href="core/PAD.html">PAD</a>
+shall be at least 84 characters. The contents of the region
+addressed by <a href="core/PAD.html">PAD</a> are intended to be under the complete
+control of the user: no words defined in this standard place
+anything in the region, although changing data-space allocations as
+described in <strong><a href="usage.html#usage:contiguous">3.3.3.2 Contiguous regions</a></strong> may change
+the address returned by <a href="core/PAD.html">PAD</a>. Non-standard words provided by
+an implementation may use <a href="core/PAD.html">PAD</a>, but such use shall be
+documented.
+<p />
+The size of the region identified by <a href="core/WORD.html">WORD</a> shall be at least
+33 characters.
+<p />
+The size of the pictured numeric output string buffer shall be at
+least <em>(2 &times; n) + 2 </em> characters, where <em>n</em> is the number of
+bits in a cell. Programs that consider it a fixed area with
+unchanging access parameters have an environmental dependency.
+<p />
+<h2 id="section.3.4">3.4 The Forth text interpreter</h2> <!-- 3.4 ========================== -->
+<a name="usage:command"></a>
+<p />
+Upon start-up, a system shall be able to interpret, as described
+by <a href="core/QUIT.html">6.1.2050 QUIT</a>, Forth source code received interactively
+from a user input device.
+<p />
+Such interactive systems usually furnish a &quot;prompt&quot; indicating
+that they have accepted a user request and acted on it. The
+implementation-defined Forth prompt should contain the word &quot;OK&quot;
+in some combination of upper or lower case.
+<p />
+Text interpretation (see <a href="core/EVALUATE.html">6.1.1360 EVALUATE</a> and
+<a href="core/QUIT.html">6.1.2050 QUIT</a>) shall repeat the following steps until
+either the parse area is empty or an ambiguous condition exists:
+<p />
+<ol style="list-style-type: lower-alpha">
+<li> Skip leading spaces and parse a <em>name</em>
+(see <a href="usage.html#usage:parsing">3.4.1</a>);
+<p />
+</li>
+<li> Search the dictionary name space (see <a href="usage.html#usage:find">3.4.2</a>).
+If a definition name matching the string is found:
+<p />
+<ol style="list-style-type: decimal">
+<li> if interpreting, perform the interpretation semantics of
+the definition (see <a href="usage.html#usage:interpret">3.4.3.2</a>), and continue at
+a).
+<p />
+</li>
+<li> if compiling, perform the compilation semantics of the
+definition (see <a href="usage.html#usage:compile">3.4.3.3</a>), and continue at a).
+</li>
+</ol>
+<p />
+</li>
+<li> If a definition name matching the string is not found,
+attempt to convert the string to a number
+(see <a href="usage.html#usage:numbers">3.4.1.3</a>). If successful:
+<p />
+<ol style="list-style-type: decimal">
+<li> if interpreting, place the number on the data stack,
+and continue at a);
+<p />
+</li>
+<li> if compiling, compile code that when executed will place
+the number on the stack (see <a href="core/LITERAL.html">6.1.1780 LITERAL</a>),
+and continue at a);
+</li>
+</ol>
+<p />
+</li>
+<li> If unsuccessful, an ambiguous condition exists
+(see <a href="usage.html#usage:ambiguous">3.4.4</a>).
+</li>
+</ol>
+<p />
+<h3 id="subsection.3.4.1">3.4.1 Parsing</h3> <!-- 3.4.1 Parsing -->
+<a name="usage:parsing"></a>
+<p />
+Unless otherwise noted, the number of characters parsed may be from
+zero to the implementation-defined maximum length of a counted
+string.
+<p />
+If the parse area is empty, i.e., when the number in <a href="core/toIN.html">&gt;IN</a> is
+equal to the length of the input buffer, or contains no characters
+other than delimiters, the selected string is empty. Otherwise, the
+selected string begins with the next character in the parse area,
+which is the character indexed by the contents of <a href="core/toIN.html">&gt;IN</a>. An
+ambiguous condition exists if the number in <a href="core/toIN.html">&gt;IN</a> is greater
+than the size of the input buffer.
+<p />
+If delimiter characters are present in the parse area after the
+beginning of the selected string, the string continues up to and
+including the character just before the first such delimiter, and
+the number in <a href="core/toIN.html">&gt;IN</a> is changed to index immediately past that
+delimiter, thus removing the parsed characters and the delimiter
+from the parse area. Otherwise, the string continues up to and
+including the last character in the parse area, and the number in
+<a href="core/toIN.html">&gt;IN</a> is changed to the length of the input buffer, thus
+emptying the parse area.
+<p />
+Parsing may change the contents of <a href="core/toIN.html">&gt;IN</a>, but shall not affect
+the contents of the input buffer. Specifically, if the value in
+<a href="core/toIN.html">&gt;IN</a> is saved before starting the parse, resetting <a href="core/toIN.html">&gt;IN</a>
+to that value immediately after the parse shall restore the parse
+area without loss of data.
+<p />
+<h4 id="subsubsection.3.4.1.1">3.4.1.1 Delimiters</h4> <!-- 3.4.1.1 -->
+<a name="usage:delim"></a>
+<p />
+If the delimiter is the space character, hex 20 (<a href="core/BL.html">BL</a>), control
+characters may be treated as delimiters. The set of conditions, if
+any, under which a &quot;space&quot; delimiter matches control characters is
+implementation defined.
+<p />
+To skip leading delimiters is to pass by zero or more contiguous
+delimiters in the parse area before parsing.
+<p />
+<h4 id="subsubsection.3.4.1.2">3.4.1.2 Syntax</h4> <!-- 3.4.1.2 -->
+<a name="usage:syntax"></a>
+<p />
+Forth has a simple, operator-ordered syntax. The phrase
+<code>A B C</code> returns values as if <code>A</code> were executed first,
+then <code>B</code> and finally <code>C</code>. Words that cause deviations
+from this linear flow of control are called control-flow words.
+Combinations of control-flow words whose stack effects are
+compatible form control-flow structures. Examples of typical use are
+given for each control-flow word in Annex <a href="rationale.html#annex:rationale">A</a>.
+<p />
+Forth syntax is extensible; for example, new control-flow words can
+be defined in terms of existing ones. This standard does not require
+a syntax or program-construct checker.
+<p />
+<h4 id="subsubsection.3.4.1.3">3.4.1.3 Text interpreter input number conversion</h4> <!-- 3.4.1.3 -->
+<a name="usage:numbers"></a>
+<p />
+When converting input numbers, the text interpreter shall recognize
+integer numbers in the form &lt;<em>anynum</em>&gt;.
+<p />
+<div class="center">
+
+  <table class="center">
+  <tr valign="top"><td class="r">&lt;<em>anynum</em>&gt;	</td><td> <span style="font-family: sans-serif">:=</span> </td><td>{ &lt;<em>BASEnum</em>&gt;
+  | &lt;<em>decnum</em>&gt;
+  | &lt;<em>hexnum</em>&gt;
+  | &lt;<em>binnum</em>&gt;
+  | &lt;<em>cnum</em>&gt; } </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>BASEnum</em>&gt;	</td><td> <span style="font-family: sans-serif">:=</span> </td><td>[<strong>-</strong>]&lt;<em>bdigit</em>&gt;&lt;<em>bdigit</em>&gt;* </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>decnum</em>&gt;	</td><td> <span style="font-family: sans-serif">:=</span> </td><td><strong>#</strong>[<strong>-</strong>]&lt;<em>decdigit</em>&gt;&lt;<em>decdigit</em>&gt;* </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>hexnum</em>&gt;	</td><td> <span style="font-family: sans-serif">:=</span> </td><td><strong>$</strong>[<strong>-</strong>]&lt;<em>hexdigit</em>&gt;&lt;<em>hexdigit</em>&gt;* </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>binnum</em>&gt;	</td><td> <span style="font-family: sans-serif">:=</span> </td><td><strong>%</strong>[<strong>-</strong>]&lt;<em>bindigit</em>&gt;&lt;<em>bindigit</em>&gt;* </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>cnum</em>&gt;		</td><td> <span style="font-family: sans-serif">:=</span> </td><td><strong>'</strong>&lt;<em>char</em>&gt;<strong>'</strong> </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>bindigit</em>&gt;	</td><td> <span style="font-family: sans-serif">:=</span> </td><td>{ <strong>0</strong> | <strong>1</strong> } </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>decdigit</em>&gt;	</td><td> <span style="font-family: sans-serif">:=</span> </td><td>{
+  <strong>0</strong> | <strong>1</strong> | <strong>2</strong> |
+  <strong>3</strong> | <strong>4</strong> |	<strong>5</strong> |
+  <strong>6</strong> | <strong>7</strong> | <strong>8</strong> |
+  <strong>9</strong> } </td></tr>
+  <tr valign="top"><td class="r">&lt;<em>hexdigit</em>&gt;	</td><td> <span style="font-family: sans-serif">:=</span> </td><td>{ &lt;<em>decdigit</em>&gt; |
+  <strong>a</strong> | <strong>b</strong> | <strong>c</strong> |
+  <strong>d</strong> | <strong>e</strong> | <strong>f</strong> |
+  <strong>A</strong> | <strong>B</strong> | <strong>C</strong> |
+  <strong>D</strong> | <strong>E</strong> | <strong>F</strong> }
+  </table>
+  
+  </div>
+<p />
+&lt;<em>bdigit</em>&gt; represents a digit according to the value of
+<a href="core/BASE.html">BASE</a> (see <strong><a href="usage.html#usage:digits">3.2.1.2 Digit conversion</a></strong>).
+For &lt;<em>hexdigit</em>&gt;, the digits <strong>a</strong>...<strong>f</strong> have the
+values 10...15. &lt;<em>char</em>&gt; represents any printable character.
+<p />
+The radix used for number conversion is:
+<div class="center">
+
+  <table class="center">
+  <tr valign="top"><td>&lt;<em>BASEnum</em>&gt;	</td><td>the value in <a href="core/BASE.html">BASE</a> </td></tr>
+  <tr valign="top"><td>&lt;<em>decnum</em>&gt;	</td><td>10 </td></tr>
+  <tr valign="top"><td>&lt;<em>hexnum</em>&gt;	</td><td>16 </td></tr>
+  <tr valign="top"><td>&lt;<em>binnum</em>&gt;	</td><td>2 </td></tr>
+  <tr valign="top"><td>&lt;<em>cnum</em>&gt;		</td><td>the number is the value of &lt;<em>char</em>&gt;
+  </table>
+  
+  </div>
+<p />
+See <strong><a href="notation.html#notation:BNF">2.2.5 BNF notation</a></strong>.
+<p />
+<h3 id="subsection.3.4.2">3.4.2 Finding definition names</h3> <!-- 3.4.2 -->
+<a name="usage:find"></a>
+<p />
+A string matches a definition name if each character in the string
+matches the corresponding character in the string used as the
+definition name when the definition was created. The case
+sensitivity (whether or not the upper-case letters match the
+lower-case letters) is implementation defined. A system may be
+either case sensitive, treating upper- and lower-case letters as
+different and not matching, or case insensitive, ignoring
+differences in case while searching.
+<p />
+The matching of upper- and lower-case letters with alphabetic
+characters in character set extensions such as accented
+international characters is implementation defined.
+<p />
+A system shall be capable of finding the definition names defined
+by this standard when they are spelled with upper-case letters.
+<p />
+<h3 id="subsection.3.4.3">3.4.3 Semantics</h3> <!-- 3.4.3 -->
+<a name="usage:semantics"></a>
+<p />
+The semantics of a Forth definition are implemented by machine code
+or a sequence of execution tokens or other representations. They are
+largely specified by the stack notation in the glossary entries,
+which shows what values shall be consumed and produced. The prose in
+each glossary entry further specifies the definition's behavior.
+<p />
+Each Forth definition may have several behaviors, described in the
+following sections. The terms &quot;initiation semantics&quot; and
+&quot;run-time semantics&quot; refer to definition fragments, and have
+meaning only within the individual glossary entries where they
+appear.
+<p />
+<h4 id="subsubsection.3.4.3.1">3.4.3.1 Execution semantics</h4> <!-- 3.4.3.1 -->
+The execution semantics of each Forth definition are specified in an
+&quot;<span class="sf">Execution:</span>&quot; section of its glossary entry. When a
+definition has only one specified behavior, the label is omitted.
+<p />
+Execution may occur implicitly, when the definition into which it
+has been compiled is executed, or explicitly, when its execution
+token is passed to <a href="core/EXECUTE.html">EXECUTE</a>. The execution semantics of a
+syntactically correct definition under conditions other than those
+specified in this standard are implementation dependent.
+<p />
+Glossary entries for defining words include the execution semantics
+for the new definition in a &quot;<em>name</em> <span class="sf">Execution:</span>&quot;
+section.
+<p />
+<h4 id="subsubsection.3.4.3.2">3.4.3.2 Interpretation semantics</h4> <!-- 3.4.3.2 -->
+<a name="usage:interpret"></a>
+<p />
+Unless otherwise specified in an &quot;<span class="sf">Interpretation:</span>&quot;
+section of the glossary entry, the interpretation semantics of a
+Forth definition are its execution semantics.
+<p />
+A system shall be capable of executing, in interpretation state,
+all of the definitions from the Core word set and any definitions
+included from the optional word sets or word set extensions whose
+interpretation semantics are defined by this standard.
+<p />
+A system shall be capable of executing, in interpretation state,
+any new definitions created in accordance with
+<strong><a href="usage.html#usage">3 Usage requirements</a></strong>.
+<p />
+<h4 id="subsubsection.3.4.3.3">3.4.3.3 Compilation semantics</h4> <!-- 3.4.3.3 -->
+<a name="usage:compile"></a>
+<p />
+Unless otherwise specified in a &quot;<span class="sf">Compilation:</span>&quot; section
+of the glossary entry, the compilation semantics of a Forth
+definition shall be to append its execution semantics to the
+execution semantics of the current definition.
+<p />
+<h3 id="subsection.3.4.4">3.4.4 Possible actions on an ambiguous condition</h3> <!-- 3.4.4 -->
+<a name="usage:ambiguous"></a>
+<p />
+When an ambiguous condition exists, a system may take one or more
+of the following actions:
+<p />
+<ul>
+<li> ignore and continue;
+</li>
+<li> display a message;
+</li>
+<li> execute a particular word;
+</li>
+<li> set interpretation state and begin text interpretation;
+</li>
+<li> take other implementation-defined actions;
+</li>
+<li> take implementation-dependent actions.
+</li>
+</ul>
+<p />
+The response to a particular ambiguous condition need not be the
+same under all circumstances.
+<p />
+<h3 id="subsection.3.4.5">3.4.5 Compilation</h3> <!-- 3.4.5 -->
+<a name="usage:compilation"></a>
+<p />
+A program shall not attempt to nest compilation of definitions.
+<p />
+During the compilation of the current definition, a program shall
+not execute any defining word, <a href="core/ColonNONAME.html">:NONAME</a>, or any definition
+that allocates dictionary data space. The compilation of the
+current definition may be suspended using <a href="core/Bracket.html">[</a> (left-bracket)
+and resumed using <a href="right-bracket.html">]</a> (right-bracket). While the compilation
+of the current definition is suspended, a program shall not execute
+any defining word, <a href="core/ColonNONAME.html">:NONAME</a>, or any definition that allocates
+dictionary data space.
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Usage requirements</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html" class="current">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Data types</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.3.1">Data types</a></li>
+        <li role="menuitem"><a href="#section.3.2">The implementation environment</a></li>
+        <li role="menuitem"><a href="#section.3.3">The Forth dictionary</a></li>
+        <li role="menuitem"><a href="#section.3.4">The Forth text interpreter</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

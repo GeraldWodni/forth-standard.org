@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: The optional Facility word set</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.10">10 The optional Facility word set</h1> <!-- 10 -->
+<h2 id="section.10.1">10.1 Introduction</h2> <!-- 10.1 -->
+<h2 id="section.10.2">10.2 Additional terms and notation</h2> <!-- 10.2 -->
+None.
+<p />
+<h2 id="section.10.3">10.3 Additional usage requirements</h2> <!-- 10.3 -->
+<h3 id="subsection.10.3.1">10.3.1 Data types</h3> <!-- 10.3.1 -->
+Append table <a href="facility.html#facility:types">10.1</a> to table <a href="usage.html#table:datatypes">3.1</a>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 10.1: Data types</div>
+  <a name="facility:types"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>Symbol</em> </td><td><em>Data type</em> </td><td class="r"><em>Size on stack</em> </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>struct-sys</em>
+  </td><td>data structures
+  </td><td class="r">implementation dependent </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td></td></tr>
+  </table>
+  
+  </div>
+<h4 id="subsubsection.10.3.1.1">10.3.1.1 Structure type</h4> <!-- 10.3.1.1 -->
+The implementation-dependent data generated upon beginning to compile
+a <a href="facility/BEGIN-STRUCTURE.html">BEGIN-STRUCTURE</a> ... <a href="facility/END-STRUCTURE.html">END-STRUCTURE</a> structure and
+consumed at its close is represented by the symbol <em>struct-sys</em>
+throughout this standard.
+<p />
+<h4 id="subsubsection.10.3.1.2">10.3.1.2 Character types</h4> <!-- 10.3.1.2 -->
+Programs that use more than seven bits of a character by
+<a href="facility/EKEY.html">EKEY</a> have an environmental dependency.
+<p />
+See: <strong><a href="usage.html#usage:char">3.1.2 Character types</a></strong>.
+<p />
+<h2 id="section.10.4">10.4 Additional documentation requirements</h2> <!-- 10.4 -->
+<h3 id="subsection.10.4.1">10.4.1 System documentation</h3> <!-- 10.4.1 -->
+<h4 id="subsubsection.10.4.1.1">10.4.1.1 Implementation-defined options</h4> <!-- 10.4.1.1 -->
+<ul>
+<li> encoding of keyboard events <a href="facility/EKEY.html">10.6.2.1305 EKEY</a>);
+</li>
+<li> duration of a system clock tick;
+</li>
+<li> repeatability to be expected from execution of
+<a href="facility/MS.html">10.6.2.1905 MS</a>.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.10.4.1.2">10.4.1.2 Ambiguous conditions</h4> <!-- 10.4.1.2 -->
+<ul>
+<li> <a href="facility/AT-XY.html">10.6.1.0742 AT-XY</a> operation can't be performed on
+user output device;
+<p />
+</li>
+<li> A <em>name</em> defined by
+<a href="facility/BEGIN-STRUCTURE.html">10.6.2.0763 BEGIN-STRUCTURE</a>
+is executed before the corresponding 
+<a href="facility/END-STRUCTURE.html">10.6.2.1336 END-STRUCTURE</a>
+has been executed.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.10.4.1.3">10.4.1.3 Other system documentation</h4> <!-- 10.4.1.3 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h3 id="subsection.10.4.2">10.4.2 Program documentation</h3> <!-- 10.4.2 -->
+<h4 id="subsubsection.10.4.2.1">10.4.2.1 Environmental dependencies</h4> <!-- 10.4.2.1 -->
+<ul>
+<li> using more than seven bits of a character in
+<a href="facility/EKEY.html">10.6.2.1305 EKEY</a>.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.10.4.2.2">10.4.2.2 Other program documentation</h4> <!-- 10.4.2.2 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h2 id="section.10.5">10.5 Compliance and labeling</h2> <!-- 10.5 -->
+<h3 id="subsection.10.5.1">10.5.1 Forth-2012 systems</h3> <!-- 10.5.1 -->
+The phrase &quot;Providing the Facility word set&quot; shall be appended to
+the label of any Standard System that provides all of the Facility
+word set.
+<p />
+The phrase &quot;Providing <em>name(s)</em> from the Facility Extensions
+word set&quot; shall be appended to the label of any Standard System
+that provides portions of the Facility Extensions word set.
+<p />
+The phrase &quot;Providing the Facility Extensions word set&quot; shall be
+appended to the label of any Standard System that provides all of
+the Facility and Facility Extensions word sets.
+<p />
+<h3 id="subsection.10.5.2">10.5.2 Forth-2012 programs</h3> <!-- 10.5.2 -->
+The phrase &quot;Requiring the Facility word set&quot; shall be appended to
+the label of Standard Programs that require the system to provide
+the Facility word set.
+<p />
+The phrase &quot;Requiring <em>name(s)</em> from the Facility Extensions
+word set&quot; shall be appended to the label of Standard Programs that
+require the system to provide portions of the Facility Extensions
+word set.
+<p />
+The phrase &quot;Requiring the Facility Extensions word set&quot; shall be
+appended to the label of Standard Programs that require the system
+to provide all of the Facility and Facility Extensions word sets.
+<p />
+<h2 id="section.10.6">10.6 Glossary</h2> <!-- 10.6 -->
+<h3 id="subsection.10.6.1">10.6.1 Facility words</h3> <!-- 10.6.1 -->
+<ul>
+<li><a href="facility/AT-XY.html">10.6.1.0742 AT-XY</a></li>
+<li><a href="facility/KEYq.html">10.6.1.1755 KEY?</a></li>
+<li><a href="facility/PAGE.html">10.6.1.2005 PAGE</a></li>
+</ul>
+<h3 id="subsection.10.6.2">10.6.2 Facility extension words</h3> <!-- 10.6.2 -->
+<ul>
+<li><a href="facility/PlusFIELD.html">10.6.2.0135 +FIELD</a></li>
+<li><a href="facility/BEGIN-STRUCTURE.html">10.6.2.0763 BEGIN-STRUCTURE</a></li>
+<li><a href="facility/CFIELDColon.html">10.6.2.0893 CFIELD:</a></li>
+<li><a href="facility/EKEY.html">10.6.2.1305 EKEY</a></li>
+<li><a href="facility/EKEYtoCHAR.html">10.6.2.1306 EKEY&gt;CHAR</a></li>
+<li><a href="facility/EKEYtoFKEY.html">10.6.2.1306.40 EKEY&gt;FKEY</a></li>
+<li><a href="facility/EKEYq.html">10.6.2.1307 EKEY?</a></li>
+<li><a href="facility/EMITq.html">10.6.2.1325 EMIT?</a></li>
+<li><a href="facility/END-STRUCTURE.html">10.6.2.1336 END-STRUCTURE</a></li>
+
+<li><a href="facility/FIELDColon.html">10.6.2.1518 FIELD:</a></li>
+<li><a href="facility/K-ALT-MASK.html">10.6.2.1740.01 K-ALT-MASK</a></li>
+<li><a href="facility/K-CTRL-MASK.html">10.6.2.1740.02 K-CTRL-MASK</a></li>
+<li><a href="facility/K-DELETE.html">10.6.2.1740.03 K-DELETE</a></li>
+<li><a href="facility/K-DOWN.html">10.6.2.1740.04 K-DOWN</a></li>
+<li><a href="facility/K-END.html">10.6.2.1740.05 K-END</a></li>
+<li><a href="facility/K-FOne.html">10.6.2.1740.06 K-F1</a></li>
+<li><a href="facility/K-FOneZero.html">10.6.2.1740.07 K-F10</a></li>
+<li><a href="facility/K-FOneOne.html">10.6.2.1740.08 K-F11</a></li>
+<li><a href="facility/K-FOneTwo.html">10.6.2.1740.09 K-F12</a></li>
+<li><a href="facility/K-FTwo.html">10.6.2.1740.10 K-F2</a></li>
+<li><a href="facility/K-F3.html">10.6.2.1740.11 K-F3</a></li>
+<li><a href="facility/K-F4.html">10.6.2.1740.12 K-F4</a></li>
+<li><a href="facility/K-F5.html">10.6.2.1740.13 K-F5</a></li>
+<li><a href="facility/K-F6.html">10.6.2.1740.14 K-F6</a></li>
+<li><a href="facility/K-F7.html">10.6.2.1740.15 K-F7</a></li>
+<li><a href="facility/K-F8.html">10.6.2.1740.16 K-F8</a></li>
+<li><a href="facility/K-F9.html">10.6.2.1740.17 K-F9</a></li>
+<li><a href="facility/K-HOME.html">10.6.2.1740.18 K-HOME</a></li>
+<li><a href="facility/K-INSERT.html">10.6.2.1740.19 K-INSERT</a></li>
+<li><a href="facility/K-LEFT.html">10.6.2.1740.20 K-LEFT</a></li>
+<li><a href="facility/K-NEXT.html">10.6.2.1740.21 K-NEXT</a></li>
+<li><a href="facility/K-PRIOR.html">10.6.2.1740.22 K-PRIOR</a></li>
+<li><a href="facility/K-RIGHT.html">10.6.2.1740.23 K-RIGHT</a></li>
+<li><a href="facility/K-SHIFT-MASK.html">10.6.2.1740.24 K-SHIFT-MASK</a></li>
+<li><a href="facility/K-UP.html">10.6.2.1740.25 K-UP</a></li>
+<li><a href="facility/MS.html">10.6.2.1905 MS</a></li>
+<li><a href="facility/TIMEandDATE.html">10.6.2.2292 TIME&amp;DATE</a></li>
+</ul>
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Facility word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html" class="current">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.10.1" class="current">Introduction</a></li>
+        <li role="menuitem"><a href="#section.10.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="#section.10.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="#section.10.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="#section.10.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="#section.10.6">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">AT-XY</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="facility/AT-XY.html">AT-XY</a></li>
+        <li role="menuitem"><a href="facility/KEYq.html">KEY?</a></li>
+        <li role="menuitem"><a href="facility/PAGE.html">PAGE</a></li>
+        <li role="menuitem"><a href="facility/PlusFIELD.html">+FIELD</a></li>
+        <li role="menuitem"><a href="facility/BEGIN-STRUCTURE.html">BEGIN-STRUCTURE</a></li>
+        <li role="menuitem"><a href="facility/CFIELDColon.html">CFIELD:</a></li>
+        <li role="menuitem"><a href="facility/EKEY.html">EKEY</a></li>
+        <li role="menuitem"><a href="facility/EKEYtoCHAR.html">EKEY&gt;CHAR</a></li>
+        <li role="menuitem"><a href="facility/EKEYtoFKEY.html">EKEY&gt;FKEY</a></li>
+        <li role="menuitem"><a href="facility/EKEYq.html">EKEY?</a></li>
+        <li role="menuitem"><a href="facility/EMITq.html">EMIT?</a></li>
+        <li role="menuitem"><a href="facility/END-STRUCTURE.html">END-STRUCTURE</a></li>
+        <li role="menuitem"><a href="facility/FIELDColon.html">FIELD:</a></li>
+        <li role="menuitem"><a href="facility/K-ALT-MASK.html">K-ALT-MASK</a></li>
+        <li role="menuitem"><a href="facility/K-CTRL-MASK.html">K-CTRL-MASK</a></li>
+        <li role="menuitem"><a href="facility/K-DELETE.html">K-DELETE</a></li>
+        <li role="menuitem"><a href="facility/K-DOWN.html">K-DOWN</a></li>
+        <li role="menuitem"><a href="facility/K-END.html">K-END</a></li>
+        <li role="menuitem"><a href="facility/K-FOne.html">K-F1</a></li>
+        <li role="menuitem"><a href="facility/K-FOneZero.html">K-F10</a></li>
+        <li role="menuitem"><a href="facility/K-FOneOne.html">K-F11</a></li>
+        <li role="menuitem"><a href="facility/K-FOneTwo.html">K-F12</a></li>
+        <li role="menuitem"><a href="facility/K-FTwo.html">K-F2</a></li>
+        <li role="menuitem"><a href="facility/K-F3.html">K-F3</a></li>
+        <li role="menuitem"><a href="facility/K-F4.html">K-F4</a></li>
+        <li role="menuitem"><a href="facility/K-F5.html">K-F5</a></li>
+        <li role="menuitem"><a href="facility/K-F6.html">K-F6</a></li>
+        <li role="menuitem"><a href="facility/K-F7.html">K-F7</a></li>
+        <li role="menuitem"><a href="facility/K-F8.html">K-F8</a></li>
+        <li role="menuitem"><a href="facility/K-F9.html">K-F9</a></li>
+        <li role="menuitem"><a href="facility/K-HOME.html">K-HOME</a></li>
+        <li role="menuitem"><a href="facility/K-INSERT.html">K-INSERT</a></li>
+        <li role="menuitem"><a href="facility/K-LEFT.html">K-LEFT</a></li>
+        <li role="menuitem"><a href="facility/K-NEXT.html">K-NEXT</a></li>
+        <li role="menuitem"><a href="facility/K-PRIOR.html">K-PRIOR</a></li>
+        <li role="menuitem"><a href="facility/K-RIGHT.html">K-RIGHT</a></li>
+        <li role="menuitem"><a href="facility/K-SHIFT-MASK.html">K-SHIFT-MASK</a></li>
+        <li role="menuitem"><a href="facility/K-UP.html">K-UP</a></li>
+        <li role="menuitem"><a href="facility/MS.html">MS</a></li>
+        <li role="menuitem"><a href="facility/TIMEandDATE.html">TIME&amp;DATE</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

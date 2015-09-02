@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: TRAVERSE-WORDLIST</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="tools:TRAVERSE-WORDLIST">
+  <div class="wordNumber">15.6.2.2297</div>
+  <div class="wordName">TRAVERSE-WORDLIST</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">TOOLS EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>i * x xt wid</em> -- <em>j * x</em> )
+      <p />
+      Remove <em>wid</em> and <em>xt</em> from the stack.  Execute
+      <em>xt</em> once for every word in the wordlist <em>wid</em>,
+      passing the name token <em>nt</em> of the word to <em>xt</em>,
+      until the wordlist is exhausted or until <em>xt</em> returns false.
+      <p />
+      The invoked <em>xt</em> has the stack effect
+      ( <em>k * x nt</em> -- <em>l * x flag</em> ).
+      <p />
+      If <em>flag</em> is true, <strong>TRAVERSE-WORDLIST</strong> will continue
+      with the next name, otherwise it will return.  <strong>TRAVERSE-WORDLIST</strong>
+      does not put any items other than <em>nt</em> on the stack when
+      calling <em>xt</em>, so that <em>xt</em> can access and modify the
+      rest of the stack.
+      <p />
+      <strong>TRAVERSE-WORDLIST</strong> may visit words in any order, with one
+      exception: words with the same name are called in the order
+      newest-to-oldest (possibly with other words in between).
+      <p />
+      An ambiguous condition exists if words are added to or deleted from
+      the wordlist <em>wid</em> during the execution of
+      <strong>TRAVERSE-WORDLIST</strong>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../rationale.html#rat:tools:TRAVERSE-WORDLIST">A.15.6.2.2297 TRAVERSE-WORDLIST</a>,
+      <a href="../tools/NAMEtoSTRING.html">15.6.2.1909.40 NAME&gt;STRING</a>, <br />
+      <a href="../tools/NAMEtoINTERPRET.html">15.6.2.1909.20 NAME&gt;INTERPRET</a>,
+      <a href="../tools/NAMEtoCOMPILE.html">15.6.2.1909.10 NAME&gt;COMPILE</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+
+      Typical use:
+      <p />
+            <div class="quote">
+        <div class="tt">
+<a href="../core/Colon.html">:</a> WORDS-COUNT <a href="../core/p.html">(</a> x nt -- x' f )
+          <a href="../core/DROP.html">DROP</a> <a href="../core/OnePlus.html">1+</a> <a href="../core/TRUE.html">TRUE</a>
+          <a href="../core/Semi.html">;</a>
+          <br />
+          0 <a href="../core/Tick.html">'</a> WORDS-COUNT
+          <a href="../search/FORTH-WORDLIST.html">FORTH-WORDLIST</a>
+          <strong>TRAVERSE-WORDLIST</strong> <a href="../core/d.html">.</a>
+          
+          </div>
+        </div>
+      <p />
+      prints a count of the number of words in the <a href="../search/FORTH-WORDLIST.html">FORTH-WORDLIST</a>.
+      <p />
+            <div class="quote">
+        <div class="tt">
+<a href="../core/Colon.html">:</a> ALL-WORDS
+          <a href="../tools/NAMEtoSTRING.html">NAME&gt;STRING</a> <a href="../core/CR.html">CR</a> <a href="../core/TYPE.html">TYPE</a> <a href="../core/TRUE.html">TRUE</a>
+          <a href="../core/Semi.html">;</a>
+          <br />
+          <a href="../core/Tick.html">'</a> ALL-WORDS 
+          <a href="../search/GET-CURRENT.html">GET-CURRENT</a>
+          <strong>TRAVERSE-WORDLIST</strong>
+          
+          </div>
+        </div>
+      prints the names of words in the current compilation wordlist.
+      <p />
+            <div class="quote">
+        <div class="tt">
+<a href="../core/Colon.html">:</a> CONTAINS-STRING <br />
+          &nbsp;&nbsp; 			<a href="../tools/NAMEtoSTRING.html">NAME&gt;STRING</a> <a href="../core/TwoOVER.html">2OVER</a>
+          <a href="../string/SEARCH.html">SEARCH</a> <a href="../core/IF.html">IF</a>
+          <a href="../core/CR.html">CR</a> <a href="../core/TYPE.html">TYPE</a>
+          <a href="../core/THEN.html">THEN</a> <a href="../core/FALSE.html">FALSE</a> <a href="../core/Semi.html">;</a> <br />
+          <a href="../core/Sq.html">S&quot;</a> COM&quot; <a href="../core/Tick.html">'</a> CONTAINS-STRING
+          <a href="../search/GET-CURRENT.html">GET-CURRENT</a> <strong>TRAVERSE-WORDLIST</strong>
+          
+          </div>
+        </div>
+      prints the name of a word containing the string
+      &quot;COM&quot;, if it exists, and then terminates.
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Programming-Tools word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html" class="current">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../tools.html#section.15.1">Introduction</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">TRAVERSE-WORDLIST</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="DotS.html">.S</a></li>
+        <li role="menuitem"><a href="q.html">?</a></li>
+        <li role="menuitem"><a href="DUMP.html">DUMP</a></li>
+        <li role="menuitem"><a href="SEE.html">SEE</a></li>
+        <li role="menuitem"><a href="WORDS.html">WORDS</a></li>
+        <li role="menuitem"><a href="SemiCODE.html">;CODE</a></li>
+        <li role="menuitem"><a href="AHEAD.html">AHEAD</a></li>
+        <li role="menuitem"><a href="ASSEMBLER.html">ASSEMBLER</a></li>
+        <li role="menuitem"><a href="BYE.html">BYE</a></li>
+        <li role="menuitem"><a href="CODE.html">CODE</a></li>
+        <li role="menuitem"><a href="CS-PICK.html">CS-PICK</a></li>
+        <li role="menuitem"><a href="CS-ROLL.html">CS-ROLL</a></li>
+        <li role="menuitem"><a href="EDITOR.html">EDITOR</a></li>
+        <li role="menuitem"><a href="FORGET.html">FORGET</a></li>
+        <li role="menuitem"><a href="NtoR.html">N&gt;R</a></li>
+        <li role="menuitem"><a href="NAMEtoCOMPILE.html">NAME&gt;COMPILE</a></li>
+        <li role="menuitem"><a href="NAMEtoINTERPRET.html">NAME&gt;INTERPRET</a></li>
+        <li role="menuitem"><a href="NAMEtoSTRING.html">NAME&gt;STRING</a></li>
+        <li role="menuitem"><a href="NRfrom.html">NR&gt;</a></li>
+        <li role="menuitem"><a href="STATE.html">STATE</a></li>
+        <li role="menuitem"><a href="SYNONYM.html">SYNONYM</a></li>
+        <li role="menuitem"><a href="TRAVERSE-WORDLIST.html" class="current">TRAVERSE-WORDLIST</a></li>
+        <li role="menuitem"><a href="BracketDEFINED.html">[DEFINED]</a></li>
+        <li role="menuitem"><a href="BracketELSE.html">[ELSE]</a></li>
+        <li role="menuitem"><a href="BracketIF.html">[IF]</a></li>
+        <li role="menuitem"><a href="BracketTHEN.html">[THEN]</a></li>
+        <li role="menuitem"><a href="BracketUNDEFINED.html">[UNDEFINED]</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

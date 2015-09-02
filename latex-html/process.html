@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: Proposals Process</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="section*.3">Proposals Process</h1>
+<a name="process"></a>
+
+In developing a standard it is necessary for the standards committee to
+know what the system implementors and the programmers are already doing
+in that area, and what they would be willing to do, or wish for.
+<p />
+To that end we have introduced a system of consultation with the Forth
+community:
+<p />
+<ol style="list-style-type: lower-alpha">
+<li>
+A proponent of an extension or change to the standard writes a
+proposal.
+<p />
+</li>
+<li>
+The proponent publishes the proposal as an <em>RfD</em> (Request for
+Discussion) by sending a copy to the <code>forth200x@yahoogroups.com</code>
+email list <em>and</em> to the <code>comp.lang.forth</code> usenet news group
+where it can be discussed.  The maintainers of the
+<code>www.forth200x.org</code> web site will then place a copy of the
+proposal on that web site.
+<p />
+Be warned, this will generate a lot of heated discussion.
+<p />
+In order for the results to be available in time for a standards
+meeting, an RfD should be published at least 12 weeks before the
+next meeting.
+<p />
+If a proposal does not propose extensions or changes to the Forth
+language, but a rewording of the current document, there is nothing
+for a system implementor to implement, or a programmer to use.  In
+such a case, the proposal should be published as a Request for Comment
+(RfC). The proposal will be considered, along with any comments, at
+the next committee meeting.
+<p />
+</li>
+<li>
+The proponent can modify the proposal, taking any comments into
+consideration.  Where comments have been dismissed, both the comment 
+and the reasons for its dismissal should be given.  The revised
+proposal is published as a revised RfD/RfC.
+<p />
+</li>
+<li>
+Once a proposal has settled down, it is frozen, and submitted to a
+vote taker, who then publishes a <em>CfV</em> (Call for Votes) on the
+proposal. The vote taker will normally be a member of the standards
+committee.  In the poll, system implementors can state, whether
+their systems implement the proposal, or what the chances are that
+it ever will.  Similarly, programmers can state whether they have
+used something similar to the proposed extension and whether they
+would use the proposed extension once it is standardized.  The
+results of this poll are used by the standards committee when
+deciding whether to accept the proposal into the standards document.
+<p />
+In order for the results to be available in time for a standards
+meeting, the CfV should be started at least 6 weeks before that
+meeting.
+<p />
+</li>
+<li>
+One to two weeks after publishing the CfV, the vote taker will
+publish a <em>Current Standings</em>.  Note that the poll will remain
+open, especially for information on additional systems, and the
+results will be updated on the Forth200<em>x</em> web page.  The
+results considered at a standards meeting are those from four weeks
+prior to that meeting.  If no poll results are available by that
+deadline, the proposal will be considered at a later meeting.
+<p />
+</li>
+<li>
+A proposal will only be accepted into the new basis document by
+consensus of those present at a standards meeting. If you can
+not attend a meeting, you should ask somebody who is attending
+to champion the proposal on your behalf.
+</li>
+</ol>
+<p />
+Should a contributor consider their comments to have been dismissed
+without due consideration, they are encouraged to submit a counter
+proposal.
+<p />
+Proposals which have passed the poll will be integrated into the basis
+document in preparation for the approaching standards committee meeting.
+Proposals often require some rewording in this process, so the proponent
+should work with the editor to integrate the proposal into the document.
+<p />
+A proposal should give a rationale for the proposal, so that system
+implementors and programmers may see the relevance of the proposal and
+why they should adopt (and vote for) it. The proposal should include
+the following sections, where appropriate.
+<p />
+<dl class="desc">
+<dt>Author:</dt><dd>  The name of the author(s) of the proposal.
+<p />
+<p />
+</dd>
+<dt>Change Log:</dt><dd>  A list of changes to the last published edition on the proposal.
+<p />
+<p />
+</dd>
+<dt>Problem:</dt><dd>  This states what problem the proposal addresses.
+<p />
+<p />
+</dd>
+<dt>Solution:</dt><dd>  An informal description of the proposed solution to the problem
+identified by the proposal.
+<p />
+</dd>
+<dt>Typical use:</dt><dd>  Shows a typical use of the word/feature you propose; this should
+make the formal wording easier to understand.
+<p />
+</dd>
+<dt>Remarks:</dt><dd>  This gives the rationale for specific decisions you have taken in
+the proposal (often in response to comments in the RfD phase), or
+discusses specific issues that have not been decided yet.
+<p />
+</dd>
+<dt>Proposal:</dt><dd>  This is the formal or normative part of the proposal and should be
+as well specified as possible.
+<p />
+Some issues could be left undecided in the initial RfDs, leaving
+the issue open for discussion.  These issues should be mentioned
+in the Remarks section as well as in the Proposal section.
+<p />
+If you want to leave something open to the system implementor, make
+that explicit, e.g., by making it an ambiguous condition.
+<p />
+For the wording of word definitions, it is normally a good idea to
+take your inspiration from existing word definitions in the basis
+document.  Where possible you should include the rationale for the
+definition.  Should a proposal be accepted where no rationale has
+been provided, the editor will construct a rationale from other
+parts of the proposal.  The proponent should work with the editor
+in the development of this rationale.
+<p />
+</dd>
+<dt>Reference implementation:</dt><dd>  This makes it easier for system implementors to adopt your proposal.
+Where possible they should be provided in standard Forth, as defined
+by this document.
+Where this is not possible, system specific knowledge is required or
+non standard words are used, this should be documented.
+<p />
+</dd>
+<dt>Testing:</dt><dd>  This should test the feature/words you propose, in particular, it
+should test boundary conditions.  Where possible test cases should
+be written to conform with John Hayes <code>tester.f</code> test harness.
+<p />
+</dd>
+<dt>Experience:</dt><dd>  Indicate where the proposal has already been implemented and/or
+used.
+<p />
+</dd>
+<dt>Comments:</dt><dd>  Initially this is blank.  As comments are made on the proposal,
+they should be incorporated into the proposal.  Comment which can
+not be incorporated should be included in this section.  A response
+to the comment may be included after the comment itself.
+<p />
+</dd>
+<dt>Instructions for responding to the poll:</dt><dd>  Once the proposal enters the CfV stage, the vote taker will add
+these instructions to the proposal.
+</dd></dl>
+<br class="clear" />
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Proposals Process</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html" class="current">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

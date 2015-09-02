@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: The optional Exception word set</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.9">9 The optional Exception word set</h1> <!-- 9 -->
+<h2 id="section.9.1">9.1 Introduction</h2> <!-- 9.1 -->
+<h2 id="section.9.2">9.2 Additional terms and notation</h2> <!-- 9.2 -->
+None.
+<p />
+<h2 id="section.9.3">9.3 Additional usage requirements</h2> <!-- 9.3 -->
+<h3 id="subsection.9.3.1">9.3.1 THROW values</h3> <!-- 9.3.1 -->
+<a name="exception:throw"></a>
+<p />
+The <a href="exception/THROW.html">THROW</a> values {-255...-1} shall be used only as
+assigned by this standard. The values {-4095...-256}
+shall be used only as assigned by a system.
+<p />
+Programs shall not define values for use with <a href="exception/THROW.html">THROW</a> in the
+range {-4095...-1}.
+<p />
+<h3 id="subsection.9.3.2">9.3.2 Exception frame</h3> <!-- 9.3.2 -->
+An exception frame is the implementation-dependent set of
+information recording the current execution state necessary for
+the proper functioning of <a href="exception/CATCH.html">CATCH</a> and <a href="exception/THROW.html">THROW</a>. It often
+includes the depths of the data stack and return stack.
+<p />
+<h3 id="subsection.9.3.3">9.3.3 Exception stack</h3> <!-- 9.3.3 -->
+A stack used for the nesting of exception frames by <a href="exception/CATCH.html">CATCH</a>
+and <a href="exception/THROW.html">THROW</a>. It may be, but need not be, implemented using
+the return stack.
+<p />
+<h3 id="subsection.9.3.4">9.3.4 Possible actions on an ambiguous condition</h3> <!-- 9.3.5 -->
+<a name="exception:ambiguous"></a>
+<p />
+A system choosing to execute <a href="exception/THROW.html">THROW</a> when detecting one of the
+ambiguous conditions listed in table <a href="exception.html#table:throw">9.1</a> shall use the
+throw code listed there.
+<p />
+See: <strong><a href="usage.html#usage:ambiguous">3.4.4 Possible actions on an ambiguous condition</a></strong>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 9.1: <a href="exception/THROW.html">THROW</a> code assignments</div>
+  <a name="table:throw"></a>
+  
+  
+  
+  <table class="center">
+  <tr valign="top"><td colspan="2"><hr /></td></tr>
+  <tr valign="top"><td style="width: 20.5em">Code Reserved for </td><td style="width: 20.5em">Code Reserved for </td></tr>
+  <tr valign="top"><td colspan="2"><hr /></td></tr>
+  <tr valign="top"><td colspan="2"> </td></tr>
+  <tr valign="top"><td style="width: 20.5em">  <div class="minipage" style="width: 20.5em">
+
+    <table>
+    <tr><td>-1</td><td><a href="exception/ABORT.html">ABORT</a></td></tr>
+        <tr><td>-2</td><td><a href="exception/ABORTq.html">ABORT&quot;</a></td></tr>
+        <tr><td>-3</td><td>stack overflow</td></tr>
+        <tr><td>-4</td><td>stack underflow</td></tr>
+        <tr><td>-5</td><td>return stack overflow</td></tr>
+        <tr><td>-6</td><td>return stack underflow</td></tr>
+        <tr><td>-7</td><td>do-loops nested too deeply during execution</td></tr>
+        <tr><td>-8</td><td>dictionary overflow</td></tr>
+        <tr><td>-9</td><td>invalid memory address</td></tr>
+        <tr><td>-10</td><td>division by zero</td></tr>
+        <tr><td>-11</td><td>result out of range</td></tr>
+        <tr><td>-12</td><td>argument type mismatch</td></tr>
+        <tr><td>-13</td><td>undefined word</td></tr>
+        <tr><td>-14</td><td>interpreting a compile-only word</td></tr>
+        <tr><td>-15</td><td>invalid <a href="tools/FORGET.html">FORGET</a></td></tr>
+        <tr><td>-16</td><td>attempt to use zero-length string as a name</td></tr>
+        <tr><td>-17</td><td>pictured numeric output string overflow</td></tr>
+        <tr><td>-18</td><td>parsed string overflow</td></tr>
+        <tr><td>-19</td><td>definition name too long</td></tr>
+        <tr><td>-20</td><td>write to a read-only location</td></tr>
+        <tr><td>-21</td><td>unsupported operation</td></tr>
+        <tr><td></td><td>(e.g., <a href="facility/AT-XY.html">AT-XY</a> on a too-dumb terminal)</td></tr>
+        <tr><td>-22</td><td>control structure mismatch</td></tr>
+        <tr><td>-23</td><td>address alignment exception</td></tr>
+        <tr><td>-24</td><td>invalid numeric argument</td></tr>
+        <tr><td>-25</td><td>return stack imbalance</td></tr>
+        <tr><td>-26</td><td>loop parameters unavailable</td></tr>
+        <tr><td>-27</td><td>invalid recursion</td></tr>
+        <tr><td>-28</td><td>user interrupt</td></tr>
+        <tr><td>-29</td><td>compiler nesting</td></tr>
+        <tr><td>-30</td><td>obsolescent feature</td></tr>
+        <tr><td>-31</td><td><a href="core/toBODY.html">&gt;BODY</a> used on non-<a href="core/CREATE.html">CREATE</a>d definition</td></tr>
+        <tr><td>-32</td><td>invalid <em>name</em> argument (e.g., <a href="core/TO.html">TO</a> <em>name</em>)</td></tr>
+        <tr><td>-33</td><td>block read exception</td></tr>
+        <tr><td>-34</td><td>block write exception</td></tr>
+        <tr><td>-35</td><td>invalid block number</td></tr>
+        <tr><td>-36</td><td>invalid file position</td></tr>
+        <tr><td>-37</td><td>file I/O exception</td></tr>
+        <tr><td>-38</td><td>non-existent file</td></tr>
+        <tr><td>-39</td><td>unexpected end of file</td></tr>
+        </table>
+  
+    </div> </td><td style="width: 20.5em">  <div class="minipage" style="width: 20.5em">
+
+    <table>
+    <tr><td>-40</td><td>invalid <a href="core/BASE.html">BASE</a> for floating point conversion</td></tr>
+        <tr><td>-41</td><td>loss of precision</td></tr>
+        <tr><td>-42</td><td>floating-point divide by zero</td></tr>
+        <tr><td>-43</td><td>floating-point result out of range</td></tr>
+        <tr><td>-44</td><td>floating-point stack overflow</td></tr>
+        <tr><td>-45</td><td>floating-point stack underflow</td></tr>
+        <tr><td>-46</td><td>floating-point invalid argument</td></tr>
+        <tr><td>-47</td><td>compilation word list deleted</td></tr>
+        <tr><td>-48</td><td>invalid <a href="core/POSTPONE.html">POSTPONE</a></td></tr>
+        <tr><td>-49</td><td>search-order overflow</td></tr>
+        <tr><td>-50</td><td>search-order underflow</td></tr>
+        <tr><td>-51</td><td>compilation word list changed</td></tr>
+        <tr><td>-52</td><td>control-flow stack overflow</td></tr>
+        <tr><td>-53</td><td>exception stack overflow</td></tr>
+        <tr><td>-54</td><td>floating-point underflow</td></tr>
+        <tr><td>-55</td><td>floating-point unidentified fault</td></tr>
+        <tr><td>-56</td><td><a href="core/QUIT.html">QUIT</a></td></tr>
+        <tr><td>-57</td><td>exception in sending or receiving a character</td></tr>
+        <tr><td>-58</td><td><a href="tools/BracketIF.html">[IF]</a>, <a href="tools/BracketELSE.html">[ELSE]</a>, or <a href="tools/BracketTHEN.html">[THEN]</a> exception</td></tr>
+        <tr><td>-59</td><td><a href="memory/ALLOCATE.html">ALLOCATE</a></td></tr>
+        <tr><td>-60</td><td><a href="memory/FREE.html">FREE</a></td></tr>
+        <tr><td>-61</td><td><a href="memory/RESIZE.html">RESIZE</a></td></tr>
+        <tr><td>-62</td><td><a href="file/CLOSE-FILE.html">CLOSE-FILE</a></td></tr>
+        <tr><td>-63</td><td><a href="file/CREATE-FILE.html">CREATE-FILE</a></td></tr>
+        <tr><td>-64</td><td><a href="file/DELETE-FILE.html">DELETE-FILE</a></td></tr>
+        <tr><td>-65</td><td><a href="file/FILE-POSITION.html">FILE-POSITION</a></td></tr>
+        <tr><td>-66</td><td><a href="file/FILE-SIZE.html">FILE-SIZE</a></td></tr>
+        <tr><td>-67</td><td><a href="file/FILE-STATUS.html">FILE-STATUS</a></td></tr>
+        <tr><td>-68</td><td><a href="file/FLUSH-FILE.html">FLUSH-FILE</a></td></tr>
+        <tr><td>-69</td><td><a href="file/OPEN-FILE.html">OPEN-FILE</a></td></tr>
+        <tr><td>-70</td><td><a href="file/READ-FILE.html">READ-FILE</a></td></tr>
+        <tr><td>-71</td><td><a href="file/READ-LINE.html">READ-LINE</a></td></tr>
+        <tr><td>-72</td><td><a href="file/RENAME-FILE.html">RENAME-FILE</a></td></tr>
+        <tr><td>-73</td><td><a href="file/REPOSITION-FILE.html">REPOSITION-FILE</a></td></tr>
+        <tr><td>-74</td><td><a href="file/RESIZE-FILE.html">RESIZE-FILE</a></td></tr>
+        <tr><td>-75</td><td><a href="file/WRITE-FILE.html">WRITE-FILE</a></td></tr>
+        <tr><td>-76</td><td><a href="file/WRITE-LINE.html">WRITE-LINE</a></td></tr>
+        <tr><td>-77</td><td>Malformed xchar</td></tr>
+        <tr><td>-78</td><td><a href="string/SUBSTITUTE.html">SUBSTITUTE</a></td></tr>
+        <tr><td>-79</td><td><a href="string/REPLACES.html">REPLACES</a></td></tr>
+        </table>
+  
+    </div>
+  </td></tr>
+  <tr valign="top"><td colspan="2"><hr /></td></tr>
+  <tr valign="top"><td style="width: 20.5em"></td></tr>
+  </table>
+  
+  </div>
+<h3 id="subsection.9.3.5">9.3.5 Exception handling</h3> <!-- 9.3.6 -->
+There are several methods of coupling <a href="exception/CATCH.html">CATCH</a> and <a href="exception/THROW.html">THROW</a>
+to other procedural nestings. The usual nestings are the execution
+of definitions, use of the return stack, use of loops,
+instantiation of locals and nesting of input sources (i.e., with
+<a href="block/LOAD.html">LOAD</a>, <a href="core/EVALUATE.html">EVALUATE</a>, or
+<a href="file/INCLUDE-FILE.html">INCLUDE-FILE</a>).
+<p />
+When a <a href="exception/THROW.html">THROW</a> returns control to a <a href="exception/CATCH.html">CATCH</a>, the system
+shall un-nest not only definitions, but also, if present, locals
+and input source specifications, to return the system to its proper
+state for continued execution past the <a href="exception/CATCH.html">CATCH</a>.
+<p />
+<h2 id="section.9.4">9.4 Additional documentation requirements</h2> <!-- 9.4 -->
+<h3 id="subsection.9.4.1">9.4.1 System documentation</h3> <!-- 9.4.1 -->
+<h4 id="subsubsection.9.4.1.1">9.4.1.1 Implementation-defined options</h4> <!-- 9.4.1.1 -->
+<ul>
+<li> Values used in the system by <a href="exception/CATCH.html">9.6.1.0875 CATCH</a> and
+<a href="exception/THROW.html">9.6.1.2275 THROW</a>
+(<strong><a href="exception.html#exception:throw">9.3.1 THROW values</a></strong>,
+<strong><a href="exception.html#exception:ambiguous">9.3.4 Possible actions on an ambiguous condition</a></strong>).
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.9.4.1.2">9.4.1.2 Ambiguous conditions</h4> <!-- 9.4.1.2 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.9.4.1.3">9.4.1.3 Other system documentation</h4> <!-- 9.4.1.3 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h3 id="subsection.9.4.2">9.4.2 Program documentation</h3> <!-- 9.4.2 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h2 id="section.9.5">9.5 Compliance and labeling</h2> <!-- 9.5 -->
+<h3 id="subsection.9.5.1">9.5.1 Forth-2012 systems</h3> <!-- 9.5.1 -->
+The phrase &quot;Providing the Exception word set&quot; shall be appended to
+the label of any Standard System that provides all of the Exception
+word set.
+<p />
+The phrase &quot;Providing <em>name(s)</em> from the Exception Extensions
+word set&quot; shall be appended to the label of any Standard System
+that provides portions of the Exception Extensions word set.
+<p />
+The phrase &quot;Providing the Exception Extensions word set&quot; shall be
+appended to the label of any Standard System that provides all of
+the Exception and Exception Extensions word sets.
+<p />
+<h3 id="subsection.9.5.2">9.5.2 Forth-2012 programs</h3> <!-- 9.5.2 -->
+The phrase &quot;Requiring the Exception word set&quot; shall be appended
+to the label of Standard Programs that require the system to provide
+the Exception word set.
+<p />
+The phrase &quot;Requiring <em>name(s)</em> from the Exception Extensions
+word set&quot; shall be appended to the label of Standard Programs that
+require the system to provide portions of the Exception Extensions
+word set.
+<p />
+The phrase &quot;Requiring the Exception Extensions word set&quot; shall be
+appended to the label of Standard Programs that require the system
+to provide all of the Exception and Exception Extensions word sets.
+<p />
+
+<h2 id="section.9.6">9.6 Glossary</h2> <!-- 9.6 -->
+<h3 id="subsection.9.6.1">9.6.1 Exception words</h3> <!-- 9.6.1 -->
+<ul>
+<li><a href="exception/CATCH.html">9.6.1.0875 CATCH</a></li>
+<li><a href="exception/THROW.html">9.6.1.2275 THROW</a></li>
+
+</ul>
+<h3 id="subsection.9.6.2">9.6.2 Exception extension words</h3> <!-- 9.6.2 -->
+<ul>
+<li><a href="exception/ABORT.html">9.6.2.0670 ABORT</a></li>
+<li><a href="exception/ABORTq.html">9.6.2.0680 ABORT&quot;</a></li>
+</ul>
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Exception word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html" class="current">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.9.1" class="current">Introduction</a></li>
+        <li role="menuitem"><a href="#section.9.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="#section.9.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="#section.9.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="#section.9.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="#section.9.6">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">CATCH</span>
+      <div class="menu">
+        <ul id="menu-word" style="width: 202px;">
+        <li role="menuitem"><a href="exception/CATCH.html">CATCH</a></li>
+        <li role="menuitem"><a href="exception/THROW.html">THROW</a></li>
+        <li role="menuitem"><a href="exception/ABORT.html">ABORT</a></li>
+        <li role="menuitem"><a href="exception/ABORTq.html">ABORT&quot;</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

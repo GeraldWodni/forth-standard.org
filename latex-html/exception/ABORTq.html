@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: ABORT"</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="exception:ABORTq">
+  <div class="wordNumber">9.6.2.0680</div>
+  <div class="wordName">ABORT&quot;</div>
+  <div class="wordEnglish">abort-quote</div>
+  <div class="wordList">EXCEPTION EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ Extend the semantics of <a href="../core/ABORTq.html">6.1.0680 ABORT&quot;</a> to be:
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Interpretation:</div>
+    <div class="sec">
+
+
+      Interpretation semantics for this word are undefined.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Compilation:</div>
+    <div class="sec">
+
+
+      ( <em>&quot;ccc&lt;quote&gt;&quot;</em> -- )
+      <p />
+      Parse <em>ccc</em> delimited by a <code>&quot;</code> (double-quote).
+      Append the run-time semantics given below to the current
+      definition.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Run-time:</div>
+    <div class="sec">
+
+
+      ( <em>i * x x<sub>1</sub></em> -- <em> |  i * x</em> )
+      ( R: <em>j * x</em> -- <em> |  j * x</em> )
+      <p />
+      Remove <em>x<sub>1</sub></em> from the stack. If any bit of <em>x<sub>1</sub></em>
+      is not zero, perform the function of <code>-2</code> <a href="../exception/THROW.html">THROW</a>,
+      displaying <em>ccc</em> if there is no exception frame on the
+      exception stack.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <strong><a href="../usage.html#usage:parsing">3.4.1 Parsing</a></strong>,
+      <a href="../core/ABORTq.html">6.1.0680 ABORT&quot;</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+      <div class="tt">
+<a href="../core/DECIMAL.html">DECIMAL</a> <br />
+         -1	<a href="../core/CONSTANT.html">CONSTANT</a> exc_abort <br />
+         -2 <a href="../core/CONSTANT.html">CONSTANT</a> exc_abort&quot; <br />
+        -13 <a href="../core/CONSTANT.html">CONSTANT</a> exc_undef <br />
+        <a href="../core/Colon.html">:</a> t6 <a href="../exception/ABORT.html">ABORT</a> <a href="../core/Semi.html">;</a>
+        <p />
+        <span class="rm">The 77 in <code>t10</code> is necessary for the second
+        <strong>ABORT&quot;</strong> test as the data stack is restored to a
+        depth of 2 when <a href="../exception/THROW.html">THROW</a> is executed.  The 77 ensures
+        the top of stack value is known for the results check.</span>
+        <p />
+        <a href="../core/Colon.html">:</a> t10 77 <a href="../core/SWAP.html">SWAP</a> <strong>ABORT&quot;</strong> This should not be displayed&quot; <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> c6 <a href="../exception/CATCH.html">CATCH</a> <br />
+        &nbsp;&nbsp; <a href="../core/CASE.html">CASE</a> exc_abort  <a href="../core/OF.html">OF</a> 11 <a href="../core/ENDOF.html">ENDOF</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		 exc_abort&quot; <a href="../core/OF.html">OF</a> 12 <a href="../core/ENDOF.html">ENDOF</a> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		 exc_undef  <a href="../core/OF.html">OF</a> 13 <a href="../core/ENDOF.html">ENDOF</a> <br />
+        &nbsp;&nbsp; <a href="../core/ENDCASE.html">ENDCASE</a> <br />
+        <a href="../core/Semi.html">;</a>
+        <p />
+        <span class="tt">T{ 1&nbsp;2&nbsp;<a href="../core/Tick.html">'</a>&nbsp;&nbsp;t6&nbsp;c6 -&gt; 1&nbsp;2&nbsp;11&nbsp; }T</span> &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Test that ABORT is caught</span> <br />
+        <span class="tt">T{ 3&nbsp;0&nbsp;<a href="../core/Tick.html">'</a>&nbsp;t10&nbsp;c6 -&gt; 3&nbsp;77&nbsp;&nbsp;&nbsp; }T</span> &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">ABORT&quot; does nothing</span> <br />
+        <span class="tt">T{ 4&nbsp;5&nbsp;<a href="../core/Tick.html">'</a>&nbsp;t10&nbsp;c6 -&gt; 4&nbsp;77&nbsp;12 }T</span> &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">ABORT&quot; caught, no message</span>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Exception word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html" class="current">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../exception.html#section.9.1">Introduction</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">ABORT&quot;</span>
+      <div class="menu">
+        <ul id="menu-word" style="width: 202px;">
+        <li role="menuitem"><a href="CATCH.html">CATCH</a></li>
+        <li role="menuitem"><a href="THROW.html">THROW</a></li>
+        <li role="menuitem"><a href="ABORT.html">ABORT</a></li>
+        <li role="menuitem"><a href="ABORTq.html" class="current">ABORT&quot;</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

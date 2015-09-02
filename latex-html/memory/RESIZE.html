@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: RESIZE</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="memory:RESIZE">
+  <div class="wordNumber">14.6.1.2145</div>
+  <div class="wordName">RESIZE</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">MEMORY</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>a-addr<sub>1</sub> u</em> -- <em>a-addr<sub>2</sub> ior</em> )
+      <p />
+      Change the allocation of the contiguous data space starting at
+      the address <em>a-addr<sub>1</sub></em>, previously allocated by
+      <a href="../memory/ALLOCATE.html">ALLOCATE</a> or <strong>RESIZE</strong>, to <em>u</em> address units.
+      <em>u</em> may be either larger or smaller than the current
+      size of the region. The data-space pointer is unaffected by
+      this operation.
+      <p />
+      If the operation succeeds, <em>a-addr<sub>2</sub></em> is the aligned
+      starting address of <em>u</em> address units of allocated memory
+      and <em>ior</em> is zero. <em>a-addr<sub>2</sub></em> may be, but need
+      not be, the same as <em>a-addr<sub>1</sub></em>. If they are not the same,
+      the values contained in the region at <em>a-addr<sub>1</sub></em> are copied
+      to <em>a-addr<sub>2</sub></em>, up to the minimum size of either of the
+      two regions. If they are the same, the values contained in the
+      region are preserved to the minimum of <em>u</em> or the original
+      size.  If <em>a-addr<sub>2</sub></em> is not the same as <em>a-addr<sub>1</sub></em>,
+      the region of memory at <em>a-addr<sub>1</sub></em> is returned to the system
+      according to the operation of <a href="../memory/FREE.html">FREE</a>.
+      <p />
+      If the operation fails, <em>a-addr<sub>2</sub></em> equals <em>a-addr<sub>1</sub></em>,
+      the region of memory at <em>a-addr<sub>1</sub></em> is unaffected, and
+      <em>ior</em> is the implementation-defined I/O result code.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../core/HERE.html">6.1.1650 HERE</a>,
+      <a href="../memory/ALLOCATE.html">14.6.1.0707 ALLOCATE</a>,
+      <a href="../memory/FREE.html">14.6.1.1605 FREE</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+      <div class="tt">
+<span class="tt">T{ 50&nbsp;<a href="../core/CHARS.html">CHARS</a>&nbsp;<a href="../memory/ALLOCATE.html">ALLOCATE</a>&nbsp;<a href="../core/SWAP.html">SWAP</a>&nbsp;addr&nbsp;<a href="../core/Store.html">!</a> -&gt; 0 }T</span> <br />
+        addr <a href="../core/Fetch.html">@</a> 50 write-char-mem addr <a href="../core/Fetch.html">@</a> 50 check-char-mem
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">Resize smaller does not change content.</span> <br />
+        <span class="tt">T{ addr&nbsp;<a href="../core/Fetch.html">@</a>&nbsp;28&nbsp;<a href="../core/CHARS.html">CHARS</a>&nbsp;<strong>RESIZE</strong>&nbsp;<a href="../core/SWAP.html">SWAP</a>&nbsp;addr&nbsp;<a href="../core/Store.html">!</a> -&gt; 0 }T</span> <br />
+        addr <a href="../core/Fetch.html">@</a> 28 check-char-mem
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">Resize larger does not change original content.</span> <br />
+        <span class="tt">T{ addr&nbsp;<a href="../core/Fetch.html">@</a>&nbsp;100&nbsp;<a href="../core/CHARS.html">CHARS</a>&nbsp;<strong>RESIZE</strong>&nbsp;<a href="../core/SWAP.html">SWAP</a>&nbsp;addr&nbsp;<a href="../core/Store.html">!</a> -&gt; 0 }T</span> <br />
+        addr <a href="../core/Fetch.html">@</a> 28 check-char-mem
+        <p />
+        <a href="../core/bs.html">\</a> <span class="rm">Resize error does not change <em>addr</em></span> <br />
+        <span class="tt">T{ addr&nbsp;<a href="../core/Fetch.html">@</a>&nbsp;-1&nbsp;<strong>RESIZE</strong>&nbsp;<a href="../core/ZeroEqual.html">0=</a> -&gt; addr&nbsp;<a href="../core/Fetch.html">@</a>&nbsp;&lt;FALSE&gt; }T</span>
+        <p />
+        <span class="tt">T{ addr&nbsp;<a href="../core/Fetch.html">@</a>&nbsp;<a href="../memory/FREE.html">FREE</a> -&gt; 0 }T</span> <br />
+        <span class="tt">T{ <a href="../core/HERE.html">HERE</a> -&gt; datsp&nbsp;<a href="../core/Fetch.html">@</a> }T</span> &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Data space pointer is unaffected</span>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Memory-Allocation word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html" class="current">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../memory.html#section.14.1">Introduction</a></li>
+        <li role="menuitem"><a href="../memory.html#section.14.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../memory.html#section.14.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../memory.html#section.14.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../memory.html#section.14.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../memory.html#section.14.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">RESIZE</span>
+      <div class="menu">
+        <ul id="menu-word" style="width: 202px;">
+        <li role="menuitem"><a href="ALLOCATE.html">ALLOCATE</a></li>
+        <li role="menuitem"><a href="FREE.html">FREE</a></li>
+        <li role="menuitem"><a href="RESIZE.html" class="current">RESIZE</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

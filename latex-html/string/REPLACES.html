@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: REPLACES</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="string:REPLACES">
+  <div class="wordNumber">17.6.2.2141</div>
+  <div class="wordName">REPLACES</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">STRING EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>c-addr<sub>1</sub> u<sub>1</sub> c-addr<sub>2</sub> u<sub>2</sub></em> -- )
+      <p />
+      Set the string <em>c-addr<sub>1</sub> u<sub>1</sub></em> as the text to substitute for
+      the substitution named by <em>c-addr<sub>2</sub> u<sub>2</sub></em>.
+      If the substitution does not exist it is created.
+      The program may then reuse the buffer <em>c-addr<sub>1</sub> u<sub>1</sub></em> without
+      affecting the definition of the substitution.
+      <p />
+      Ambiguous conditions occur as follows:
+      <ul>
+      <li> The substitution cannot be created;
+      </li>
+      <li> The name of a substitution contains the `<code>%</code>' delimiter character.
+      </li>
+</ul>
+      <p />
+      <strong>REPLACES</strong> may allot data space and create a definition.  This breaks
+      the contiguity of the current region and is not allowed during compilation
+      of a colon definition
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <strong><a href="../usage.html#usage:contiguous">3.3.3.2 Contiguous regions</a></strong>,
+      <strong><a href="../usage.html#usage:compilation">3.4.5 Compilation</a></strong>,
+      <a href="../string/SUBSTITUTE.html">17.6.2.2255 SUBSTITUTE</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+
+      <a href="../core/DECIMAL.html">DECIMAL</a>
+      <p />
+      <a href="../tools/BracketUNDEFINED.html">[UNDEFINED]</a> place <a href="../tools/BracketIF.html">[IF]</a> <br />
+      &nbsp;&nbsp; <a href="../core/Colon.html">:</a> place &nbsp;&nbsp; <a href="../core/bs.html">\</a>  c-addr1 u c-addr2 -- <br />
+      &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Copy the string described by <em>c-addr<em><sub>1</sub></em> u</em> as a counted</span> <br />
+      &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">string at the memory address described by <em>c-addr<em><sub>2</sub></em></em>.</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/TwoDUP.html">2DUP</a> <a href="../core/TwotoR.html">2&gt;R</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; 1 <a href="../core/CHARS.html">CHARS</a> <a href="../core/Plus.html">+</a> <a href="../core/SWAP.html">SWAP</a> <a href="../core/MOVE.html">MOVE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/TwoRfrom.html">2R&gt;</a> <a href="../core/CStore.html">C!</a> <br />
+      &nbsp;&nbsp; <a href="../core/Semi.html">;</a> <br />
+      <a href="../tools/BracketTHEN.html">[THEN]</a>
+      <p />
+      <a href="../core/Colon.html">:</a> &quot;/COUNTED-STRING&quot; <a href="../core/Sq.html">S&quot;</a> /COUNTED-STRING&quot; <a href="../core/Semi.html">;</a> <br />
+      &quot;/COUNTED-STRING&quot; <a href="../core/ENVIRONMENTq.html">ENVIRONMENT?</a> <a href="../core/ZeroEqual.html">0=</a> <a href="../tools/BracketIF.html">[IF]</a> 256 <a href="../tools/BracketTHEN.html">[THEN]</a> <br />
+      <a href="../core/CHARS.html">CHARS</a> <a href="../core/CONSTANT.html">CONSTANT</a> string-max
+      <p />
+      <a href="../search/WORDLIST.html">WORDLIST</a> <a href="../core/CONSTANT.html">CONSTANT</a> wid-subst <br />
+      <a href="../core/bs.html">\</a> <span class="rm">Wordlist ID of the wordlist used to hold substitution names and replacement text.</span>
+      <p />
+      <a href="../tools/BracketDEFINED.html">[DEFINED]</a> VFXforth <a href="../tools/BracketIF.html">[IF]</a> <a href="../core/bs.html">\</a> <span class="rm"><strong>VFX Forth</strong></span> <br />
+      &nbsp;&nbsp; <a href="../core/Colon.html">:</a> makeSubst	<a href="../core/bs.html">\</a> c-addr len -- c-addr <br />
+      &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Given a name string create a substution and storage space.</span> <br />
+      &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Return the address of the buffer for the substitution text.</span> <br />
+      &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">This word requires system specific knowledge of the host Forth.</span> <br />
+      &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Some systems may need to perform case conversion here.</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../search/GET-CURRENT.html">GET-CURRENT</a> <a href="../core/toR.html">&gt;R</a> wid-subst <a href="../search/SET-CURRENT.html">SET-CURRENT</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; ($create) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">like <a href="../core/CREATE.html">CREATE</a> but takes c-addr/len</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/Rfrom.html">R&gt;</a> <a href="../search/SET-CURRENT.html">SET-CURRENT</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/HERE.html">HERE</a>  string-max <a href="../core/ALLOT.html">ALLOT</a>  0 <a href="../core/OVER.html">OVER</a> <a href="../core/CStore.html">C!</a>	<a href="../core/bs.html">\</a> <span class="rm">create buffer space</span> <br />
+      &nbsp;&nbsp; <a href="../core/Semi.html">;</a> <br />
+      <a href="../tools/BracketTHEN.html">[THEN]</a>
+      <p />
+      <a href="../tools/BracketDEFINED.html">[DEFINED]</a> (WID-CREATE) <a href="../tools/BracketIF.html">[IF]</a> <a href="../core/bs.html">\</a> <span class="rm"><strong>SwiftForth</strong></span> <br />
+      &nbsp;&nbsp; <a href="../core/Colon.html">:</a> makeSubst <a href="../core/bs.html">\</a> c-addr len -- c-addr <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; wid-subst (WID-CREATE) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">like <a href="../core/CREATE.html">CREATE</a> but takes c-addr/len/wid</span> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; LAST <a href="../core/Fetch.html">@</a> &gt;CREATE <a href="../core/Store.html">!</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/HERE.html">HERE</a>  string-max <a href="../core/ALLOT.html">ALLOT</a>  0 <a href="../core/OVER.html">OVER</a> <a href="../core/CStore.html">C!</a> <a href="../core/bs.html">\</a> <span class="rm">create buffer space</span> <br />
+      &nbsp;&nbsp; <a href="../core/Semi.html">;</a> <br />
+      <a href="../tools/BracketTHEN.html">[THEN]</a>
+      <p />
+      <a href="../core/Colon.html">:</a> findSubst <a href="../core/bs.html">\</a> c-addr len -- xt flag | 0 <br />
+      <a href="../core/bs.html">\</a> <span class="rm">Given a name string, find the substitution.</span> <br />
+      <a href="../core/bs.html">\</a> <span class="rm">Return <em>xt</em> and <em>flag</em> if found, or just zero if not found.</span> <br />
+      <a href="../core/bs.html">\</a> <span class="rm">Some systems may need to perform case conversion here.</span> <br />
+      &nbsp;&nbsp; wid-subst <a href="../search/SEARCH-WORDLIST.html">SEARCH-WORDLIST</a> <br />
+      <a href="../core/Semi.html">;</a>
+      <p />
+      <a href="../core/Colon.html">:</a> <strong>REPLACES</strong> <a href="../core/bs.html">\</a> text tlen name nlen -- <br />
+      <a href="../core/bs.html">\</a> <span class="rm">Define the string <em>text/tlen</em> as the text to substitute for the substitution named <em>name/nlen</em>.</span> <br />
+      <a href="../core/bs.html">\</a> <span class="rm">If the substitution does not exist it is created.</span> <br />
+      &nbsp;&nbsp; <a href="../core/TwoDUP.html">2DUP</a> findSubst <a href="../core/IF.html">IF</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/NIP.html">NIP</a> <a href="../core/NIP.html">NIP</a>  <a href="../core/EXECUTE.html">EXECUTE</a> &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">get buffer address</span> <br />
+      &nbsp;&nbsp; <a href="../core/ELSE.html">ELSE</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; makeSubst <br />
+      &nbsp;&nbsp; <a href="../core/THEN.html">THEN</a> <br />
+      &nbsp;&nbsp; place &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">copy as counted string</span> <br />
+      <a href="../core/Semi.html">;</a>
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">String word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html" class="current">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../string.html#section.17.1">Introduction</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">REPLACES</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="MinusTRAILING.html">-TRAILING</a></li>
+        <li role="menuitem"><a href="DivSTRING.html">/STRING</a></li>
+        <li role="menuitem"><a href="BLANK.html">BLANK</a></li>
+        <li role="menuitem"><a href="CMOVE.html">CMOVE</a></li>
+        <li role="menuitem"><a href="CMOVEtop.html">CMOVE&gt;</a></li>
+        <li role="menuitem"><a href="COMPARE.html">COMPARE</a></li>
+        <li role="menuitem"><a href="SEARCH.html">SEARCH</a></li>
+        <li role="menuitem"><a href="SLITERAL.html">SLITERAL</a></li>
+        <li role="menuitem"><a href="REPLACES.html" class="current">REPLACES</a></li>
+        <li role="menuitem"><a href="SUBSTITUTE.html">SUBSTITUTE</a></li>
+        <li role="menuitem"><a href="UNESCAPE.html">UNESCAPE</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

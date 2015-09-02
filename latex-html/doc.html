@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: Documentation requirements</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.4">4 Documentation requirements</h1>
+<a name="doc"></a>
+<p />
+When it is impossible or infeasible for a system or program to
+define a particular behavior itself, it is permissible to state
+that the behavior is unspecifiable and to explain the circumstances
+and reasons why this is so.
+<p />
+<h2 id="section.4.1">4.1 System documentation</h2> <!-- 4.1 -->
+<a name="doc:system"></a>
+<p />
+<h3 id="subsection.4.1.1">4.1.1 Implementation-defined options</h3> <!-- 4.1.1 -->
+The implementation-defined items in the following list represent
+characteristics and choices left to the discretion of the
+implementor, provided that the requirements of this standard are
+met. A system shall document the values for, or behaviors of, each
+item.
+<p />
+<ul>
+<li> aligned address requirements <strong><a href="usage.html#usage:addr">3.1.3.3 Addresses</a></strong>;
+</li>
+<li> behavior of <a href="core/EMIT.html">6.1.1320 EMIT</a> for non-graphic characters;
+</li>
+<li> character editing of <a href="core/ACCEPT.html">6.1.0695 ACCEPT</a>;
+</li>
+<li> character set (<strong><a href="usage.html#usage:char">3.1.2 Character types</a></strong>,
+<a href="core/EMIT.html">6.1.1320 EMIT</a>, <a href="core/KEY.html">6.1.1750 KEY</a>);
+</li>
+<li> character-aligned address requirements
+(<strong><a href="usage.html#usage:addr">3.1.3.3 Addresses</a></strong>);
+</li>
+<li> character-set-extensions matching characteristics
+(<strong><a href="usage.html#usage:find">3.4.2 Finding definition names</a></strong>);
+</li>
+<li> conditions under which control characters match a space
+delimiter (<strong><a href="usage.html#usage:delim">3.4.1.1 Delimiters</a></strong>);
+</li>
+<li> format of the control-flow stack
+(<strong><a href="usage.html#usage:controlstack">3.2.3.2 Control-flow stack</a></strong>);
+</li>
+<li> conversion of digits larger than thirty-five
+(<strong><a href="usage.html#usage:digits">3.2.1.2 Digit conversion</a></strong>);
+</li>
+<li> display after input terminates in <a href="core/ACCEPT.html">6.1.0695 ACCEPT</a>;
+</li>
+<li> exception abort sequence (as in <a href="core/ABORTq.html">6.1.0680 ABORT&quot;</a>);
+</li>
+<li> input line terminator (<strong><a href="usage.html#usage:input">3.2.4.1 User input device</a></strong>);
+</li>
+<li> maximum size of a counted string, in characters
+(<strong><a href="usage.html#usage:cstring">3.1.3.4 Counted strings</a></strong>, <a href="core/WORD.html">6.1.2450 WORD</a>);
+</li>
+<li> maximum size of a parsed string
+(<strong><a href="usage.html#usage:parsing">3.4.1 Parsing</a></strong>);
+</li>
+<li> maximum size of a definition name, in characters
+(<strong><a href="usage.html#usage:names">3.3.1.2 Definition names</a></strong>);
+</li>
+<li> maximum string length for
+<a href="core/ENVIRONMENTq.html">6.1.1345 ENVIRONMENT?</a>, in characters;
+</li>
+<li> method of selecting <strong><a href="usage.html#usage:input">3.2.4.1 User input device</a></strong>;
+</li>
+<li> method of selecting <strong><a href="usage.html#usage:output">3.2.4.2 User output device</a></strong>;
+</li>
+<li> methods of dictionary compilation
+(<strong><a href="usage.html#usage:dict">3.3 The Forth dictionary</a></strong>);
+</li>
+<li> number of bits in one address unit
+(<strong><a href="usage.html#usage:addr">3.1.3.3 Addresses</a></strong>);
+</li>
+<li> number representation and arithmetic
+(<strong><a href="usage.html#usage:number">3.2.1.1 Internal number representation</a></strong>);
+</li>
+<li> ranges for <em>n</em>, <em>+n</em>, <em>u</em>, <em>d</em>,
+<em>+d</em>, and <em>ud</em>
+(<strong><a href="usage.html#usage:cell">3.1.3 Single-cell types</a></strong>,
+<strong><a href="usage.html#usage:2cell">3.1.4 Cell-pair types</a></strong>);
+</li>
+<li> read-only data-space regions
+(<strong><a href="usage.html#usage:dataspace">3.3.3 Data space</a></strong>);
+</li>
+<li> size of buffer at <a href="core/WORD.html">6.1.2450 WORD</a>
+(<strong><a href="usage.html#usage:transient">3.3.3.6 Other transient regions</a></strong>);
+</li>
+<li> size of one cell in address units
+(<strong><a href="usage.html#usage:cell">3.1.3 Single-cell types</a></strong>);
+</li>
+<li> size of one character in address units
+(<strong><a href="usage.html#usage:char">3.1.2 Character types</a></strong>);
+</li>
+<li> size of the keyboard terminal input buffer
+(<strong><a href="usage.html#usage:inbuf">3.3.3.5 Input buffers</a></strong>);
+</li>
+<li> size of the pictured numeric output string buffer 
+(<strong><a href="usage.html#usage:transient">3.3.3.6 Other transient regions</a></strong>);
+</li>
+<li> size of the scratch area whose address is returned by
+<a href="core/PAD.html">6.2.2000 PAD</a> <br />
+(<strong><a href="usage.html#usage:transient">3.3.3.6 Other transient regions</a></strong>);
+</li>
+<li> system case-sensitivity characteristics
+(<strong><a href="usage.html#usage:find">3.4.2 Finding definition names</a></strong>);
+</li>
+<li> system prompt (<strong><a href="usage.html#usage:dict">3.3 The Forth dictionary</a></strong>,
+<a href="core/QUIT.html">6.1.2050 QUIT</a>);
+</li>
+<li> type of division rounding (<strong><a href="usage.html#usage:div">3.2.2.1 Integer division</a></strong>,
+<a href="core/TimesDiv.html">6.1.0100 */</a>, <a href="core/TimesDivMOD.html">6.1.0110 */MOD</a>, <a href="core/Div.html">6.1.0230 /</a>,
+<a href="core/DivMOD.html">6.1.0240 /MOD</a>, <a href="core/MOD.html">6.1.1890 MOD</a>);
+</li>
+<li> values of <a href="core/STATE.html">6.1.2250 STATE</a> when true;
+</li>
+<li> values returned after arithmetic overflow
+(<strong><a href="usage.html#usage:intops">3.2.2.2 Other integer operations</a></strong>);
+</li>
+<li> whether the current definition can be found after
+<a href="core/DOES.html">6.1.1250 DOES&gt;</a> (<a href="core/Colon.html">6.1.0450 :</a>).
+</li>
+</ul>
+<p />
+<h3 id="subsection.4.1.2">4.1.2 Ambiguous conditions</h3> <!-- 4.1.2 =========================== -->
+<a name="doc:ambiguous"></a>
+<p />
+A system shall document the system action taken upon each of the
+general or specific ambiguous conditions identified in this
+standard. See <strong><a href="usage.html#usage:ambiguous">3.4.4 Possible actions on an ambiguous condition</a></strong>.
+<p />
+The following general ambiguous conditions could occur because of a
+combination of factors:
+<p />
+<ul>
+<li> a <em>name</em> is neither a valid definition name nor a valid
+number during text interpretation (<strong><a href="usage.html#usage:command">3.4 The Forth text interpreter</a></strong>);
+</li>
+<li> a definition name exceeded the maximum length allowed
+(<strong><a href="usage.html#usage:names">3.3.1.2 Definition names</a></strong>);
+</li>
+<li> addressing a region not listed in <strong><a href="usage.html#usage:dataspace">3.3.3 Data space</a></strong>;
+</li>
+<li> argument type incompatible with specified input parameter,
+e.g., passing a <em>flag</em> to a word expecting an <em>n</em>
+(<strong><a href="usage.html#usage:data">3.1 Data types</a></strong>);
+</li>
+<li> attempting to obtain the execution token, (e.g., with
+<a href="core/Tick.html">6.1.0070 '</a>, <a href="core/FIND.html">6.1.1550 FIND</a>, etc. of a definition
+with undefined interpretation semantics;
+</li>
+<li> dividing by zero
+(<a href="core/TimesDiv.html">6.1.0100 */</a>,
+<a href="core/TimesDivMOD.html">6.1.0110 */MOD</a>,
+<a href="core/Div.html">6.1.0230 /</a>,
+<a href="core/DivMOD.html">6.1.0240 /MOD</a>,
+<a href="core/FMDivMOD.html">6.1.1561 FM/MOD</a>,
+<a href="core/MOD.html">6.1.1890 MOD</a>,
+<a href="core/SMDivREM.html">6.1.2214 SM/REM</a>,
+<a href="core/UMDivMOD.html">6.1.2370 UM/MOD</a>,
+<a href="double/MTimesDiv.html">8.6.1.1820 M*/</a>);
+</li>
+<li> insufficient data-stack space or return-stack space (stack
+overflow);
+</li>
+<li> insufficient space for loop-control parameters;
+</li>
+<li> insufficient space in the dictionary;
+</li>
+<li> interpreting a word with undefined interpretation semantics;
+</li>
+<li> modifying the contents of the input buffer or a string literal
+(<strong><a href="usage.html#usage:"literal">3.3.3.4 Text-literal regions</a></strong>,
+<strong><a href="usage.html#usage:inbuf">3.3.3.5 Input buffers</a></strong>);
+</li>
+<li> overflow of a pictured numeric output string;
+</li>
+<li> parsed string overflow;
+</li>
+<li> producing a result out of range, e.g., multiplication
+(using <a href="core/Times.html">*</a>) results in a value too big to be represented by
+a single-cell integer
+(<a href="core/Times.html">6.1.0090 *</a>,
+<a href="core/TimesDiv.html">6.1.0100 */</a>,
+<a href="core/TimesDivMOD.html">6.1.0110 */MOD</a>,
+<a href="core/toNUMBER.html">6.1.0570 &gt;NUMBER</a>,
+<a href="core/FMDivMOD.html">6.1.1561 FM/MOD</a>,
+<a href="core/SMDivREM.html">6.1.2214 SM/REM</a>,
+<a href="core/UMDivMOD.html">6.1.2370 UM/MOD</a>,
+<a href="double/MTimesDiv.html">8.6.1.1820 M*/</a>);
+</li>
+<li> reading from an empty data stack or return stack
+(stack underflow);
+</li>
+<li> unexpected end of input buffer, resulting in an attempt to
+use a zero-length string as a <em>name</em>.
+</li>
+</ul>
+<p />
+The following specific ambiguous conditions are noted in the
+glossary entries of the relevant words:
+<p />
+<ul>
+<li> <a href="core/toIN.html">&gt;IN</a> greater than size of input buffer
+(<strong><a href="usage.html#usage:parsing">3.4.1 Parsing</a></strong>);
+</li>
+<li> <a href="core/RECURSE.html">6.1.2120 RECURSE</a> appears after
+<a href="core/DOES.html">6.1.1250 DOES&gt;</a>;
+</li>
+<li> argument input source different than current input source for
+<a href="core/RESTORE-INPUT.html">6.2.2148 RESTORE-INPUT</a>;
+</li>
+<li> data space containing definitions is de-allocated
+(<strong><a href="usage.html#usage:contiguous">3.3.3.2 Contiguous regions</a></strong>);
+</li>
+<li> data space read/write with incorrect alignment
+(<strong><a href="usage.html#usage:aaddr">3.3.3.1 Address alignment</a></strong>);
+</li>
+<li> data-space pointer not properly aligned
+(<a href="core/Comma.html">6.1.0150 ,</a>, <a href="core/CComma.html">6.1.0860 C,</a>);
+</li>
+<li> less than <em>u</em>+2 stack items (<a href="core/PICK.html">6.2.2030 PICK</a>,
+<a href="core/ROLL.html">6.2.2150 ROLL</a>);
+</li>
+<li> loop-control parameters not available
+(<a href="core/PlusLOOP.html">6.1.0140 +LOOP</a>,
+<a href="core/I.html">6.1.1680 I</a>,
+<a href="core/J.html">6.1.1730 J</a>,
+<a href="core/LEAVE.html">6.1.1760 LEAVE</a>,
+<a href="core/LOOP.html">6.1.1800 LOOP</a>,
+<a href="core/UNLOOP.html">6.1.2380 UNLOOP</a>);
+</li>
+<li> most recent definition does not have a <em>name</em>
+(<a href="core/IMMEDIATE.html">6.1.1710 IMMEDIATE</a>);
+</li>
+<li> <a href="core/TO.html">6.2.2295 TO</a> not followed directly by a <em>name</em>
+defined by a word with &quot;<a href="core/TO.html">TO</a> <em>name</em> runtime&quot;
+semantics (<a href="core/VALUE.html">6.2.2405 VALUE</a> and
+<a href="local/LOCAL.html">13.6.1.0086 (LOCAL)</a>);
+</li>
+<li> <em>name</em> not found <a href="core/Tick.html">6.1.0070 '</a>,
+<a href="core/POSTPONE.html">6.1.2033 POSTPONE</a>, <a href="core/BracketTick.html">6.1.2510 [']</a>,
+<a href="core/BracketCOMPILE.html">6.2.2530 [COMPILE]</a>);
+</li>
+<li> parameters are not of the same type <a href="core/DO.html">6.1.1240 DO</a>,
+<a href="core/qDO.html">6.2.0620 ?DO</a>, <a href="core/WITHIN.html">6.2.2440 WITHIN</a>);
+</li>
+<li> <a href="core/POSTPONE.html">6.1.2033 POSTPONE</a>,
+<a href="core/BracketCOMPILE.html">6.2.2530 [COMPILE]</a>,
+<a href="core/Tick.html">6.1.0070 '</a> or
+<a href="core/BracketTick.html">6.1.2510 [']</a> applied to <a href="core/TO.html">6.2.2295 TO</a>;
+</li>
+<li> string longer than a counted string returned by
+<a href="core/WORD.html">6.1.2450 WORD</a>;
+</li>
+<li> <em>u</em> greater than or equal to the number of bits in a cell
+(<a href="core/LSHIFT.html">6.1.1805 LSHIFT</a>, <a href="core/RSHIFT.html">6.1.2162 RSHIFT</a>);
+</li>
+<li> word not defined via <a href="core/CREATE.html">6.1.1000 CREATE</a>
+(<a href="core/toBODY.html">6.1.0550 &gt;BODY</a>, <a href="core/DOES.html">6.1.1250 DOES&gt;</a>);
+</li>
+<li> words improperly used outside
+<a href="core/num-start.html">6.1.0490 &lt;#</a> and <a href="core/num-end.html">6.1.0040 #&gt;</a>
+(<a href="core/num.html">6.1.0030 #</a>, <a href="core/numS.html">6.1.0050 #S</a>,
+<a href="core/HOLD.html">6.1.1670 HOLD</a>,
+<a href="core/HOLDS.html">6.2.1675 HOLDS</a>,
+<a href="core/SIGN.html">6.1.2210 SIGN</a>);
+</li>
+</ul>
+<p />
+<ul>
+<li> access to a deferred word, a word defined by <a href="core/DEFER.html">6.2.1173 DEFER</a>,
+which has yet to be assigned to an <em>xt</em>;
+</li>
+<li> access to a deferred word, a word defined by <a href="core/DEFER.html">6.2.1173 DEFER</a>,
+which was not defined by <a href="core/DEFER.html">6.2.1173 DEFER</a>;
+</li>
+<li> <a href="core/POSTPONE.html">6.1.2033 POSTPONE</a>, <a href="core/BracketCOMPILE.html">6.2.2530 [COMPILE]</a>,
+<a href="core/BracketTick.html">6.1.2510 [']</a> or <a href="core/Tick.html">6.1.0070 '</a> applied to <a href="core/ACTION-OF.html">6.2.0698 ACTION-OF</a>
+or <a href="core/IS.html">6.2.1725 IS</a>;
+</li>
+</ul>
+<p />
+<ul>
+<li> \x is not followed by two hexadecimal characters (<a href="core/Seq.html">6.2.2266 S\&quot;</a>);
+</li>
+<li> a \ is placed before any character, other than those defined in
+<a href="core/Seq.html">6.2.2266 S\&quot;</a>.
+</li>
+</ul>
+<p />
+<h3 id="subsection.4.1.3">4.1.3 Other system documentation</h3> <!-- 4.1.3 -->
+A system shall provide the following information:
+<p />
+<ul>
+<li> list of non-standard words using <a href="core/PAD.html">6.2.2000 PAD</a>
+(<strong><a href="usage.html#usage:transient">3.3.3.6 Other transient regions</a></strong>);
+</li>
+<li> operator's terminal facilities available;
+</li>
+<li> program data space available, in address units;
+</li>
+<li> return stack space available, in cells;
+</li>
+<li> stack space available, in cells;
+</li>
+<li> system dictionary space required, in address units.
+</li>
+</ul>
+<p />
+<h2 id="section.4.2">4.2 Program documentation</h2> <!-- 4.2 =============================== -->
+<a name="doc:program"></a>
+<p />
+<h3 id="subsection.4.2.1">4.2.1 Environmental dependencies</h3> <!-- 4.2.1 -->
+<a name="doc:env"></a>
+<p />
+A program shall document the following environmental dependencies,
+where they apply, and should document other known environmental
+dependencies:
+<p />
+<ul>
+<li> considering the pictured numeric output string buffer a fixed
+area with unchanging access parameters
+(<strong><a href="usage.html#usage:transient">3.3.3.6 Other transient regions</a></strong>);
+</li>
+<li> depending on the presence or absence of non-graphic characters
+in a received string (<a href="core/ACCEPT.html">6.1.0695 ACCEPT</a>);
+</li>
+<li> relying on a particular rounding direction
+(<strong><a href="usage.html#usage:div">3.2.2.1 Integer division</a></strong>);
+</li>
+<li> requiring a particular number representation and arithmetic (<strong><a href="usage.html#usage:number">3.2.1.1 Internal number representation</a></strong>);
+</li>
+<li> requiring non-standard words or techniques
+(<strong><a href="usage.html#usage">3 Usage requirements</a></strong>);
+</li>
+<li> requiring the ability to send or receive control characters
+(<strong><a href="usage.html#usage:control">3.1.2.2 Control characters</a></strong>,
+<a href="core/KEY.html">6.1.1750 KEY</a>);
+</li>
+<li> using control characters to perform specific functions
+<a href="core/EMIT.html">6.1.1320 EMIT</a>, <a href="core/TYPE.html">6.1.2310 TYPE</a>);
+</li>
+<li> using flags as arithmetic operands
+(<strong><a href="usage.html#usage:flags">3.1.3.1 Flags</a></strong>);
+</li>
+<li> using lower case for standard definition names or depending
+on the case sensitivity of a system
+(<strong><a href="usage.html#usage:names">3.3.1.2 Definition names</a></strong>);
+</li>
+<li> using definition names of more than 31 characters in length
+(<strong><a href="usage.html#usage:names">3.3.1.2 Definition names</a></strong>);
+</li>
+<li> using the graphic character with a value of hex 24
+(<strong><a href="usage.html#usage:ASCII">3.1.2.1 Graphic characters</a></strong>).
+</li>
+</ul>
+<p />
+<h3 id="subsection.4.2.2">4.2.2 Other program documentation</h3> <!-- 4.2.2 -->
+A program shall also document:
+<p />
+<ul>
+<li> minimum operator's terminal facilities required;
+</li>
+<li> whether a Standard System exists after the program is loaded.
+</li>
+</ul>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Documentation requirements</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html" class="current">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">System documentation</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.4.1">System documentation</a></li>
+        <li role="menuitem"><a href="#section.4.2">Program documentation</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

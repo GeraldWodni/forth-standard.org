@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: FORGET</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="tools:FORGET">
+  <div class="wordNumber">15.6.2.1580</div>
+  <div class="wordName">FORGET</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">TOOLS EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>&quot;&lt;spaces&gt;name&quot;</em> -- )
+      <p />
+      Skip leading space delimiters. Parse <em>name</em> delimited by a
+      space. Find <em>name</em>, then delete <em>name</em> from the
+      dictionary along with all words added to the dictionary after
+      <em>name</em>. An ambiguous condition exists if <em>name</em> cannot
+      be found.
+      <p />
+      If the Search-Order word set is present, <strong>FORGET</strong> searches
+      the compilation word list. An ambiguous condition exists if the
+      compilation word list is deleted.
+      <p />
+      An ambiguous condition exists if <strong>FORGET</strong> removes a word
+      required for correct execution.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Note:</div>
+    <div class="sec">
+
+ This word is obsolescent and is included as a concession to
+      existing implementations.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <strong><a href="../usage.html#usage:parsing">3.4.1 Parsing</a></strong>,
+      <a href="../rationale.html#rat:tools:FORGET">A.15.6.2.1580 FORGET</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.15.6.2.1580 FORGET -->
+      Typical use:
+      ... <strong>FORGET</strong> <em>name</em> ...
+      <p />
+      <strong>FORGET</strong> <em>name</em> tries to infer the previous dictionary
+      state from <em>name</em>; this is not always possible.  As a
+      consequence, <strong>FORGET</strong> <em>name</em> removes <em>name</em> and
+      all following words in the name space.
+      <p />
+      See <a href="../rationale.html#rat:core:MARKER">A.6.2.1850 MARKER</a>.
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Programming-Tools word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html" class="current">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../tools.html#section.15.1">Introduction</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">FORGET</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="DotS.html">.S</a></li>
+        <li role="menuitem"><a href="q.html">?</a></li>
+        <li role="menuitem"><a href="DUMP.html">DUMP</a></li>
+        <li role="menuitem"><a href="SEE.html">SEE</a></li>
+        <li role="menuitem"><a href="WORDS.html">WORDS</a></li>
+        <li role="menuitem"><a href="SemiCODE.html">;CODE</a></li>
+        <li role="menuitem"><a href="AHEAD.html">AHEAD</a></li>
+        <li role="menuitem"><a href="ASSEMBLER.html">ASSEMBLER</a></li>
+        <li role="menuitem"><a href="BYE.html">BYE</a></li>
+        <li role="menuitem"><a href="CODE.html">CODE</a></li>
+        <li role="menuitem"><a href="CS-PICK.html">CS-PICK</a></li>
+        <li role="menuitem"><a href="CS-ROLL.html">CS-ROLL</a></li>
+        <li role="menuitem"><a href="EDITOR.html">EDITOR</a></li>
+        <li role="menuitem"><a href="FORGET.html" class="current">FORGET</a></li>
+        <li role="menuitem"><a href="NtoR.html">N&gt;R</a></li>
+        <li role="menuitem"><a href="NAMEtoCOMPILE.html">NAME&gt;COMPILE</a></li>
+        <li role="menuitem"><a href="NAMEtoINTERPRET.html">NAME&gt;INTERPRET</a></li>
+        <li role="menuitem"><a href="NAMEtoSTRING.html">NAME&gt;STRING</a></li>
+        <li role="menuitem"><a href="NRfrom.html">NR&gt;</a></li>
+        <li role="menuitem"><a href="STATE.html">STATE</a></li>
+        <li role="menuitem"><a href="SYNONYM.html">SYNONYM</a></li>
+        <li role="menuitem"><a href="TRAVERSE-WORDLIST.html">TRAVERSE-WORDLIST</a></li>
+        <li role="menuitem"><a href="BracketDEFINED.html">[DEFINED]</a></li>
+        <li role="menuitem"><a href="BracketELSE.html">[ELSE]</a></li>
+        <li role="menuitem"><a href="BracketIF.html">[IF]</a></li>
+        <li role="menuitem"><a href="BracketTHEN.html">[THEN]</a></li>
+        <li role="menuitem"><a href="BracketUNDEFINED.html">[UNDEFINED]</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

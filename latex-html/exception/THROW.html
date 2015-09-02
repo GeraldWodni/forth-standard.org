@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: THROW</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="exception:THROW">
+  <div class="wordNumber">9.6.1.2275</div>
+  <div class="wordName">THROW</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">EXCEPTION</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>k * x n</em> -- <em>k * x  |  i * x n</em> )
+      <p />
+      If any bits of <em>n</em> are non-zero, pop the topmost exception
+      frame from the exception stack, along with everything on the
+      return stack above that frame. Then restore the input source
+      specification in use before the corresponding <a href="../exception/CATCH.html">CATCH</a>
+      and adjust the depths of all stacks defined by this standard
+      so that they are the same as the depths saved in the exception
+      frame (<em>i</em> is the same number as the <em>i</em> in the input
+      arguments to the corresponding <a href="../exception/CATCH.html">CATCH</a>), put <em>n</em> on
+      top of the data stack, and transfer control to a point just after
+      the <a href="../exception/CATCH.html">CATCH</a> that pushed that exception frame.
+      <p />
+      If the top of the stack is non zero and there is no exception
+      frame on the exception stack, the behavior is as follows:
+      <p />
+      If <em>n</em> is minus-one (-1), perform the function of
+      <a href="../core/ABORT.html">6.1.0670 ABORT</a> (the version of <a href="../core/ABORT.html">ABORT</a> in
+      the Core word set), displaying no message.
+      <p />
+      If <em>n</em> is minus-two, perform the function of
+      <a href="../core/ABORTq.html">6.1.0680 ABORT&quot;</a> (the version of <a href="../core/ABORTq.html">ABORT&quot;</a>
+      in the Core word set), displaying the characters <em>ccc</em>
+      associated with the <a href="../exception/ABORTq.html">ABORT&quot;</a> that generated the
+      <strong>THROW</strong>.
+      <p />
+      Otherwise, the system may display an implementation-dependent
+      message giving information about the condition associated with
+      the <strong>THROW</strong> code <em>n</em>. Subsequently, the system shall
+      perform the function of <a href="../core/ABORT.html">6.1.0670 ABORT</a> (the version
+      of <a href="../core/ABORT.html">ABORT</a> in the Core word set).
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../rationale.html#rat:exception:THROW">A.9.6.1.2275 THROW</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.9.6.1.2275 THROW -->
+      If <strong>THROW</strong> is executed with a non zero argument, the effect
+      is as if the corresponding <a href="../exception/CATCH.html">CATCH</a> had returned it. In that
+      case, the stack depth is the same as it was just before <a href="../exception/CATCH.html">CATCH</a>
+      began execution. The values of the <em>i * x</em> stack arguments could
+      have been modified arbitrarily during the execution of <em>xt</em>.
+      In general, nothing useful may be done with those stack items, but
+      since their number is known (because the stack depth is deterministic),
+      the application may <a href="../core/DROP.html">DROP</a> them to return to a predictable
+      stack state.
+      <p />
+      Typical use:
+      
+            <div class="quote">
+        <div class="tt">
+<a href="../core/Colon.html">:</a> could-fail <a href="../core/p.html">(</a> -- char ) <br />
+          &nbsp;&nbsp; <a href="../core/KEY.html">KEY</a> <a href="../core/DUP.html">DUP</a> <a href="../core/BracketCHAR.html">[CHAR]</a> Q <a href="../core/Equal.html">=</a> 
+          <a href="../core/IF.html">IF</a>  1 <a href="../exception/THROW.html">THROW</a>
+          <a href="../core/THEN.html">THEN</a>
+          <a href="../core/Semi.html">;</a>
+          <p />
+          <a href="../core/Colon.html">:</a> do-it <a href="../core/p.html">(</a> a b -- c)  
+          <a href="../core/TwoDROP.html">2DROP</a> could-fail <a href="../core/Semi.html">;</a>
+          <p />
+          <a href="../core/Colon.html">:</a> try-it <a href="../core/p.html">(</a> --) <br />
+          &nbsp;&nbsp; 1 2 <a href="../core/BracketTick.html">[']</a> do-it  <a href="../exception/CATCH.html">CATCH</a>  <a href="../core/IF.html">IF</a> <br />
+          &nbsp;&nbsp;   <a href="../core/p.html">(</a> x1 x2 ) <a href="../core/TwoDROP.html">2DROP</a>
+          <a href="../core/Dotq.html">.&quot;</a>  There was an exception&quot; <a href="../core/CR.html">CR</a> <br />
+          &nbsp;&nbsp; <a href="../core/ELSE.html">ELSE</a>
+          <a href="../core/Dotq.html">.&quot;</a> The character was &quot; <a href="../core/EMIT.html">EMIT</a> <a href="../core/CR.html">CR</a> <br />
+          &nbsp;&nbsp; <a href="../core/THEN.html">THEN</a> <br />
+          <a href="../core/Semi.html">;</a>
+          <p />
+          <a href="../core/Semi.html">;</a> retry-it <a href="../core/p.html">(</a> -- ) <br />
+          &nbsp;&nbsp; <a href="../core/BEGIN.html">BEGIN</a>  1 2 <a href="../core/BracketTick.html">[']</a> do-it <a href="../exception/CATCH.html">CATCH</a> 
+          <a href="../core/WHILE.html">WHILE</a> <br />
+          &nbsp;&nbsp;   <a href="../core/p.html">(</a> x1 x2) <a href="../core/TwoDROP.html">2DROP</a>
+          <a href="../core/Dotq.html">.&quot;</a> Exception, keep trying&quot; <a href="../core/CR.html">CR</a> <br />
+          &nbsp;&nbsp; <a href="../core/REPEAT.html">REPEAT</a> <a href="../core/p.html">(</a> char ) <br />
+          &nbsp;&nbsp; <a href="../core/Dotq.html">.&quot;</a> The character was &quot; <a href="../core/EMIT.html">EMIT</a> <a href="../core/CR.html">CR</a> <br />
+          <a href="../core/Semi.html">;</a>
+          
+          </div>
+        </div>
+      
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+
+      <span class="rm">This is the counter part to <a href="../implement.html#imp:exception:CATCH">E.9.6.1.0875 CATCH</a>.</span>
+      <p />
+      <div class="tabbing">
+         <a href="../core/Colon.html">:</a> <strong>THROW</strong> <a href="../core/p.html">(</a> ??? exception# -- ??? exception# ) <br />
+        &nbsp;&nbsp;&nbsp; <a href="../core/qDUP.html">?DUP</a> <a href="../core/IF.html">IF</a>				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> exc# )		&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> 0 THROW <span class="rm">is no-op</span> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HANDLER <a href="../core/Fetch.html">@</a> RP!				&nbsp; <a href="../core/p.html">(</a> exc# )		&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">restore prev return stack</span> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/Rfrom.html">R&gt;</a> HANDLER <a href="../core/Store.html">!</a>		&nbsp;&nbsp; <a href="../core/p.html">(</a> exc# )		&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">restore prev handler</span> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/Rfrom.html">R&gt;</a> <a href="../core/SWAP.html">SWAP</a> <a href="../core/toR.html">&gt;R</a>	&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> saved-sp )	 <a href="../core/bs.html">\</a> exc# <span class="rm">on return stack</span> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SP! <a href="../core/DROP.html">DROP</a> <a href="../core/Rfrom.html">R&gt;</a>		&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> exc# )		&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">restore stack</span> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/bs.html">\</a> <span class="rm">Return to the caller of CATCH because return</span> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/bs.html">\</a> <span class="rm">stack is restored to the state that existed</span> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/bs.html">\</a> <span class="rm">when CATCH began execution</span> <br />
+        &nbsp;&nbsp;&nbsp; <a href="../core/THEN.html">THEN</a> <br />
+        <a href="../core/Semi.html">;</a>
+        <br />
+        
+        </div>
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+       <div class="tt">
+<a href="../core/DECIMAL.html">DECIMAL</a>
+        <p />
+        <a href="../core/Colon.html">:</a> t1 9 <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> c1 1 2 3 <a href="../core/BracketTick.html">[']</a> t1 <a href="../exception/CATCH.html">CATCH</a> <a href="../core/Semi.html">;</a> <br />
+        <span class="tt">T{ c1 -&gt; 1&nbsp;2&nbsp;3&nbsp;9&nbsp;0 }T</span> &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">No THROW executed</span>
+        <p />
+        <a href="../core/Colon.html">:</a> t2 8 0 <strong>THROW</strong> <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> c2 1 2 <a href="../core/BracketTick.html">[']</a> t2 <a href="../exception/CATCH.html">CATCH</a> <a href="../core/Semi.html">;</a> <br />
+        <span class="tt">T{ c2 -&gt; 1&nbsp;2&nbsp;8&nbsp;0 }T</span> &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">0 THROW does nothing</span>
+        <p />
+        <a href="../core/Colon.html">:</a> t3 7 8 9 99 <strong>THROW</strong> <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> c3 1 2 <a href="../core/BracketTick.html">[']</a> t3 <a href="../exception/CATCH.html">CATCH</a> <a href="../core/Semi.html">;</a><br />
+        <span class="tt">T{ c3 -&gt; 1&nbsp;2&nbsp;99 }T</span> &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Restores stack to <a href="../exception/CATCH.html">CATCH</a> depth</span>
+        <p />
+        <a href="../core/Colon.html">:</a> t4 <a href="../core/OneMinus.html">1-</a> <a href="../core/DUP.html">DUP</a> <a href="../core/Zeromore.html">0&gt;</a> <a href="../core/IF.html">IF</a> <a href="../core/RECURSE.html">RECURSE</a> <a href="../core/ELSE.html">ELSE</a> 999 <strong>THROW</strong> -222 <a href="../core/THEN.html">THEN</a> <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> c4 3 4 5 10 <a href="../core/BracketTick.html">[']</a> t4 <a href="../exception/CATCH.html">CATCH</a> -111 <a href="../core/Semi.html">;</a> <br />
+        <span class="tt">T{ c4 -&gt; 3&nbsp;4&nbsp;5&nbsp;0&nbsp;999&nbsp;-111 }T</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Test return stack unwinding</span>
+        <p />
+        <a href="../core/Colon.html">:</a> t5 <a href="../core/TwoDROP.html">2DROP</a> <a href="../core/TwoDROP.html">2DROP</a> 9999 <strong>THROW</strong> <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> c5 1 2 3 4 <a href="../core/BracketTick.html">[']</a> t5 <a href="../exception/CATCH.html">CATCH</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Test depth restored correctly</span> <br />
+        &nbsp;&nbsp; <a href="../core/DEPTH.html">DEPTH</a> <a href="../core/toR.html">&gt;R</a> <a href="../core/DROP.html">DROP</a> <a href="../core/TwoDROP.html">2DROP</a> <a href="../core/TwoDROP.html">2DROP</a> <a href="../core/Rfrom.html">R&gt;</a> <a href="../core/Semi.html">;</a> &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">after stack has been emptied</span> <br />
+        <span class="tt">T{ c5 -&gt; 5 }T</span>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Exception word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html" class="current">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../exception.html#section.9.1">Introduction</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">THROW</span>
+      <div class="menu">
+        <ul id="menu-word" style="width: 202px;">
+        <li role="menuitem"><a href="CATCH.html">CATCH</a></li>
+        <li role="menuitem"><a href="THROW.html" class="current">THROW</a></li>
+        <li role="menuitem"><a href="ABORT.html">ABORT</a></li>
+        <li role="menuitem"><a href="ABORTq.html">ABORT&quot;</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

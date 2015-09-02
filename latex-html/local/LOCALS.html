@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: LOCALS|</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="local:LOCALS">
+  <div class="wordNumber">13.6.2.1795</div>
+  <div class="wordName">LOCALS|</div>
+  <div class="wordEnglish">locals-bar</div>
+  <div class="wordList">LOCAL EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">Interpretation:</div>
+    <div class="sec">
+
+
+      Interpretation semantics for this word are undefined.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Compilation:</div>
+    <div class="sec">
+
+
+      ( <em>&quot;&lt;spaces&gt;name<sub>1</sub>&quot; &quot;&lt;spaces&gt;name<sub>2</sub>&quot; ... &quot;&lt;spaces&gt;name<sub>n</sub>&quot; &quot; | &quot;</em> -- )
+      <p />
+      Create up to eight local identifiers by repeatedly skipping
+      leading spaces, parsing <em>name</em>, and executing
+      <a href="../local/LOCAL.html">13.6.1.0086 (LOCAL)</a>. The list of locals to be defined
+      is terminated by <em> | </em>. Append the run-time semantics given
+      below to the current definition.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Run-time:</div>
+    <div class="sec">
+
+
+      ( <em>x<sub>n</sub> ... x<sub>2</sub> x<sub>1</sub></em> -- )
+      <p />
+      Initialize up to eight local identifiers as described in
+      <a href="../local/LOCAL.html">13.6.1.0086 (LOCAL)</a>, each of which takes as its
+      initial value the top stack item, removing it from the stack.
+      Identifier <em>name<sub>1</sub></em> is initialized with <em>x<sub>1</sub></em>,
+      identifier <em>name<sub>2</sub></em> with <em>x<sub>2</sub></em>, etc. When invoked,
+      each local will return its value. The value of a local may be
+      changed using <a href="../core/TO.html">6.2.2295 TO</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Note:</div>
+    <div class="sec">
+
+ This word is obsolescent and is included as a concession to
+      existing implementations.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+
+      <a href="../core/Colon.html">:</a> <strong>LOCALS|</strong> <a href="../core/p.html">(</a> &quot;name...name |&quot; -- ) <br />
+      &nbsp;&nbsp; <a href="../core/BEGIN.html">BEGIN</a> <br />
+      &nbsp;&nbsp;  <a href="../core/BL.html">BL</a> <a href="../core/WORD.html">WORD</a>   <a href="../core/COUNT.html">COUNT</a> <a href="../core/OVER.html">OVER</a> <a href="../core/CFetch.html">C@</a> <br />
+      &nbsp;&nbsp;  <a href="../core/BracketCHAR.html">[CHAR]</a> | <a href="../core/Minus.html">-</a> <a href="../core/OVER.html">OVER</a> 1 <a href="../core/Minus.html">-</a> <a href="../core/OR.html">OR</a>   <a href="../core/WHILE.html">WHILE</a> <br />
+      &nbsp;&nbsp;  <a href="../local/LOCAL.html">(LOCAL)</a> <br />
+      &nbsp;&nbsp; <a href="../core/REPEAT.html">REPEAT</a> <a href="../core/TwoDROP.html">2DROP</a>   0 0 <a href="../local/LOCAL.html">(LOCAL)</a> <br />
+      <a href="../core/Semi.html">;</a> <a href="../core/IMMEDIATE.html">IMMEDIATE</a>
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Locals word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html" class="current">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../locals.html#section.13.1">Introduction</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../locals.html#section.13.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">LOCALS|</span>
+      <div class="menu">
+        <ul id="menu-word" style="width: 202px;">
+        <li role="menuitem"><a href="LOCAL.html">(LOCAL)</a></li>
+        <li role="menuitem"><a href="LOCALS.html" class="current">LOCALS|</a></li>
+        <li role="menuitem"><a href="bColon.html">{:</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

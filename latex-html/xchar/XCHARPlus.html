@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: XCHAR+</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="xchar:XCHAR+">
+  <div class="wordNumber">18.6.1.2487.40</div>
+  <div class="wordName">XCHAR+</div>
+  <div class="wordEnglish">x-char-plus</div>
+  <div class="wordList">XCHAR</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>xc-addr<sub>1</sub></em> -- <em>xc-addr<sub>2</sub></em> )
+      <p />
+      Adds the size of the xchar stored at <em>xc-addr<sub>1</sub></em> to this address,
+      giving <em>xc-addr<sub>2</sub></em>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../core/CHARPlus.html">6.1.0897 CHAR+</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+
+      <a href="../core/Colon.html">:</a> <strong>XCHAR+</strong> <a href="../core/p.html">(</a> xc-addr -- xc-addr' )  <a href="../xchar/XCFetchPlus.html">XC@+</a> <a href="../core/DROP.html">DROP</a> <a href="../core/Semi.html">;</a>
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Extended-Character word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html" class="current">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../xchar.html#section.18.1">Introduction</a></li>
+        <li role="menuitem"><a href="../xchar.html#section.18.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../xchar.html#section.18.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../xchar.html#section.18.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../xchar.html#section.18.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../xchar.html#section.18.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">XCHAR+</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="X-SIZE.html">X-SIZE</a></li>
+        <li role="menuitem"><a href="XCStorePlus.html">XC!+</a></li>
+        <li role="menuitem"><a href="XCStorePlusq.html">XC!+?</a></li>
+        <li role="menuitem"><a href="XCComma.html">XC,</a></li>
+        <li role="menuitem"><a href="XC-SIZE.html">XC-SIZE</a></li>
+        <li role="menuitem"><a href="XCFetchPlus.html">XC@+</a></li>
+        <li role="menuitem"><a href="XCHARPlus.html" class="current">XCHAR+</a></li>
+        <li role="menuitem"><a href="XEMIT.html">XEMIT</a></li>
+        <li role="menuitem"><a href="XKEY.html">XKEY</a></li>
+        <li role="menuitem"><a href="XKEYq.html">XKEY?</a></li>
+        <li role="menuitem"><a href="PlusXDivSTRING.html">+X/STRING</a></li>
+        <li role="menuitem"><a href="MinusTRAILING-GARBAGE.html">-TRAILING-GARBAGE</a></li>
+        <li role="menuitem"><a href="CHAR.html">CHAR</a></li>
+        <li role="menuitem"><a href="EKEYtoXCHAR.html">EKEY&gt;XCHAR</a></li>
+        <li role="menuitem"><a href="PARSE.html">PARSE</a></li>
+        <li role="menuitem"><a href="X-WIDTH.html">X-WIDTH</a></li>
+        <li role="menuitem"><a href="XC-WIDTH.html">XC-WIDTH</a></li>
+        <li role="menuitem"><a href="XCHARMinus.html">XCHAR-</a></li>
+        <li role="menuitem"><a href="XHOLD.html">XHOLD</a></li>
+        <li role="menuitem"><a href="XSTRINGMinus.html">X\STRING-</a></li>
+        <li role="menuitem"><a href="BracketCHAR.html">[CHAR]</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

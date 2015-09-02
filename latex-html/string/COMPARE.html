@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: COMPARE</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="string:COMPARE">
+  <div class="wordNumber">17.6.1.0935</div>
+  <div class="wordName">COMPARE</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">STRING</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>c-addr<sub>1</sub> u<sub>1</sub> c-addr<sub>2</sub> u<sub>2</sub></em> -- <em>n</em> )
+      <p />
+      Compare the string specified by <em>c-addr<sub>1</sub> u<sub>1</sub></em> to the
+      string specified by <em>c-addr<sub>2</sub> u<sub>2</sub></em>. The strings are
+      compared, beginning at the given addresses, character by
+      character, up to the length of the shorter string or until a
+      difference is found. If the two strings are identical, <em>n</em>
+      is zero. If the two strings are identical up to the length of
+      the shorter string, <em>n</em> is minus-one (-1) if <em>u<sub>1</sub></em>
+      is less than <em>u<sub>2</sub></em> and one (1) otherwise. If the two
+      strings are not identical up to the length of the shorter string,
+      <em>n</em> is minus-one (-1) if the first non-matching character
+      in the string specified by <em>c-addr<sub>1</sub> u<sub>1</sub></em> has a lesser
+      numeric value than the corresponding character in the string
+      specified by <em>c-addr<sub>2</sub> u<sub>2</sub></em> and one (1) otherwise.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+      <div class="tt">
+<span class="tt">T{ s1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s1&nbsp;<strong>COMPARE</strong> -&gt; &nbsp;0&nbsp; }T</span> <br />
+        <span class="tt">T{ s1&nbsp;&nbsp;PAD&nbsp;SWAP&nbsp;<a href="../string/CMOVE.html">CMOVE</a>&nbsp;&nbsp; -&gt; &nbsp;&nbsp;&nbsp; }T</span> &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Copy s1 to PAD</span> <br />
+        <span class="tt">T{ s1&nbsp;&nbsp;PAD&nbsp;OVER&nbsp;<strong>COMPARE</strong> -&gt; &nbsp;0&nbsp; }T</span> <br />
+        <span class="tt">T{ s1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PAD&nbsp;6&nbsp;<strong>COMPARE</strong> -&gt; &nbsp;1&nbsp; }T</span> <br />
+        <span class="tt">T{ PAD&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;s1&nbsp;<strong>COMPARE</strong> -&gt; -1&nbsp; }T</span> <br />
+        <span class="tt">T{ s1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PAD&nbsp;0&nbsp;<strong>COMPARE</strong> -&gt; &nbsp;1&nbsp; }T</span> <br />
+        <span class="tt">T{ PAD&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;s1&nbsp;<strong>COMPARE</strong> -&gt; -1&nbsp; }T</span> <br />
+        <span class="tt">T{ s1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s6&nbsp;<strong>COMPARE</strong> -&gt; &nbsp;1&nbsp; }T</span> <br />
+        <span class="tt">T{ s6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s1&nbsp;<strong>COMPARE</strong> -&gt; -1&nbsp; }T</span>
+        <p />
+        <a href="../core/Colon.html">:</a> &quot;abdde&quot;  <a href="../core/Sq.html">S&quot;</a> abdde&quot;  <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> &quot;abbde&quot;  <a href="../core/Sq.html">S&quot;</a> abbde&quot;  <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> &quot;abcdf&quot;  <a href="../core/Sq.html">S&quot;</a> abcdf&quot;  <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> &quot;abcdee&quot; <a href="../core/Sq.html">S&quot;</a> abcdee&quot; <a href="../core/Semi.html">;</a>
+        <p />
+        <span class="tt">T{ s1&nbsp;&quot;abdde&quot;&nbsp;&nbsp;<strong>COMPARE</strong> -&gt; -1 }T</span> <br />
+        <span class="tt">T{ s1&nbsp;&quot;abbde&quot;&nbsp;&nbsp;<strong>COMPARE</strong> -&gt; &nbsp;1 }T</span> <br />
+        <span class="tt">T{ s1&nbsp;&quot;abcdf&quot;&nbsp;&nbsp;<strong>COMPARE</strong> -&gt; -1 }T</span> <br />
+        <span class="tt">T{ s1&nbsp;&quot;abcdee&quot;&nbsp;<strong>COMPARE</strong> -&gt; &nbsp;1 }T</span>
+        <p />
+        <a href="../core/Colon.html">:</a> s11 <a href="../core/Sq.html">S&quot;</a> 0abc&quot; <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> s12 <a href="../core/Sq.html">S&quot;</a> 0aBc&quot; <a href="../core/Semi.html">;</a>
+        <p />
+        <span class="tt">T{ s11&nbsp;s12&nbsp;<strong>COMPARE</strong> -&gt; &nbsp;1 }T</span> <br />
+        <span class="tt">T{ s12&nbsp;s11&nbsp;<strong>COMPARE</strong> -&gt; -1 }T</span>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">String word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html" class="current">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../string.html#section.17.1">Introduction</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../string.html#section.17.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">COMPARE</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="MinusTRAILING.html">-TRAILING</a></li>
+        <li role="menuitem"><a href="DivSTRING.html">/STRING</a></li>
+        <li role="menuitem"><a href="BLANK.html">BLANK</a></li>
+        <li role="menuitem"><a href="CMOVE.html">CMOVE</a></li>
+        <li role="menuitem"><a href="CMOVEtop.html">CMOVE&gt;</a></li>
+        <li role="menuitem"><a href="COMPARE.html" class="current">COMPARE</a></li>
+        <li role="menuitem"><a href="SEARCH.html">SEARCH</a></li>
+        <li role="menuitem"><a href="SLITERAL.html">SLITERAL</a></li>
+        <li role="menuitem"><a href="REPLACES.html">REPLACES</a></li>
+        <li role="menuitem"><a href="SUBSTITUTE.html">SUBSTITUTE</a></li>
+        <li role="menuitem"><a href="UNESCAPE.html">UNESCAPE</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

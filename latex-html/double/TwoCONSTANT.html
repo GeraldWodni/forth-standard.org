@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: 2CONSTANT</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="double:2CONSTANT">
+  <div class="wordNumber">8.6.1.0360</div>
+  <div class="wordName">2CONSTANT</div>
+  <div class="wordEnglish">two-constant</div>
+  <div class="wordList">DOUBLE</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>x<sub>1</sub> x<sub>2</sub> &quot;&lt;spaces&gt;name&quot;</em> -- )
+      <p />
+      Skip leading space delimiters. Parse <em>name</em> delimited by
+      a space. Create a definition for <em>name</em> with the execution
+      semantics defined below.
+      <p />
+      <em>name</em> is referred to as a &quot;two-constant&quot;.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname"><em>name</em> Execution:</div>
+    <div class="sec">
+
+
+      ( -- <em>x<sub>1</sub> x<sub>2</sub></em> )
+      <p />
+      Place cell pair <em>x<sub>1</sub> x<sub>2</sub></em> on the stack.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <strong><a href="../usage.html#usage:parsing">3.4.1 Parsing</a></strong>,
+      <a href="../rationale.html#rat:double:2CONSTANT">A.8.6.1.0360 2CONSTANT</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.8.6.1.0360 2CONSTANT -->
+      Typical use:
+      <code>x1</code> <code>x2</code> <strong>2CONSTANT</strong> <em>name</em>
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+
+      <span class="tt">T{ 1&nbsp;2&nbsp;<strong>2CONSTANT</strong>&nbsp;2c1 -&gt;  }T</span> <br />
+      <span class="tt">T{ 2c1 -&gt; 1&nbsp;2 }T</span>
+      <p />
+      <span class="tt">T{ <a href="../core/Colon.html">:</a>&nbsp;cd1&nbsp;2c1&nbsp;<a href="../core/Semi.html">;</a> -&gt;  }T</span> <br />
+      <span class="tt">T{ cd1 -&gt; 1&nbsp;2 }T</span>
+      <p />
+      <span class="tt">T{ <a href="../core/Colon.html">:</a>&nbsp;cd2&nbsp;<strong>2CONSTANT</strong>&nbsp;<a href="../core/Semi.html">;</a> -&gt;  }T</span> <br />
+      <span class="tt">T{ -1&nbsp;-2&nbsp;cd2&nbsp;2c2 -&gt;  }T</span> <br />
+      <span class="tt">T{ 2c2 -&gt; -1&nbsp;-2 }T</span>
+      <p />
+      <span class="tt">T{ 4&nbsp;5&nbsp;<strong>2CONSTANT</strong>&nbsp;2c3&nbsp;<a href="../core/IMMEDIATE.html">IMMEDIATE</a>&nbsp;2c3 -&gt; 4&nbsp;5 }T</span> <br />
+      <span class="tt">T{ <a href="../core/Colon.html">:</a>&nbsp;cd6&nbsp;2c3&nbsp;<a href="../double/TwoLITERAL.html">2LITERAL</a>&nbsp;<a href="../core/Semi.html">;</a>&nbsp;cd6 -&gt; 4&nbsp;5 }T</span>
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Double-Number word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html" class="current">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../double.html#section.8.1">Introduction</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../double.html#section.8.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">2CONSTANT</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="TwoCONSTANT.html" class="current">2CONSTANT</a></li>
+        <li role="menuitem"><a href="TwoLITERAL.html">2LITERAL</a></li>
+        <li role="menuitem"><a href="TwoVARIABLE.html">2VARIABLE</a></li>
+        <li role="menuitem"><a href="DPlus.html">D+</a></li>
+        <li role="menuitem"><a href="DMinus.html">D-</a></li>
+        <li role="menuitem"><a href="Dd.html">D.</a></li>
+        <li role="menuitem"><a href="DDotR.html">D.R</a></li>
+        <li role="menuitem"><a href="DZeroless.html">D0&lt;</a></li>
+        <li role="menuitem"><a href="DZeroEqual.html">D0=</a></li>
+        <li role="menuitem"><a href="DTwoTimes.html">D2*</a></li>
+        <li role="menuitem"><a href="DTwoDiv.html">D2/</a></li>
+        <li role="menuitem"><a href="Dless.html">D&lt;</a></li>
+        <li role="menuitem"><a href="DEqual.html">D=</a></li>
+        <li role="menuitem"><a href="DtoS.html">D&gt;S</a></li>
+        <li role="menuitem"><a href="DABS.html">DABS</a></li>
+        <li role="menuitem"><a href="DMAX.html">DMAX</a></li>
+        <li role="menuitem"><a href="DMIN.html">DMIN</a></li>
+        <li role="menuitem"><a href="DNEGATE.html">DNEGATE</a></li>
+        <li role="menuitem"><a href="MTimesDiv.html">M*/</a></li>
+        <li role="menuitem"><a href="MPlus.html">M+</a></li>
+        <li role="menuitem"><a href="TwoROT.html">2ROT</a></li>
+        <li role="menuitem"><a href="TwoVALUE.html">2VALUE</a></li>
+        <li role="menuitem"><a href="DUless.html">DU&lt;</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

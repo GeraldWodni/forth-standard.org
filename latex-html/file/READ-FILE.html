@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: READ-FILE</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="file:READ-FILE">
+  <div class="wordNumber">11.6.1.2080</div>
+  <div class="wordName">READ-FILE</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">FILE</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>c-addr u<sub>1</sub> fileid</em> -- <em>u<sub>2</sub> ior</em> )
+      <p />
+      Read <em>u<sub>1</sub></em> consecutive characters to <em>c-addr</em> from the
+      current position of the file identified by <em>fileid</em>.
+      <p />
+      If <em>u<sub>1</sub></em> characters are read without an exception, <em>ior</em>
+      is zero and <em>u<sub>2</sub></em> is equal to <em>u<sub>1</sub></em>.
+      <p />
+      If the end of the file is reached before <em>u<sub>1</sub></em> characters are
+      read, <em>ior</em> is zero and <em>u<sub>2</sub></em> is the number of characters
+      actually read.
+      <p />
+      If the operation is initiated when the value returned by
+      <a href="../file/FILE-POSITION.html">FILE-POSITION</a> is equal to the value returned by
+      <a href="../file/FILE-SIZE.html">FILE-SIZE</a> for the file identified by <em>fileid</em>,
+      <em>ior</em> is zero and <em>u<sub>2</sub></em> is zero.
+      <p />
+      If an exception occurs, <em>ior</em> is the implementation-defined
+      I/O result code, and <em>u<sub>2</sub></em> is the number of characters
+      transferred to <em>c-addr</em> without an exception.
+      <p />
+      An ambiguous condition exists if the operation is initiated when
+      the value returned by <a href="../file/FILE-POSITION.html">FILE-POSITION</a> is greater than the
+      value returned by <a href="../file/FILE-SIZE.html">FILE-SIZE</a> for the file identified by
+      <em>fileid</em>, or if the requested operation attempts to read
+      portions of the file not written.
+      <p />
+      At the conclusion of the operation, <a href="../file/FILE-POSITION.html">FILE-POSITION</a> returns
+      the next file position after the last character read.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../rationale.html#rat:file:READ-FILE">A.11.6.1.2080 READ-FILE</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.11.6.1.2080 READ-FILE -->
+      A typical sequential file-processing algorithm might look like:
+            <div class="quote">
+        <div class="tt">
+
+          <div class="tabbing">
+            <a href="../core/BEGIN.html">BEGIN</a>					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> ) <br />
+            &nbsp;&nbsp;&nbsp; ... <a href="../file/READ-FILE.html">READ-FILE</a> <a href="../exception/THROW.html">THROW</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;	 <a href="../core/p.html">(</a> length ) <br />
+            <a href="../core/qDUP.html">?DUP</a> <a href="../core/WHILE.html">WHILE</a>		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> length ) <br />
+            &nbsp;&nbsp;&nbsp; ...						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	 <a href="../core/p.html">(</a> ) <br />
+            <a href="../core/REPEAT.html">REPEAT</a>					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> )
+            <br />
+            
+            </div>
+          
+          </div>
+        </div>In this example, <a href="../exception/THROW.html">THROW</a> is used to handle
+      exception conditions, which are reported as
+      non-zero values of the <em>ior</em> return value from
+      <strong>READ-FILE</strong>. End-of-file is reported as a zero value of
+      the &quot;length&quot; return value.
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">File-Access word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html" class="current">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../file.html#section.11.1">Introduction</a></li>
+        <li role="menuitem"><a href="../file.html#section.11.2">Additional terms</a></li>
+        <li role="menuitem"><a href="../file.html#section.11.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../file.html#section.11.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../file.html#section.11.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../file.html#section.11.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">READ-FILE</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="p.html">(</a></li>
+        <li role="menuitem"><a href="BIN.html">BIN</a></li>
+        <li role="menuitem"><a href="CLOSE-FILE.html">CLOSE-FILE</a></li>
+        <li role="menuitem"><a href="CREATE-FILE.html">CREATE-FILE</a></li>
+        <li role="menuitem"><a href="DELETE-FILE.html">DELETE-FILE</a></li>
+        <li role="menuitem"><a href="FILE-POSITION.html">FILE-POSITION</a></li>
+        <li role="menuitem"><a href="FILE-SIZE.html">FILE-SIZE</a></li>
+        <li role="menuitem"><a href="INCLUDE-FILE.html">INCLUDE-FILE</a></li>
+        <li role="menuitem"><a href="INCLUDED.html">INCLUDED</a></li>
+        <li role="menuitem"><a href="OPEN-FILE.html">OPEN-FILE</a></li>
+        <li role="menuitem"><a href="RDivO.html">R/O</a></li>
+        <li role="menuitem"><a href="RDivW.html">R/W</a></li>
+        <li role="menuitem"><a href="READ-FILE.html" class="current">READ-FILE</a></li>
+        <li role="menuitem"><a href="READ-LINE.html">READ-LINE</a></li>
+        <li role="menuitem"><a href="REPOSITION-FILE.html">REPOSITION-FILE</a></li>
+        <li role="menuitem"><a href="RESIZE-FILE.html">RESIZE-FILE</a></li>
+        <li role="menuitem"><a href="Sq.html">S&quot;</a></li>
+        <li role="menuitem"><a href="SOURCE-ID.html">SOURCE-ID</a></li>
+        <li role="menuitem"><a href="WDivO.html">W/O</a></li>
+        <li role="menuitem"><a href="WRITE-FILE.html">WRITE-FILE</a></li>
+        <li role="menuitem"><a href="WRITE-LINE.html">WRITE-LINE</a></li>
+        <li role="menuitem"><a href="FILE-STATUS.html">FILE-STATUS</a></li>
+        <li role="menuitem"><a href="FLUSH-FILE.html">FLUSH-FILE</a></li>
+        <li role="menuitem"><a href="INCLUDE.html">INCLUDE</a></li>
+        <li role="menuitem"><a href="REFILL.html">REFILL</a></li>
+        <li role="menuitem"><a href="RENAME-FILE.html">RENAME-FILE</a></li>
+        <li role="menuitem"><a href="REQUIRE.html">REQUIRE</a></li>
+        <li role="menuitem"><a href="REQUIRED.html">REQUIRED</a></li>
+        <li role="menuitem"><a href="Seq.html">S\&quot;</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: CATCH</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="exception:CATCH">
+  <div class="wordNumber">9.6.1.0875</div>
+  <div class="wordName">CATCH</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">EXCEPTION</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>i * x xt</em> -- <em>j * x 0  |  i * x n</em> )
+      <p />
+      Push an exception frame on the exception stack and then execute
+      the execution token <em>xt</em> (as with <a href="../core/EXECUTE.html">EXECUTE</a>) in
+      such a way that control can be transferred to a point just after
+      <strong>CATCH</strong> if <a href="../exception/THROW.html">THROW</a> is executed during the execution of
+      <em>xt</em>.
+      <p />
+      If the execution of <em>xt</em> completes normally (i.e., the
+      exception frame pushed by this <strong>CATCH</strong> is not popped by an
+      execution of <a href="../exception/THROW.html">THROW</a>) pop the exception frame and return
+      zero on top of the data stack, above whatever stack items would
+      have been returned by <em>xt</em> <a href="../core/EXECUTE.html">EXECUTE</a>. Otherwise,
+      the remainder of the execution semantics are given by
+      <a href="../exception/THROW.html">THROW</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../rationale.html#rat:exception:THROW">A.9.6.1.2275 THROW</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+ <!-- I.9.1.0875 CATCH -->
+            <div class="rm">
+This sample implementation of <strong>CATCH</strong> uses the non-standard
+        words described below.  They or their equivalents are available in many
+        systems.  Other implementation strategies, including directly saving the
+        value of <a href="../core/DEPTH.html">DEPTH</a>, are possible if such words are not available.
+        <p />
+        <dl class="desc">
+        <dt><code>SP@</code></dt><dd> ( -- <em>addr</em> ) <br />
+        returns the address corresponding to the top of data stack.
+        <p />
+        </dd>
+        <dt><code>SP!</code></dt><dd> ( <em>addr</em> -- ) <br />
+        sets the stack pointer to <em>addr</em>, thus restoring the stack
+        depth to the same depth that existed just before <em>addr</em> was
+        acquired by executing <code>SP@</code>.
+        <p />
+        </dd>
+        <dt><code>RP@</code></dt><dd> ( -- <em>addr</em> ) <br />
+        returns the address corresponding to the top of return stack.
+        <p />
+        </dd>
+        <dt><code>RP!</code></dt><dd> ( <em>addr</em> -- ) <br />
+        sets the return stack pointer to <em>addr</em>, thus restoring the
+        return stack depth to the same depth that existed just before
+        <em>addr</em> was acquired by executing <code>RP@</code>.
+        </dd></dl>
+        <br class="clear" />
+
+        <p />
+                <div class="tt">
+<div class="tabbing">
+            <a href="../core/VARIABLE.html">VARIABLE</a> HANDLER   0 HANDLER <a href="../core/Store.html">!</a>   <a href="../core/bs.html">\</a> <span class="rm">last exception handler</span> <br /><br />
+             <a href="../core/Colon.html">:</a> <strong>CATCH</strong>   <a href="../core/p.html">(</a> xt -- exception# | 0  <a href="../core/bs.html">\</a> <span class="rm">return addr on stack</span> <br />
+            &nbsp;&nbsp;&nbsp;SP@ <a href="../core/toR.html">&gt;R</a>					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> xt )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">save data stack pointer</span> <br />
+            &nbsp;&nbsp;&nbsp;HANDLER <a href="../core/Fetch.html">@</a> <a href="../core/toR.html">&gt;R</a>		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> xt )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">and previous handler</span> <br />
+            &nbsp;&nbsp;&nbsp;RP@ HANDLER <a href="../core/Store.html">!</a>			&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> xt )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">set current handler</span> <br />
+            &nbsp;&nbsp;&nbsp;<a href="../core/EXECUTE.html">EXECUTE</a>					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> )	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">execute returns if no</span> THROW <br />
+            &nbsp;&nbsp;&nbsp;<a href="../core/Rfrom.html">R&gt;</a> HANDLER <a href="../core/Store.html">!</a>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> )   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">restore previous handler</span> <br />
+            &nbsp;&nbsp;&nbsp;<a href="../core/Rfrom.html">R&gt;</a> <a href="../core/DROP.html">DROP</a>		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> )   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">discard saved stack ptr</span> <br />
+            &nbsp;&nbsp;&nbsp;	0								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/p.html">(</a> 0 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">normal completion</span> <br />
+            <a href="../core/Semi.html">;</a>
+            <br />
+            
+            </div>
+          <p />
+                    <div class="rm">
+In a multi-tasking system, the <code>HANDLER</code> variable should be in
+            the per-task variable area (i.e., a user variable).
+            <p />
+            This sample implementation does not explicitly handle the case in
+            which <strong>CATCH</strong> has never been called (i.e., the <a href="../exception/ABORT.html">ABORT</a>
+            behavior). One solution would be to execute a <strong>CATCH</strong> within
+            <a href="../core/QUIT.html">QUIT</a>, so that there is always an &quot;exception handler of last
+            resort&quot; present, as shown in <a href="../implement.html#imp:core:QUIT">E.6.1.2050 QUIT</a>.
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+
+      See <a href="../testsuite.html#test:exception:THROW">F.9.6.1.2275 THROW</a>.
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Exception word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html" class="current">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../exception.html#section.9.1">Introduction</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../exception.html#section.9.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">CATCH</span>
+      <div class="menu">
+        <ul id="menu-word" style="width: 202px;">
+        <li role="menuitem"><a href="CATCH.html" class="current">CATCH</a></li>
+        <li role="menuitem"><a href="THROW.html">THROW</a></li>
+        <li role="menuitem"><a href="ABORT.html">ABORT</a></li>
+        <li role="menuitem"><a href="ABORTq.html">ABORT&quot;</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

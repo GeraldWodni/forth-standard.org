@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: The optional Locals word set</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.13">13 The optional Locals word set</h1> <!-- 13 -->
+<h2 id="section.13.1">13.1 Introduction</h2> <!-- 13.1 -->
+<a name="locals:intro"></a>
+<p />
+<h2 id="section.13.2">13.2 Additional terms and notation</h2> <!-- 13.2 -->
+None.
+<p />
+<h2 id="section.13.3">13.3 Additional usage requirements</h2> <!-- 13.3 -->
+<h3 id="subsection.13.3.1">13.3.1 Locals</h3> <!-- 13.3.1 -->
+A local is a data object whose execution semantics shall return its
+value, whose scope shall be limited to the definition in which it is
+declared, and whose use in a definition shall not preclude reentrancy
+or recursion.
+<p />
+<h3 id="subsection.13.3.2">13.3.2 Environmental queries</h3> <!-- 13.3.2 -->
+Append table <a href="locals.html#local:env">13.1</a> to table <a href="usage.html#table:env">3.4</a>.
+<p />
+See: <strong><a href="usage.html#usage:env">3.2.6 Environmental queries</a></strong>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 13.1: Environmental Query Strings</div>
+  <a name="local:env"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td colspan="2">String  Value data type </td><td class="c">Constant? </td><td style="width: 21em">Meaning </td></tr>
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td style="width: 9em"><code>#LOCALS</code>		</td><td class="r"><em>n</em>	</td><td class="c">yes
+  </td><td style="width: 21em">maximum number of local variables in a definition </td></tr>
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td style="width: 9em"></td></tr>
+  </table>
+  
+  </div>
+<h3 id="subsection.13.3.3">13.3.3 Processing locals</h3> <!-- 13.3.3 -->
+<a name="local:locals"></a>
+<p />
+To support the locals word set, a system shall provide a mechanism
+to receive the messages defined by <a href="local/LOCAL.html">(LOCAL)</a> and respond as
+described here.
+<p />
+During the compilation of a definition after <a href="core/Colon.html">:</a> (colon),
+<a href="core/ColonNONAME.html">:NONAME</a>, or <a href="core/DOES.html">DOES&gt;</a>, a program may begin
+sending local identifier messages to the system. The process shall
+begin when the first message is sent. The process shall end when the
+&quot;last local&quot; message is sent. The system shall keep track of the
+names, order, and number of identifiers contained in the complete
+sequence.
+<p />
+<h4 id="subsubsection.13.3.3.1">13.3.3.1 Compilation semantics</h4> <!-- 13.3.3.1 -->
+The system, upon receipt of a sequence of local-identifier messages,
+shall take the following actions at compile time:
+<ol style="list-style-type: lower-alpha">
+<li> Create temporary dictionary entries for each of the
+identifiers passed to <a href="local/LOCAL.html">(LOCAL)</a>, such that each identifier
+will behave as a <em>local</em>. These temporary dictionary
+entries shall vanish at the end of the definition, denoted by
+<a href="core/Semi.html">;</a> (semicolon), <a href="tools/SemiCODE.html">;CODE</a>, or
+<a href="core/DOES.html">DOES&gt;</a>. The system need not maintain these
+identifiers in the same way it does other dictionary entries
+as long as they can be found by normal dictionary searching
+processes. Furthermore, if the Search-Order word set is present,
+local identifiers shall always be searched before any of the
+word lists in any definable search order, and none of the
+Search-Order words shall change the locals' privileged position
+in the search order. Local identifiers may reside in mass storage.
+<p />
+</li>
+<li> For each identifier passed to <a href="local/LOCAL.html">(LOCAL)</a>, the system shall
+generate an appropriate code sequence that does the following at
+execution time:
+<p />
+<ol style="list-style-type: decimal">
+<li> Allocate a storage resource adequate to contain the value
+of a local. The storage shall be allocated in a way that
+does not preclude re-entrancy or recursion in the definition
+using the local.
+<p />
+</li>
+<li> Initialize the value using the top item on the data stack.
+If more than one local is declared, the top item on the
+stack shall be moved into the first local identified, the
+next item shall be moved into the second, and so on.
+</li>
+</ol>
+<p />
+The storage resource may be the return stack or may be
+implemented in other ways, such as in registers. The storage
+resource shall not be the data stack. Use of locals shall not
+restrict use of the data stack before or after the point of
+declaration.
+<p />
+</li>
+<li> Arrange that any of the legitimate methods of terminating
+execution of a definition, specifically <a href="core/Semi.html">;</a>
+(semicolon), <a href="tools/SemiCODE.html">;CODE</a>, <a href="core/DOES.html">DOES&gt;</a> or
+<a href="core/EXIT.html">EXIT</a>, will release the storage resource allocated
+for the locals, if any, declared in that definition.
+<a href="core/ABORT.html">ABORT</a> shall release all local storage resources,
+and <a href="exception/CATCH.html">CATCH</a> / <a href="exception/THROW.html">THROW</a> (if
+implemented) shall release such resources for all definitions
+whose execution is being terminated.
+<p />
+</li>
+<li> Separate sets of locals may be declared in defining words
+before <a href="core/DOES.html">DOES&gt;</a> for use by the defining word, and
+after <a href="core/DOES.html">DOES&gt;</a> for use by the word defined.
+</li>
+</ol>
+<p />
+A system implementing the Locals word set shall support the
+declaration of at least sixteen locals in a definition.
+<p />
+<h4 id="subsubsection.13.3.3.2">13.3.3.2 Syntax restrictions</h4> <!-- 13.3.3.2 -->
+<a name="locals:rules"></a>
+<p />
+Immediate words in a program may use <a href="local/LOCAL.html">(LOCAL)</a> to implement
+syntaxes for local declarations with the following restrictions:
+<p />
+<ol style="list-style-type: lower-alpha">
+<li> A program shall not compile any executable code into the
+current definition between the time <a href="local/LOCAL.html">(LOCAL)</a> is executed
+to identify the first local for that definition and the time of
+sending the single required &quot;last local&quot; message;
+<p />
+</li>
+<li> The position in program source at which the sequence of
+<a href="local/LOCAL.html">(LOCAL)</a> messages is sent, referred to here as the point
+at which locals are declared, shall not lie within the scope of
+any control structure;
+<p />
+</li>
+<li> Locals shall not be declared until values previously placed on
+the return stack within the definition have been removed;
+<p />
+</li>
+<li> After a definition's locals have been declared, a program may
+place data on the return stack. However, if this is done,
+locals shall not be accessed until those values have been
+removed from the return stack;
+<p />
+</li>
+<li> Words that return execution tokens, such as <a href="core/Tick.html">'</a>
+(tick), <a href="core/BracketTick.html">[']</a>, or <a href="core/FIND.html">FIND</a>, shall not be
+used with local names;
+<p />
+</li>
+<li> A program that declares more than sixteen locals in a single
+definition has an environmental dependency;
+<p />
+</li>
+<li> Locals may be accessed or updated within control structures,
+including do-loops;
+<p />
+</li>
+<li> Local names shall not be referenced by <a href="core/POSTPONE.html">POSTPONE</a>
+and <a href="core/BracketCOMPILE.html">[COMPILE]</a>.
+</li>
+</ol>
+<p />
+See: <strong><a href="usage.html#usage:command">3.4 The Forth text interpreter</a></strong>.
+<p />
+<h2 id="section.13.4">13.4 Additional documentation requirements</h2> <!-- 13.4 -->
+<h3 id="subsection.13.4.1">13.4.1 System documentation</h3> <!-- 13.4.1 -->
+<h4 id="subsubsection.13.4.1.1">13.4.1.1 Implementation-defined options</h4> <!-- 13.4.1.1 -->
+<ul>
+<li> maximum number of locals in a definition
+(<strong><a href="locals.html#local:locals">13.3.3 Processing locals</a></strong>,
+<a href="local/LOCALS.html">13.6.2.1795 LOCALS|</a>).
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.13.4.1.2">13.4.1.2 Ambiguous conditions</h4> <!-- 13.4.1.2 -->
+<a name="locals:ambiguous"></a>
+<ul>
+<li> executing a named <em>local</em> while in interpretation state
+(<a href="local/LOCAL.html">13.6.1.0086 (LOCAL)</a>);
+</li>
+<li> a local name ends in &quot;<code>:</code>&quot;, &quot;<code>[</code>&quot;, &quot;<code>^</code>&quot;;
+</li>
+<li> a local name is a single non-alphabetic character;
+</li>
+<li> the text between <a href="local/bColon.html">{:</a> and <code>:}</code> extends over more than one line;
+</li>
+<li> <a href="local/bColon.html">{:</a> ... <code>:}</code> is used more than once in a word.
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.13.4.1.3">13.4.1.3 Other system documentation</h4> <!-- 13.4.1.3 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h3 id="subsection.13.4.2">13.4.2 Program documentation</h3> <!-- 13.4.2 -->
+<h4 id="subsubsection.13.4.2.1">13.4.2.1 Environmental dependencies</h4> <!-- 13.4.2.1 -->
+<a name="locals:environment"></a>
+<ul>
+<li> declaring more than sixteen locals in a single definition
+(<strong><a href="locals.html#local:locals">13.3.3 Processing locals</a></strong>).
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.13.4.2.2">13.4.2.2 Other program documentation</h4> <!-- 13.4.2.2 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h2 id="section.13.5">13.5 Compliance and labeling</h2> <!-- 13.5 -->
+<h3 id="subsection.13.5.1">13.5.1 Forth-2012 systems</h3> <!-- 13.5.1 -->
+The phrase &quot;Providing the Locals word set&quot; shall be appended to
+the label of any Standard System that provides all of the Locals
+word set.
+<p />
+The phrase &quot;Providing <em>name(s)</em> from the Locals Extensions
+word set&quot; shall be appended to the label of any Standard System
+that provides portions of the Locals Extensions word set.
+<p />
+The phrase &quot;Providing the Locals Extensions word set&quot; shall be
+appended to the label of any Standard System that provides all of
+the Locals and Locals Extensions word sets.
+<p />
+<h3 id="subsection.13.5.2">13.5.2 Forth-2012 programs</h3> <!-- 13.5.2 -->
+The phrase &quot;Requiring the Locals word set&quot; shall be appended to
+the label of Standard Programs that require the system to provide
+the Locals word set.
+<p />
+The phrase &quot;Requiring <em>name(s)</em> from the Locals Extensions
+word set&quot; shall be appended to the label of Standard Programs that
+require the system to provide portions of the Locals Extensions word
+set.
+<p />
+The phrase &quot;Requiring the Locals Extensions word set&quot; shall be
+appended to the label of Standard Programs that require the system
+to provide all of the Locals and Locals Extensions word sets.
+<p />
+<h2 id="section.13.6">13.6 Glossary</h2> <!-- 13.6 -->
+<h3 id="subsection.13.6.1">13.6.1 Locals words</h3> <!-- 13.6.1 -->
+
+<ul>
+<li><a href="local/LOCAL.html">13.6.1.0086 (LOCAL)</a></li>
+</ul>
+<h3 id="subsection.13.6.2">13.6.2 Locals extension words</h3> <!-- 13.6.2 -->
+<ul>
+<li><a href="local/LOCALS.html">13.6.2.1795 LOCALS|</a></li>
+<li><a href="local/bColon.html">13.6.2.2550 {:</a></li>
+</ul>
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Locals word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html" class="current">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.13.1" class="current">Introduction</a></li>
+        <li role="menuitem"><a href="#section.13.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="#section.13.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="#section.13.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="#section.13.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="#section.13.6">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">(LOCAL)</span>
+      <div class="menu">
+        <ul id="menu-word" style="width: 202px;">
+        <li role="menuitem"><a href="local/LOCAL.html">(LOCAL)</a></li>
+        <li role="menuitem"><a href="local/LOCALS.html">LOCALS|</a></li>
+        <li role="menuitem"><a href="local/bColon.html">{:</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

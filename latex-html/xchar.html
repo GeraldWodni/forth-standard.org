@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: The optional Extended-Character word set</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="forth.css" />
+  <script type="text/javascript" src="forth.js"></script>
+</head><body><div id="body">
+<h1 id="chapter.18">18 The optional Extended-Character word set</h1> <!-- 18 -->
+<h2 id="section.18.1">18.1 Introduction</h2> <!-- 18.1 -->
+<a name="xchar:intro"></a>
+<p />
+This word set deals with variable width character encodings.  It also
+works with fixed width encodings.
+<p />
+Since the standard specifies ASCII encoding for characters, only
+ASCII-compatible encodings may be used.  Because ASCII compatibility
+has so many benefits, most encodings actually are ASCII compatible.
+The characters beyond the ASCII encoding are called &quot;extended
+characters&quot; (xchars).
+<p />
+All words dealing with strings shall handle xchars when the xchar word
+set is present.  This includes dictionary definitions.  White space
+parsing does not have to treat code points greater than $20 as white
+space.
+<p />
+<h2 id="section.18.2">18.2 Additional terms and notation</h2> <!-- 18.2 -->
+<h3 id="subsection.18.2.1">18.2.1 Definition of Terms</h3> <!-- 18.2.1 -->
+<dl class="desc">
+<dt>code point:</dt><dd> A member of an extended character set.
+</dd></dl>
+<br class="clear" />
+
+<p />
+<h3 id="subsection.18.2.2">18.2.2 Parsed-text notation</h3>
+<p />
+Append table <a href="xchar.html#xchar:syntax">18.1</a> to table <a href="notation.html#table:syntax">2.1</a>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 18.1: Parsed text abbreviations</div>
+  <a name="xchar:syntax"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="2"><hr /></td></tr>
+  <tr valign="top"><td><em>Abbreviation</em> </td><td><em>Description</em> </td></tr>
+  <tr valign="top"><td colspan="2"><hr /></td></tr>
+  <tr valign="top"><td><em>&lt;xchar&gt;</em> </td><td>the delimiting extended character </td></tr>
+  <tr valign="top"><td colspan="2"><hr /></td></tr>
+  <tr valign="top"><td></td></tr>
+  </table>
+  
+  </div>
+See: <strong><a href="notation.html#notation:parsed">2.2.3 Parsed-text notation</a></strong>.
+<p />
+<h2 id="section.18.3">18.3 Additional usage requirements</h2> <!-- 18.3 -->
+<h3 id="subsection.18.3.1">18.3.1 Data types</h3> <!-- 18.3.1 -->
+Append table <a href="xchar.html#xchar:types">18.2</a> to table <a href="usage.html#table:datatypes">3.1</a>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 18.2: Data Types</div>
+  <a name="xchar:types"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>Symbol</em>		</td><td><em>Data type</em> </td><td class="r"><em>Size on stack</em> </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td><em>pchar</em>		</td><td>primitive character		</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>xchar</em>		</td><td>extended character			</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td><em>xc-addr</em>		</td><td>xchar-aligned address		</td><td class="r">1 cell </td></tr>
+  <tr valign="top"><td colspan="3"><hr /></td></tr>
+  <tr valign="top"><td></td></tr>
+  </table>
+  
+  </div>
+See: <strong><a href="usage.html#usage:data">3.1 Data types</a></strong>.
+<p />
+<h4 id="subsubsection.18.3.1.1">18.3.1.1 Extended Characters</h4> <!-- 18.3.1.1 -->
+An extended character (xchar) is the code point of a character within an
+extended character set; on the stack it is a subset of <em>u</em>.  Extended
+characters are stored in memory encoded as one or more primitive characters
+(pchars).
+<p />
+<h3 id="subsection.18.3.2">18.3.2 Environmental queries</h3> <!-- 18.3.2. -->
+Append table <a href="xchar.html#xchar:env">18.3</a> to table <a href="usage.html#table:env">3.4</a>.
+<p />
+
+<div class="center">
+
+  <div class="caption">Table 18.3: Environmental Query Strings</div>
+  <a name="xchar:env"></a>
+  <table class="center">
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td colspan="2">String  Value data type </td><td class="c">Constant? </td><td style="width: 21em">Meaning </td></tr>
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td style="width: 9em"><code>XCHAR-ENCODING</code>		</td><td class="r"><em>c-addr u</em> </td><td class="c">no </td><td style="width: 21em">Returns a printable ASCII string that represents the encoding,
+  and use the preferred MIME name (if any) or the name in the
+  IANA character-set register<sup>[1]</sup> (RFC-1700) such
+  as &quot;<code>ISO-LATIN-1</code>&quot; or &quot;<code>UTF&ndash;8</code>&quot;,
+  with the exception of &quot;<code>ASCII</code>&quot;, where the alias
+  &quot;<code>ASCII</code>&quot; is preferred. </td></tr>
+  <tr valign="top"><td style="width: 9em"><code>MAX-XCHAR</code>			</td><td class="r"><em>u</em> </td><td class="c">no </td><td style="width: 21em">Maximal value for <em>xchar</em> </td></tr>
+  <tr valign="top"><td style="width: 9em"><code>XCHAR-MAXMEM</code>		</td><td class="r"><em>u</em> </td><td class="c">no </td><td style="width: 21em">Maximal memory consumed by an <em>xchar</em> in address units </td></tr>
+  <tr valign="top"><td colspan="4"><hr /></td></tr>
+  <tr valign="top"><td style="width: 9em"></td></tr>
+  <tr valign="top"><td colspan="4"><div>
+  <sup>[1]</sup>
+    <a href="http://www.iana.org/assignments/character-sets">http://www.iana.org/assignments/character-sets</a>
+    </div> </td></tr>
+  <tr valign="top"><td style="width: 9em"></td></tr>
+  </table>
+  
+  </div>
+See: <strong><a href="usage.html#usage:env">3.2.6 Environmental queries</a></strong>.
+<p />
+<h3 id="subsection.18.3.3">18.3.3 Common encodings</h3> <!-- 18.3.3 -->
+Input and files are often encoded iso&ndash;latin&ndash;1 or utf&ndash;8.  The encoding
+depends on settings of the computer system such as the LANG environment
+variable on Unix.  You can use the system consistently only when you do
+not change the encoding, or only use the ASCII subset.
+The typical practice in environments requiring more than one encoding
+is that the base system is ASCII only, and the character set is then
+extended to specify the required encoding.
+<p />
+<h3 id="subsection.18.3.4">18.3.4 The Forth text interpreter</h3> <!-- 18.3.4 -->
+In section <strong><a href="usage.html#usage:numbers">3.4.1.3 Text interpreter input number conversion</a></strong>, &lt;<em>cnum</em>&gt; should be redefined to be:
+<p />
+<div class="center">
+
+  <table class="center">
+  <tr valign="top"><td>&lt;<em>cnum</em>&gt;		</td><td>the number is the value of &lt;<em>xchar</em>&gt;
+  </table>
+  
+  </div>
+<p />
+<h3 id="subsection.18.3.5">18.3.5 Input and Output</h3> <!-- 18.3.5 -->
+<a name="xchar:io"></a>
+<p />
+IO words such as
+<a href="core/KEY.html">KEY</a>, 
+<a href="core/EMIT.html">EMIT</a>,
+<a href="core/TYPE.html">TYPE</a>,
+<a href="file/READ-FILE.html">READ-FILE</a>,
+<a href="file/READ-LINE.html">READ-LINE</a>,
+<a href="file/WRITE-FILE.html">WRITE-FILE</a>, and
+<a href="file/WRITE-LINE.html">WRITE-LINE</a>
+operate on <em>pchars</em>.  Therefore, it is possible that these words
+read or write incomplete <em>xchars</em>, which are completed in the next
+consecutive operation(s).  The IO system shall combine these <em>pchars</em>
+into a complete <em>xchars</em> on output, or split an <em>xchars</em> into
+<em>pchars</em> on input, and shall not throw a &quot;malformed <em>xchars</em>&quot;
+exception when the combination of these <em>pchars</em> form a valid
+<em>xchars</em>.  <a href="xchar/MinusTRAILING-GARBAGE.html">-TRAILING-GARBAGE</a> can be used to process
+an incomplete <em>xchars</em> at the end of such an IO operation.
+<a href="core/ACCEPT.html">ACCEPT</a> as input editor may be aware of <em>xchars</em> to
+provide comfort like backspace or cursor movement.
+<p />
+<h2 id="section.18.4">18.4 Additional documentation requirements</h2> <!-- 18.4 -->
+<h3 id="subsection.18.4.1">18.4.1 System documentation</h3> <!-- 18.4.1 -->
+<h4 id="subsubsection.18.4.1.1">18.4.1.1 Implementation-defined options</h4> <!-- 18.4.1.1 -->
+<a name="xchar:impopt"></a>
+<p />
+Since Unicode input and display poses a number of challenges like input
+method editors for different languages, left-to-right and right-to-left
+writing, and most fonts contain only a subset of Unicode glyphs,
+systems should document their capabilities.  File IO and in-memory
+string handling should work transparently with <em>xchars</em>.
+<p />
+<h4 id="subsubsection.18.4.1.2">18.4.1.2 Ambiguous conditions</h4> <!-- 18.4.1.2 -->
+<ul>
+<li> the data in memory does not encode a valid xchar
+(<a href="xchar/X-SIZE.html">18.6.1.2486.50 X-SIZE</a>);
+</li>
+<li> the <em>xchars</em> value is outside the range of allowed code points of
+the current character set used;
+</li>
+<li> words improperly used outside
+<a href="core/num-start.html">6.1.0490 &lt;#</a> and <a href="core/num-end.html">6.1.0040 #&gt;</a>
+(<a href="xchar/XHOLD.html">18.6.2.2488.20 XHOLD</a>).
+</li>
+</ul>
+<p />
+<h4 id="subsubsection.18.4.1.3">18.4.1.3 Other system documentation</h4> <!-- 18.4.1.3 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h3 id="subsection.18.4.2">18.4.2 Program documentation</h3> <!-- 18.4.2 -->
+<ul>
+<li> no additional requirements.
+</li>
+</ul>
+<p />
+<h2 id="section.18.5">18.5 Compliance and labeling</h2> <!-- 18.5 -->
+<h3 id="subsection.18.5.1">18.5.1 Forth-2012 systems</h3> <!-- 18.5.1 -->
+The phrase &quot;Providing the Extended-Character word set&quot; shall be
+appended to the label of any Standard System that provides all of
+the Extended-Character word set.
+<p />
+The phrase &quot;Providing <em>name(s)</em> from the Extended-Character
+Extensions word set&quot; shall be appended to the label of any Standard
+System that provides portions of the Extended-Character Extensions
+word set.
+<p />
+The phrase &quot;Providing the Extended-Character Extensions word set&quot;
+shall be appended to the label of any Standard System that provides
+all of the Extended-Character and Extended-Character Extensions
+word sets.
+<p />
+<h3 id="subsection.18.5.2">18.5.2 Forth-2012 programs</h3> <!-- 18.5.2 -->
+The phrase &quot;Requiring the Extended-Character word set&quot; shall be
+appended to the label of Standard Programs that require the system
+to provide the Extended-Character word set.
+<p />
+The phrase &quot;Requiring <em>name(s)</em> from the Extended-Character
+Extensions word set&quot; shall be appended to the label of Standard Programs
+that require the system to provide portions of the Extended-Character
+Extensions word set.
+<p />
+The phrase &quot;Requiring the Extended-Character Extensions word set&quot;
+shall be appended to the label of Standard Programs that require the
+system to provide all of the Extended-Character Exception and
+Extended-Character Extensions word sets.
+<p />
+<h2 id="section.18.6">18.6 Glossary</h2> <!-- 18.6 -->
+<h3 id="subsection.18.6.1">18.6.1 Extended-Character words</h3> <!-- 18.6.1 -->
+<ul>
+<li><a href="xchar/X-SIZE.html">18.6.1.2486.50 X-SIZE</a></li>
+<li><a href="xchar/XCStorePlus.html">18.6.1.2487.10 XC!+</a></li>
+<li><a href="xchar/XCStorePlusq.html">18.6.1.2487.15 XC!+?</a></li>
+<li><a href="xchar/XCComma.html">18.6.1.2487.20 XC,</a></li>
+<li><a href="xchar/XC-SIZE.html">18.6.1.2487.25 XC-SIZE</a></li>
+<li><a href="xchar/XCFetchPlus.html">18.6.1.2487.35 XC@+</a></li>
+<li><a href="xchar/XCHARPlus.html">18.6.1.2487.40 XCHAR+</a></li>
+
+<li><a href="xchar/XEMIT.html">18.6.1.2488.10 XEMIT</a></li>
+
+<li><a href="xchar/XKEY.html">18.6.1.2488.30 XKEY</a></li>
+
+<li><a href="xchar/XKEYq.html">18.6.1.2488.35 XKEY?</a></li>
+</ul>
+<h3 id="subsection.18.6.2">18.6.2 Extended-Character extension words</h3> <!-- 18.6.2 -->
+<ul>
+<li><a href="xchar/PlusXDivSTRING.html">18.6.2.0145 +X/STRING</a></li>
+<li><a href="xchar/MinusTRAILING-GARBAGE.html">18.6.2.0175 -TRAILING-GARBAGE</a></li>
+<li><a href="xchar/CHAR.html">18.6.2.0895 CHAR</a></li>
+
+<li><a href="xchar/EKEYtoXCHAR.html">18.6.2.1306.60 EKEY&gt;XCHAR</a></li>
+
+<li><a href="xchar/PARSE.html">18.6.2.2008 PARSE</a></li>
+
+<li><a href="xchar/X-WIDTH.html">18.6.2.2486.70 X-WIDTH</a></li>
+
+<li><a href="xchar/XC-WIDTH.html">18.6.2.2487.30 XC-WIDTH</a></li>
+<li><a href="xchar/XCHARMinus.html">18.6.2.2487.45 XCHAR-</a></li>
+<li><a href="xchar/XHOLD.html">18.6.2.2488.20 XHOLD</a></li>
+<li><a href="xchar/XSTRINGMinus.html">18.6.2.2495 X\STRING-</a></li>
+<li><a href="xchar/BracketCHAR.html">18.6.2.2520 [CHAR]</a></li>
+</ul>
+
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Extended-Character word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="core.html">Glossary</a></li>
+        <li role="menuitem"><a href="block.html">Block word set</a></li>
+        <li role="menuitem"><a href="double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="string.html">String word set</a></li>
+        <li role="menuitem"><a href="xchar.html" class="current">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Introduction</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="#section.18.1" class="current">Introduction</a></li>
+        <li role="menuitem"><a href="#section.18.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="#section.18.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="#section.18.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="#section.18.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="#section.18.6">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">X-SIZE</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="xchar/X-SIZE.html">X-SIZE</a></li>
+        <li role="menuitem"><a href="xchar/XCStorePlus.html">XC!+</a></li>
+        <li role="menuitem"><a href="xchar/XCStorePlusq.html">XC!+?</a></li>
+        <li role="menuitem"><a href="xchar/XCComma.html">XC,</a></li>
+        <li role="menuitem"><a href="xchar/XC-SIZE.html">XC-SIZE</a></li>
+        <li role="menuitem"><a href="xchar/XCFetchPlus.html">XC@+</a></li>
+        <li role="menuitem"><a href="xchar/XCHARPlus.html">XCHAR+</a></li>
+        <li role="menuitem"><a href="xchar/XEMIT.html">XEMIT</a></li>
+        <li role="menuitem"><a href="xchar/XKEY.html">XKEY</a></li>
+        <li role="menuitem"><a href="xchar/XKEYq.html">XKEY?</a></li>
+        <li role="menuitem"><a href="xchar/PlusXDivSTRING.html">+X/STRING</a></li>
+        <li role="menuitem"><a href="xchar/MinusTRAILING-GARBAGE.html">-TRAILING-GARBAGE</a></li>
+        <li role="menuitem"><a href="xchar/CHAR.html">CHAR</a></li>
+        <li role="menuitem"><a href="xchar/EKEYtoXCHAR.html">EKEY&gt;XCHAR</a></li>
+        <li role="menuitem"><a href="xchar/PARSE.html">PARSE</a></li>
+        <li role="menuitem"><a href="xchar/X-WIDTH.html">X-WIDTH</a></li>
+        <li role="menuitem"><a href="xchar/XC-WIDTH.html">XC-WIDTH</a></li>
+        <li role="menuitem"><a href="xchar/XCHARMinus.html">XCHAR-</a></li>
+        <li role="menuitem"><a href="xchar/XHOLD.html">XHOLD</a></li>
+        <li role="menuitem"><a href="xchar/XSTRINGMinus.html">X\STRING-</a></li>
+        <li role="menuitem"><a href="xchar/BracketCHAR.html">[CHAR]</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
+

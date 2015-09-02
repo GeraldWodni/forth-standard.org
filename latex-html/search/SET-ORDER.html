@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: SET-ORDER</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="search:SET-ORDER">
+  <div class="wordNumber">16.6.1.2197</div>
+  <div class="wordName">SET-ORDER</div>
+  <div class="wordEnglish">&nbsp;</div>
+  <div class="wordList">SEARCH</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">&nbsp;</div>
+    <div class="sec">
+
+ ( <em>wid<sub>n</sub> ... wid<sub>1</sub> n</em> -- )
+      <p />
+      Set the search order to the word lists identified by
+      <em>wid<sub>n</sub></em> ... <em>wid<sub>1</sub></em>. Subsequently, word list
+      <em>wid<sub>1</sub></em> will be searched first, and word list <em>wid<sub>n</sub></em>
+      searched last. If <em>n</em> is zero, empty the search order. If
+      <em>n</em> is minus one, set the search order to the
+      implementation-defined minimum search order. The minimum search
+      order shall include the words <a href="../search/FORTH-WORDLIST.html">FORTH-WORDLIST</a> and
+      <strong>SET-ORDER</strong>. A system shall allow <em>n</em> to be at least
+      eight.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+
+      <span class="rm">This is the complement of <a href="../implement.html#imp:search:GET-ORDER">E.16.6.1.1647 GET-ORDER</a>.</span>
+      <p />
+      <a href="../core/Colon.html">:</a> <strong>SET-ORDER</strong> <a href="../core/p.html">(</a> wid1 ... widn n -0 ) <br />
+      &nbsp;&nbsp; <a href="../core/DUP.html">DUP</a> -1 <a href="../core/Equal.html">=</a> <a href="../core/IF.html">IF</a> <br />
+      &nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/DROP.html">DROP</a> &lt;<em><span class="rm">push system default word lists and n</span></em>&gt; <br />
+      &nbsp;&nbsp; <a href="../core/THEN.html">THEN</a> <br />
+      &nbsp;&nbsp; <a href="../core/DUP.html">DUP</a> #order <a href="../core/Store.html">!</a> <br />
+      &nbsp;&nbsp; 0 <a href="../core/qDO.html">?DO</a>   <a href="../core/I.html">I</a> <a href="../core/CELLS.html">CELLS</a> context <a href="../core/Plus.html">+</a> <a href="../core/Store.html">!</a>   <a href="../core/LOOP.html">LOOP</a> <br />
+      <a href="../core/Semi.html">;</a>
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+      <div class="tt">
+<span class="tt">T{ <a href="../search/GET-ORDER.html">GET-ORDER</a>&nbsp;<a href="../core/OVER.html">OVER</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a href="../search/GET-ORDER.html">GET-ORDER</a>&nbsp;wid1&nbsp;<a href="../core/Fetch.html">@</a> }T</span> <br />
+        <span class="tt">T{ <a href="../search/GET-ORDER.html">GET-ORDER</a>&nbsp;<strong>SET-ORDER</strong> -&gt;  }T</span> <br />
+        <span class="tt">T{ <a href="../search/GET-ORDER.html">GET-ORDER</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; get-orderlist }T</span> <!-- \tab \word{bs} \textdf{Check nothing changed} \\ -->
+        <span class="tt">T{ get-orderlist&nbsp;<a href="../core/DROP.html">DROP</a>&nbsp;get-orderList&nbsp;<a href="../core/TwoTimes.html">2*</a>&nbsp;<strong>SET-ORDER</strong> -&gt;  }T</span> <br />
+        <span class="tt">T{ <a href="../search/GET-ORDER.html">GET-ORDER</a> -&gt; get-orderlist&nbsp;<a href="../core/DROP.html">DROP</a>&nbsp;get-orderList&nbsp;<a href="../core/TwoTimes.html">2*</a> }T</span> <br />
+        <span class="tt">T{ get-orderlist&nbsp;<strong>SET-ORDER</strong>&nbsp;<a href="../search/GET-ORDER.html">GET-ORDER</a> -&gt; get-orderlist }T</span>
+        <p />
+        <a href="../core/Colon.html">:</a> so2a <a href="../search/GET-ORDER.html">GET-ORDER</a> get-orderlist <strong>SET-ORDER</strong> <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> so2 0 <strong>SET-ORDER</strong> so2a <a href="../core/Semi.html">;</a>
+        <p />
+        <span class="tt">T{ so2 -&gt; 0 }T</span>	&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">0 SET-ORDER leaves an empty search order</span>
+        <p />
+        <a href="../core/Colon.html">:</a> so3 -1 <strong>SET-ORDER</strong> so2a <a href="../core/Semi.html">;</a> <br />
+        <a href="../core/Colon.html">:</a> so4 <a href="../search/ONLY.html">ONLY</a> so2a <a href="../core/Semi.html">;</a>
+        <p />
+        <span class="tt">T{ so3 -&gt; so4 }T</span>	&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">-1 SET-ORDER is the same as ONLY</span>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Search-Order word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html" class="current">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../search.html#section.16.1">Introduction</a></li>
+        <li role="menuitem"><a href="../search.html#section.16.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../search.html#section.16.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../search.html#section.16.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../search.html#section.16.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../search.html#section.16.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">SET-ORDER</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="DEFINITIONS.html">DEFINITIONS</a></li>
+        <li role="menuitem"><a href="FIND.html">FIND</a></li>
+        <li role="menuitem"><a href="FORTH-WORDLIST.html">FORTH-WORDLIST</a></li>
+        <li role="menuitem"><a href="GET-CURRENT.html">GET-CURRENT</a></li>
+        <li role="menuitem"><a href="GET-ORDER.html">GET-ORDER</a></li>
+        <li role="menuitem"><a href="SEARCH-WORDLIST.html">SEARCH-WORDLIST</a></li>
+        <li role="menuitem"><a href="SET-CURRENT.html">SET-CURRENT</a></li>
+        <li role="menuitem"><a href="SET-ORDER.html" class="current">SET-ORDER</a></li>
+        <li role="menuitem"><a href="WORDLIST.html">WORDLIST</a></li>
+        <li role="menuitem"><a href="ALSO.html">ALSO</a></li>
+        <li role="menuitem"><a href="FORTH.html">FORTH</a></li>
+        <li role="menuitem"><a href="ONLY.html">ONLY</a></li>
+        <li role="menuitem"><a href="ORDER.html">ORDER</a></li>
+        <li role="menuitem"><a href="PREVIOUS.html">PREVIOUS</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

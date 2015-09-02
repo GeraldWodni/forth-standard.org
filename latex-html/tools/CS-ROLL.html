@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: CS-ROLL</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="tools:CS-ROLL">
+  <div class="wordNumber">15.6.2.1020</div>
+  <div class="wordName">CS-ROLL</div>
+  <div class="wordEnglish">c-s-roll</div>
+  <div class="wordList">TOOLS EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">Interpretation:</div>
+    <div class="sec">
+
+
+      Interpretation semantics for this word are undefined.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Execution:</div>
+    <div class="sec">
+
+
+      ( C: <em>orig<sub>u</sub> | dest<sub>u</sub> orig<sub>u-1</sub> | dest<sub>u-1</sub> ... orig<sub>0</sub> | dest<sub>0</sub></em> -- <em>orig<sub>u-1</sub> | dest<sub>u-1</sub> ... orig<sub>0</sub> | dest<sub>0</sub> orig<sub>u</sub> | dest<sub>u</sub></em> )
+      ( S: <em>u</em> -- )
+      <p />
+      Remove <em>u</em>. Rotate <em>u</em>+1 elements on top of the
+      control-flow stack so that <em>orig<sub>u</sub> | dest<sub>u</sub></em> is on top of
+      the control-flow stack. An ambiguous condition exists if there
+      are less than <em>u</em>+1 items, each of which shall be an
+      <em>orig</em> or <em>dest</em>, on the control-flow stack before
+      <strong>CS-ROLL</strong> is executed.
+      <p />
+      If the control-flow stack is implemented using the data stack,
+      <em>u</em> shall be the topmost item on the data stack.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../rationale.html#rat:tools:CS-ROLL">A.15.6.2.1020 CS-ROLL</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.15.6.2.1020 CS-ROLL -->
+      The intent is to modify the order in which the <em>orig</em>s
+      and <em>dest</em>s on the control-flow stack are to be resolved
+      by subsequent control-flow words. For example, <a href="../core/WHILE.html">WHILE</a>
+      could be implemented in terms of <a href="../core/IF.html">IF</a> and
+      <strong>CS-ROLL</strong>, as follows:
+      <p />
+      
+            <div class="quote">
+        <div class="tt">
+<a href="../core/Colon.html">:</a> <a href="../core/WHILE.html">WHILE</a>   <a href="../core/p.html">(</a> dest -- orig dest ) <br />
+          &nbsp;&nbsp; <a href="../core/POSTPONE.html">POSTPONE</a> <a href="../core/IF.html">IF</a>   1 <a href="../tools/CS-ROLL.html">CS-ROLL</a> <br />
+          <a href="../core/Semi.html">;</a> <a href="../core/IMMEDIATE.html">IMMEDIATE</a>
+          
+          </div>
+        </div>
+      
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+      <div class="tt">
+<span class="tt">T{ <a href="../core/Colon.html">:</a>&nbsp;?DONE&nbsp;<a href="../core/p.html">(</a>&nbsp;dest&nbsp;--&nbsp;orig&nbsp;dest&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/bs.html">\</a>&nbsp;<span class="rm">Same&nbsp;as&nbsp;WHILE</span>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/POSTPONE.html">POSTPONE</a>&nbsp;<a href="../core/IF.html">IF</a>&nbsp;1&nbsp;<strong>CS-ROLL</strong>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/Semi.html">;</a>&nbsp;<a href="../core/IMMEDIATE.html">IMMEDIATE</a> -&gt;  }T</span> <br />
+        <span class="tt">T{ <a href="../core/Colon.html">:</a>&nbsp;pt6&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/toR.html">&gt;R</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/BEGIN.html">BEGIN</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/RFetch.html">R@</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;?DONE&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/RFetch.html">R@</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/Rfrom.html">R&gt;</a>&nbsp;<a href="../core/OneMinus.html">1-</a>&nbsp;<a href="../core/toR.html">&gt;R</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/REPEAT.html">REPEAT</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/Rfrom.html">R&gt;</a>&nbsp;<a href="../core/DROP.html">DROP</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/Semi.html">;</a> -&gt;  }T</span>
+        <p />
+        <span class="tt">T{ 5&nbsp;pt6 -&gt; 5&nbsp;4&nbsp;3&nbsp;2&nbsp;1 }T</span>
+        <p />
+        <a href="../core/Colon.html">:</a> mix_up 2 <strong>CS-ROLL</strong> <a href="../core/Semi.html">;</a> <a href="../core/IMMEDIATE.html">IMMEDIATE</a> &nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">cs-rot</span>
+        <p />
+        <a href="../core/Colon.html">:</a> pt7 <a href="../core/p.html">(</a> f3 f2 f1 -- ? ) <br />
+        &nbsp;&nbsp; <a href="../core/IF.html">IF</a> 1111 <a href="../core/ROT.html">ROT</a> <a href="../core/ROT.html">ROT</a>	&nbsp;&nbsp;		( -- 1111 f3 f2 )		&nbsp;&nbsp;&nbsp;&nbsp;	( cs: -- o1 ) <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/IF.html">IF</a> 2222 <a href="../core/SWAP.html">SWAP</a>			&nbsp;&nbsp;	( -- 1111 2222 f3 )	&nbsp;&nbsp;	( cs: -- o1 o2 ) <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		<a href="../core/IF.html">IF</a>															&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	( cs: -- o1 o2 o3 ) <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			3333 mix_up							( -- 1111 2222 3333 )		( cs: -- o2 o3 o1 ) <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		<a href="../core/THEN.html">THEN</a>															&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	( cs: -- o2 o3 ) <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		4444	&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Hence failure of first IF comes here and falls through</span> <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;	<a href="../core/THEN.html">THEN</a>																&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	( cs: -- o2 ) <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;	5555 		&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Failure of 3rd IF comes here</span> <br />
+        &nbsp;&nbsp; <a href="../core/THEN.html">THEN</a>																&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	( cs: -- ) <br />
+        &nbsp;&nbsp; 6666 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../core/bs.html">\</a> <span class="rm">Failure of 2nd IF comes here</span> <br />
+        &nbsp;&nbsp; <a href="../core/Semi.html">;</a>
+        <p />
+        <span class="tt">T{ -1&nbsp;-1&nbsp;-1&nbsp;pt7 -&gt; 1111&nbsp;2222&nbsp;3333&nbsp;4444&nbsp;5555&nbsp;6666 }T</span> <br />
+        <span class="tt">T{ &nbsp;0&nbsp;-1&nbsp;-1&nbsp;pt7 -&gt; 1111&nbsp;2222&nbsp;5555&nbsp;6666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }T</span> <br />
+        <span class="tt">T{ &nbsp;0&nbsp;&nbsp;0&nbsp;-1&nbsp;pt7 -&gt; 1111&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;6666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }T</span> <br />
+        <span class="tt">T{ &nbsp;0&nbsp;&nbsp;0&nbsp;&nbsp;0&nbsp;pt7 -&gt; 0&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;4444&nbsp;5555&nbsp;6666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }T</span>
+        <p />
+        <a href="../core/Colon.html">:</a> [1cs-roll] 1 <strong>CS-ROLL</strong> <a href="../core/Semi.html">;</a> <a href="../core/IMMEDIATE.html">IMMEDIATE</a>
+        <p />
+        <span class="tt">T{ <a href="../core/Colon.html">:</a>&nbsp;pt8&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/toR.html">&gt;R</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../tools/AHEAD.html">AHEAD</a>&nbsp;111&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/BEGIN.html">BEGIN</a>&nbsp;222&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1cs-roll]&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/THEN.html">THEN</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;333&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/Rfrom.html">R&gt;</a>&nbsp;<a href="../core/OneMinus.html">1-</a>&nbsp;<a href="../core/toR.html">&gt;R</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/RFetch.html">R@</a>&nbsp;<a href="../core/Zeroless.html">0&lt;</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/UNTIL.html">UNTIL</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/Rfrom.html">R&gt;</a>&nbsp;<a href="../core/DROP.html">DROP</a>&nbsp;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/Semi.html">;</a> -&gt;  }T</span>
+        <p />
+        <span class="tt">T{ 1&nbsp;pt8 -&gt; 333&nbsp;222&nbsp;333 }T</span>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Programming-Tools word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html" class="current">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../tools.html#section.15.1">Introduction</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">CS-ROLL</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="DotS.html">.S</a></li>
+        <li role="menuitem"><a href="q.html">?</a></li>
+        <li role="menuitem"><a href="DUMP.html">DUMP</a></li>
+        <li role="menuitem"><a href="SEE.html">SEE</a></li>
+        <li role="menuitem"><a href="WORDS.html">WORDS</a></li>
+        <li role="menuitem"><a href="SemiCODE.html">;CODE</a></li>
+        <li role="menuitem"><a href="AHEAD.html">AHEAD</a></li>
+        <li role="menuitem"><a href="ASSEMBLER.html">ASSEMBLER</a></li>
+        <li role="menuitem"><a href="BYE.html">BYE</a></li>
+        <li role="menuitem"><a href="CODE.html">CODE</a></li>
+        <li role="menuitem"><a href="CS-PICK.html">CS-PICK</a></li>
+        <li role="menuitem"><a href="CS-ROLL.html" class="current">CS-ROLL</a></li>
+        <li role="menuitem"><a href="EDITOR.html">EDITOR</a></li>
+        <li role="menuitem"><a href="FORGET.html">FORGET</a></li>
+        <li role="menuitem"><a href="NtoR.html">N&gt;R</a></li>
+        <li role="menuitem"><a href="NAMEtoCOMPILE.html">NAME&gt;COMPILE</a></li>
+        <li role="menuitem"><a href="NAMEtoINTERPRET.html">NAME&gt;INTERPRET</a></li>
+        <li role="menuitem"><a href="NAMEtoSTRING.html">NAME&gt;STRING</a></li>
+        <li role="menuitem"><a href="NRfrom.html">NR&gt;</a></li>
+        <li role="menuitem"><a href="STATE.html">STATE</a></li>
+        <li role="menuitem"><a href="SYNONYM.html">SYNONYM</a></li>
+        <li role="menuitem"><a href="TRAVERSE-WORDLIST.html">TRAVERSE-WORDLIST</a></li>
+        <li role="menuitem"><a href="BracketDEFINED.html">[DEFINED]</a></li>
+        <li role="menuitem"><a href="BracketELSE.html">[ELSE]</a></li>
+        <li role="menuitem"><a href="BracketIF.html">[IF]</a></li>
+        <li role="menuitem"><a href="BracketTHEN.html">[THEN]</a></li>
+        <li role="menuitem"><a href="BracketUNDEFINED.html">[UNDEFINED]</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>

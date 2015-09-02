@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forth 2012: [THEN]</title>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" type="text/css" href="../forth.css" />
+  <script type="text/javascript" src="../forth.js"></script>
+</head><body><div id="body">
+
+
+<div class="wordHead" id="tools:[THEN]">
+  <div class="wordNumber">15.6.2.2533</div>
+  <div class="wordName">[THEN]</div>
+  <div class="wordEnglish">bracket-then</div>
+  <div class="wordList">TOOLS EXT</div>
+</div>
+<div class="wordBody">
+
+  <div class="secdef">
+
+    <div class="secname">Compilation:</div>
+    <div class="sec">
+
+
+      Perform the execution semantics given below.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Execution:</div>
+    <div class="sec">
+
+
+      ( -- )
+      <p />
+      Does nothing. <strong>[THEN]</strong> is an immediate word.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">See:</div>
+    <div class="sec">
+
+ <a href="../rationale.html#rat:tools:[THEN]">A.15.6.2.2533 [THEN]</a>.
+      <p />
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Rationale:</div>
+    <div class="secrationale">
+
+ <!-- A.15.6.2.2533 [THEN] -->
+      Typical use:
+      ... <em>flag</em>
+      <a href="../tools/BracketIF.html">[IF]</a> ...
+      <a href="../tools/BracketELSE.html">[ELSE]</a> ...
+      <strong>[THEN]</strong> ...
+      <p />
+      Software that runs in several system environments often
+      contains some source code that is environmentally dependent.
+      Conditional compilation &mdash; the selective inclusion or
+      exclusion of portions of the source code at compile time &mdash;
+      is one technique that is often used to assist in the
+      maintenance of such source code.
+      <p />
+      Conditional compilation is sometimes done with &quot;smart
+      comments&quot; &mdash; definitions that either skip or do not skip
+      the remainder of the line based on some test. For example:
+      <p />
+      
+            <div class="quote">
+        <div class="tt">
+<a href="../core/bs.html">\</a> If 16-Bit? contains TRUE, lines preceded by 16BIT\ <br />
+          <a href="../core/bs.html">\</a> will be skipped. Otherwise, they will not be skipped.
+          <p />
+          <a href="../core/VARIABLE.html">VARIABLE</a> 16-BIT?
+          <p />
+          <a href="../core/Colon.html">:</a> 16BIT\  <a href="../core/p.html">(</a> -- )  
+          16-BIT? <a href="../core/Fetch.html">@</a>  
+          <a href="../core/IF.html">IF</a>   <a href="../core/POSTPONE.html">POSTPONE</a> <a href="../core/bs.html">\</a>   <a href="../core/THEN.html">THEN</a> <br />
+          <a href="../core/Semi.html">;</a> <a href="../core/IMMEDIATE.html">IMMEDIATE</a>
+          
+          </div>
+        </div>
+      This technique works on a line by line basis, and is good for
+      short, isolated variant code sequences.
+      <p />
+      More complicated conditional compilation problems suggest a
+      nestable method that can encompass more than one source line
+      at a time. The words included in the optional Programming tools
+      extensions word set are useful for this purpose.
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Implementation:</div>
+    <div class="secimplement">
+
+
+      <a href="../core/Colon.html">:</a> <strong>[THEN]</strong> <a href="../core/p.html">(</a> -- ) <a href="../core/Semi.html">;</a> <a href="../core/IMMEDIATE.html">IMMEDIATE</a>
+        
+      </div>
+    </div>
+<div class="secdef">
+
+    <div class="secname">Testing:</div>
+    <div class="sectesting">
+
+
+      <span class="tt">T{ &lt;TRUE&gt;&nbsp;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;111&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;222&nbsp;<strong>[THEN]</strong> -&gt; 111 }T</span> <br />
+      <span class="tt">T{ &lt;FALSE&gt;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;111&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;222&nbsp;<strong>[THEN]</strong> -&gt; 222 }T</span>
+      <p />
+      <a href="../core/bs.html">\</a> <span class="rm">Check words are immediate</span> <br />
+      <a href="../core/Colon.html">:</a> tfind <a href="../core/BL.html">BL</a> <a href="../core/WORD.html">WORD</a> <a href="../core/FIND.html">FIND</a> <a href="../core/Semi.html">;</a> <br />
+      <span class="tt">T{ tfind&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../core/NIP.html">NIP</a> -&gt; 1 }T</span> <br />
+      <span class="tt">T{ tfind&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;<a href="../core/NIP.html">NIP</a> -&gt; 1 }T</span> <br />
+      <span class="tt">T{ tfind&nbsp;<strong>[THEN]</strong>&nbsp;<a href="../core/NIP.html">NIP</a> -&gt; 1 }T</span>
+      <p />
+      <span class="tt">T{ <a href="../core/Colon.html">:</a>&nbsp;pt2&nbsp;<a href="../core/Bracket.html">[</a>&nbsp;&nbsp;0&nbsp;<a href="../right-bracket.html">]</a>&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;1111&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;2222&nbsp;<strong>[THEN]</strong>&nbsp;<a href="../core/Semi.html">;</a>&nbsp;pt2 -&gt; 2222 }T</span> <br />
+      <span class="tt">T{ <a href="../core/Colon.html">:</a>&nbsp;pt3&nbsp;<a href="../core/Bracket.html">[</a>&nbsp;-1&nbsp;<a href="../right-bracket.html">]</a>&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;3333&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;4444&nbsp;<strong>[THEN]</strong>&nbsp;<a href="../core/Semi.html">;</a>&nbsp;pt3 -&gt; 3333 }T</span>
+      <p />
+      <a href="../core/bs.html">\</a> <span class="rm">Code spread over more than 1 line</span> <br />
+      <span class="tt">T{ &lt;TRUE&gt;&nbsp;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;1&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>[THEN]</strong> -&gt; 1&nbsp;2 }T</span><br />
+      <span class="tt">T{ &lt;FALSE&gt;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;2&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;4&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>[THEN]</strong> -&gt; 3&nbsp;4 }T</span>
+      <p />
+      <a href="../core/bs.html">\</a> <span class="rm">Nested</span> <br />
+      <a href="../core/Colon.html">:</a> &lt;T&gt; &lt;TRUE&gt;  <a href="../core/Semi.html">;</a> <br />
+      <a href="../core/Colon.html">:</a> &lt;F&gt; &lt;FALSE&gt; <a href="../core/Colon.html">:</a> <br />
+      <span class="tt">T{ &lt;T&gt;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;1&nbsp;&lt;T&gt;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;2&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;3&nbsp;<strong>[THEN]</strong>&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;4&nbsp;<strong>[THEN]</strong> -&gt; 1&nbsp;2 }T</span> <br />
+      <span class="tt">T{ &lt;F&gt;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;1&nbsp;&lt;T&gt;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;2&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;3&nbsp;<strong>[THEN]</strong>&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;4&nbsp;<strong>[THEN]</strong> -&gt; 4 }T</span> <br />
+      <span class="tt">T{ &lt;T&gt;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;1&nbsp;&lt;F&gt;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;2&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;3&nbsp;<strong>[THEN]</strong>&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;4&nbsp;<strong>[THEN]</strong> -&gt; 1&nbsp;3 }T</span> <br />
+      <span class="tt">T{ &lt;F&gt;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;1&nbsp;&lt;F&gt;&nbsp;<a href="../tools/BracketIF.html">[IF]</a>&nbsp;2&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;3&nbsp;<strong>[THEN]</strong>&nbsp;<a href="../tools/BracketELSE.html">[ELSE]</a>&nbsp;4&nbsp;<strong>[THEN]</strong> -&gt; 4 }T</span>
+      
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div id="menu-bar" role="menubar">
+  <ul>
+    <li role="menu" aria-haspopup="true" class="first">
+      <span id="menu-label-doc" class="with-menu">Forth 2012</span>
+      <div class="menu">
+        <ul id="menu-doc" style="width: 100px;">
+        <li role="menuitem"><a href="../index.html" class="current">Forth 2012</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-chap" class="with-menu">Programming-Tools word set</span>
+      <div class="menu">
+        <ul id="menu-chap" class="scroll-bar" style="width: 265px;">
+        <li role="menuitem"><a href="../foreword.html">Foreword</a></li>
+        <li role="menuitem"><a href="../process.html">Proposals Process</a></li>
+        <li role="menuitem"><a href="../members-2x.html">200<em>x</em> Membership</a></li>
+        <li role="menuitem"><a href="../intro.html">Introduction</a></li>
+        <li role="menuitem"><a href="../notation.html">Terms, notation, and references</a></li>
+        <li role="menuitem"><a href="../usage.html">Usage requirements</a></li>
+        <li role="menuitem"><a href="../doc.html">Documentation requirements</a></li>
+        <li role="menuitem"><a href="../label.html">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../core.html">Glossary</a></li>
+        <li role="menuitem"><a href="../block.html">Block word set</a></li>
+        <li role="menuitem"><a href="../double.html">Double-Number word set</a></li>
+        <li role="menuitem"><a href="../exception.html">Exception word set</a></li>
+        <li role="menuitem"><a href="../facility.html">Facility word set</a></li>
+        <li role="menuitem"><a href="../file.html">File-Access word set</a></li>
+        <li role="menuitem"><a href="../float.html">Floating-Point word set</a></li>
+        <li role="menuitem"><a href="../locals.html">Locals word set</a></li>
+        <li role="menuitem"><a href="../memory.html">Memory-Allocation word set</a></li>
+        <li role="menuitem"><a href="../tools.html" class="current">Programming-Tools word set</a></li>
+        <li role="menuitem"><a href="../search.html">Search-Order word set</a></li>
+        <li role="menuitem"><a href="../string.html">String word set</a></li>
+        <li role="menuitem"><a href="../xchar.html">Extended-Character word set</a></li>
+        <li role="menuitem"><a href="../rationale.html">Rationale</a></li>
+        <li role="menuitem"><a href="../bib.html">Bibliography</a></li>
+        <li role="menuitem"><a href="../diff.html">Compatibility analysis</a></li>
+        <li role="menuitem"><a href="../port.html">Portability guide</a></li>
+        <li role="menuitem"><a href="../implement.html">Reference Implementations</a></li>
+        <li role="menuitem"><a href="../testsuite.html">Test Suite</a></li>
+        <li role="menuitem"><a href="../alpha.html">Alphabetic list of words</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-sec" class="with-menu">Glossary</span>
+      <div class="menu">
+        <ul id="menu-sec" style="width: 255px;">
+        <li role="menuitem"><a href="../tools.html#section.15.1">Introduction</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.2">Additional terms and notation</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.3">Additional usage requirements</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.4">Additional documentation requirements</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.5">Compliance and labeling</a></li>
+        <li role="menuitem"><a href="../tools.html#section.15.6" class="current">Glossary</a></li>
+        </ul>
+      </div>
+    </li>
+    <li role="menu" aria-haspopup="true">
+      <span id="menu-label-word" class="with-menu">[THEN]</span>
+      <div class="menu">
+        <ul id="menu-word" class="scroll-bar" style="width: 202px;">
+        <li role="menuitem"><a href="DotS.html">.S</a></li>
+        <li role="menuitem"><a href="q.html">?</a></li>
+        <li role="menuitem"><a href="DUMP.html">DUMP</a></li>
+        <li role="menuitem"><a href="SEE.html">SEE</a></li>
+        <li role="menuitem"><a href="WORDS.html">WORDS</a></li>
+        <li role="menuitem"><a href="SemiCODE.html">;CODE</a></li>
+        <li role="menuitem"><a href="AHEAD.html">AHEAD</a></li>
+        <li role="menuitem"><a href="ASSEMBLER.html">ASSEMBLER</a></li>
+        <li role="menuitem"><a href="BYE.html">BYE</a></li>
+        <li role="menuitem"><a href="CODE.html">CODE</a></li>
+        <li role="menuitem"><a href="CS-PICK.html">CS-PICK</a></li>
+        <li role="menuitem"><a href="CS-ROLL.html">CS-ROLL</a></li>
+        <li role="menuitem"><a href="EDITOR.html">EDITOR</a></li>
+        <li role="menuitem"><a href="FORGET.html">FORGET</a></li>
+        <li role="menuitem"><a href="NtoR.html">N&gt;R</a></li>
+        <li role="menuitem"><a href="NAMEtoCOMPILE.html">NAME&gt;COMPILE</a></li>
+        <li role="menuitem"><a href="NAMEtoINTERPRET.html">NAME&gt;INTERPRET</a></li>
+        <li role="menuitem"><a href="NAMEtoSTRING.html">NAME&gt;STRING</a></li>
+        <li role="menuitem"><a href="NRfrom.html">NR&gt;</a></li>
+        <li role="menuitem"><a href="STATE.html">STATE</a></li>
+        <li role="menuitem"><a href="SYNONYM.html">SYNONYM</a></li>
+        <li role="menuitem"><a href="TRAVERSE-WORDLIST.html">TRAVERSE-WORDLIST</a></li>
+        <li role="menuitem"><a href="BracketDEFINED.html">[DEFINED]</a></li>
+        <li role="menuitem"><a href="BracketELSE.html">[ELSE]</a></li>
+        <li role="menuitem"><a href="BracketIF.html">[IF]</a></li>
+        <li role="menuitem"><a href="BracketTHEN.html" class="current">[THEN]</a></li>
+        <li role="menuitem"><a href="BracketUNDEFINED.html">[UNDEFINED]</a></li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+</div>
+</body>
+</html>
