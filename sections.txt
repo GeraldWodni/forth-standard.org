@@ -1,0 +1,25 @@
+ stack-effect: 
+ interpretation:
+  'newname interpretation:',
+  'Interpretation:',
+  'newname compilation:'
+  'Compilation:',
+  'name Execution:',
+  'Execution:',
+  'xt Execution:',
+  'local Execution:',
+  'Run-time:',
+  'TO local Run-time:',
+  'TO name Run-time:',
+  'Initiation:',
+  
+
+other:
+  'See:',
+  'Rationale:',
+  'Testing:',
+  'Note:',
+  'Alignment:',
+  'Future:',
+  'Translation rules:',
+  'Implementation:',

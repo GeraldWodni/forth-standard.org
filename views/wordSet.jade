@@ -1,0 +1,15 @@
+//- (c)2015 by Gerald Wodni
+
+extends layout
+
+//block menu
+//    +menu
+
+block content
+    div.box
+        h1= wordSet.name
+        ul.row
+            each word in wordSet.words
+                li.col-xs-4
+                    a(href="/words/#{wordSet.name}/#{word.basename}")
+                        = word.name

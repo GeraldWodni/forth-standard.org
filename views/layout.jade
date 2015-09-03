@@ -1,0 +1,49 @@
+//- (c)2014 by Gerald Wodni
+
+doctype html
+include mixins
++script('/js/jquery.min.js')
+
+mixin menuItem( link, icon, text )
+    li
+        a(href="##{link}")
+            +glyph(icon)
+            span.hidden-xs
+                | 
+                = text
+
+mixin menu
+    ul.navbar-nav
+        +menuItem("start",    "play",             "Start" )
+
+html
+    head
+        title Forth
+        meta(name="viewport",content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width")
+        +style('/css/index.css')
+        +styles
+    body
+        div.wrapper
+            div.navbar.navbar-fixed-top(role='navigation')
+                div.container-fluid
+                    div.navbar-header
+                        a.navbar-brand(href="/",title="Main Link")
+                            | Forth
+                    block menu
+
+            div.container.main-content
+                block content
+
+        footer
+            div.container-fluid
+                div.row
+                    div.col-xs-4
+                        | powered by  
+                        a(href='https://github.com/GeraldWodni/kern.js') kern.js
+                    div.col-xs-8.text-right
+                        | ©copyright 2015 
+                        a(href="http://wodni.at") 
+                            | Gerald Wodni
+
+        +script('/js/bootstrap.min.js')
+        +scripts

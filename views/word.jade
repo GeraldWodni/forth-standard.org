@@ -1,0 +1,15 @@
+//- (c)2015 by Gerald Wodni
+
+extends layout
+
+//block menu
+//    +menu
+
+block content
+    div.box
+        h1= word.name
+        each section in word.sections
+            if section.name !== " "
+                h2= section.name
+
+            div!= section.html
