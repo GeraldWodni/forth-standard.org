@@ -1,0 +1,38 @@
+//- (c)2015 by Gerald Wodni
+
+extends layout
+
+block menu
+    +menu
+
+block content
+
+    +box
+        h1 TODOs
+        ul
+            li breadcrumbs to surf words
+            li discussion for words
+            li show anton &amp; bernd
+
+    +box.todos
+        h4(style="color:red") Motivation
+        p This website was created as a modern entry point to the Forth programming language.
+        p Here are some of the sites that where used for reference (upper=more influence): 
+        ul
+            li
+                +link( "https://www.haskell.org/" )
+                br
+                | very much like I'd like the website to be
+            li
+                +link( "https://www.python.org/" )
+                br
+                | major entry point, all python resources accessible through top menu
+            li
+                +link( "http://php.net/" )
+                br
+                | interactive discussions on every function, helps beginners a lot
+            li
+                +link( "https://isocpp.org/" )
+                br
+                | Has all major elements, but looks outdated
+

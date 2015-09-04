@@ -6,32 +6,44 @@ include mixins
 
 mixin menuItem( link, icon, text )
     li
-        a(href="##{link}")
-            +glyph(icon)
+        a(href="#{link}")
+            +fa(icon)
             span.hidden-xs
                 | 
                 = text
 
 mixin menu
     ul.navbar-nav
-        +menuItem("start",    "play",             "Start" )
+        +menuItem("/words",                     "list-ul",      "Words")
+        +menuItem("http://www.forth200x.org",   "wrench",       "Committee")
+        +menuItem("http://theforth.net",        "gift",         "Packages" )
+        +menuItem("http://forth-ev.de",         "comments-o",   "DE-Community" )
+        +menuItem("http://forth.org",           "comments",     "EN-Community" )
+
+mixin box
+    div.box&attributes(attributes)
+        div.container
+            block
 
 html
     head
         title Forth
         meta(name="viewport",content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width")
+        +favicon("/images/forth-phi-favicon.png")
         +style('/css/index.css')
+        +style('/css/font-awesome.min.css')
         +styles
     body
         div.wrapper
             div.navbar.navbar-fixed-top(role='navigation')
-                div.container-fluid
+                div.container
                     div.navbar-header
                         a.navbar-brand(href="/",title="Main Link")
+                            img(src="/images/forth-phi-favicon.png",alt="Forth Standard Icon: colon followed by the greek letter phi")
                             | Forth
                     block menu
 
-            div.container.main-content
+            div.main-content
                 block content
 
         footer
@@ -40,7 +52,9 @@ html
                     div.col-xs-4
                         | powered by  
                         a(href='https://github.com/GeraldWodni/kern.js') kern.js
-                    div.col-xs-8.text-right
+                    div.col-xs-4.text-center
+                        a(href="/todo") TODOs
+                    div.col-xs-4.text-right
                         | ©copyright 2015 
                         a(href="http://wodni.at") 
                             | Gerald Wodni

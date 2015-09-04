@@ -1,0 +1,227 @@
+// (c) 2014 by Gerald Wodni
+
+@import "bootstrap";
+@import "materials";
+
+.material("Red");
+
+@navbar-height: 50px;
+@footer-height: 30px;
+@light-90: rgba( 255, 255, 255, 0.9 );
+
+@brand-darker:  #3b5998;
+@brand-dark:    @mat-900;
+@brand-light:   #dfe3ee;
+@brand-lighter: #f7f7f7;
+
+@white: #FFFFFF;
+@black: #000000;
+
+.mat( "Grey", 800 );
+@navbar-color: @white;
+@navbar-background: @mat;
+@content-background: @white;
+@footer-color: darken(@navbar-color, 30%);
+@footer-background: @navbar-background;
+
+@link-color: @mat-900;
+@link-hover-color: @mat-400;
+
+@only-xs:  ~"(max-width: @{screen-xs-max})";
+@from-sm:  ~"(min-width: @{screen-sm-min})";
+
+html, body {
+    height: 100%;
+}
+
+.main-content a {
+    color: @link-color;
+
+    &:hover {
+        color: @link-hover-color;
+    }
+}
+
+body {
+    background-color: '#FFF';
+    color: #CCC;
+
+    background: @white;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    @media @only-xs {
+        //background: #555;
+    }
+}
+
+body > .wrapper {
+    height: auto; min-height: 100%;
+
+    padding-top: @navbar-height;
+    padding-bottom: @footer-height;
+}
+
+footer {
+    clear: both;
+    position: relative;
+    height: @footer-height;
+    line-height: @footer-height;
+    vertical-align: middle;
+    margin-top: @footer-height * -1;
+
+    color: @footer-color;
+    background: @footer-background;
+}
+
+.navbar {
+    color: @navbar-color;
+    background: @navbar-background;
+
+    border-bottom: 1px solid #CCC;
+
+    &.mainpage {
+        border-bottom-color: @navbar-background;
+    }
+
+    .navbar-nav {
+        padding-left: 0;
+    }
+
+    @media @only-xs {
+        div.navbar-header {
+            float: left;
+            margin-right: 0;
+        }
+    }
+
+    a, a.navbar-brand {
+        color: @navbar-color;
+        padding: 15px;
+        display: inline-block;
+        font-size: 18px;
+        line-height: 18px;
+        height: 50px;
+
+        text-decoration: none;
+
+        &:hover {
+            background: lighten( @brand-dark, 10%);
+            //background: rgba( 120, 120, 120, 0.7 );
+        }
+
+        &.active {
+            background: @brand-dark;
+            //background: rgba( 150, 150, 150, 0.7 );
+        }
+    }
+
+    a.navbar-brand {
+        font-weight: bold;
+
+        img {
+                display: inline-block;
+                margin-right: 0.4em;
+                //@red-500: #FF0000;
+                //@sceme: "red";
+                //@a: ~"@{sceme}-500";
+        }
+    }
+
+    ul {
+        margin: 0;
+        li {
+            display: inline;
+
+            a {
+                line-height: 16px;
+            }
+        }
+    }
+}
+
+.box {
+    color: #333;
+    padding: 20px;
+    //border: 1px solid green;
+    background: @content-background;
+
+    margin: 15px;
+
+    & *:first-child {
+        margin-top: 0;
+    }
+    & *:last-child {
+        margin-bottom: 0;
+    }
+
+    .btn-primary {
+        margin: 10px 0 5px 0;
+    }
+
+    @media @only-xs {
+        margin-top: 20px;
+    }
+}
+
+.box.forth {
+    color: @navbar-color;
+    background: @navbar-background;
+
+    //.mat( "Lime", "300" );
+    color: @black;
+    background: @white;
+
+    h1 {
+        color: @mat-900;
+
+        img {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        font-size: 50px;
+    }
+
+    code {
+        display: block;
+        color: @mat-900;
+        background-color: @mat-50;
+    }
+}
+
+.box.standard {
+    //.mat( "DeepPurple", "50" );
+    //background: @mat;
+}
+
+.box.systems {
+    //.mat( "DeepPurple", "100" );
+    //background: @mat-100;
+    //background: @mat;
+
+    background-image: url("/images/board.png");
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    .container {
+        border-radius: @border-radius-large;
+        background-color: @light-90;
+
+        padding: 15px;
+    }
+
+    .remark {
+        margin-top: 20px;
+        color: #777;
+    }
+}
+
+.badge {
+    &.embedded  { background-color: @mat-800; }
+    &.gnu       { background-color: @mat-700; }
+    &.android   { background-color: @mat-600; }
+    &.win       { background-color: @mat-500; }
+    &.osx       { background-color: @mat-400; }
+}

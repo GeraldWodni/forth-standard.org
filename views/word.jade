@@ -6,7 +6,7 @@ extends layout
 //    +menu
 
 block content
-    div.box
+    +box
         h1= word.name
         each section in word.sections
             if section.name !== " "
