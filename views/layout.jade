@@ -14,7 +14,7 @@ mixin menuItem( link, icon, text )
 
 mixin menu
     ul.navbar-nav
-        +menuItem("/words",                     "list-ul",      "Words")
+        +menuItem("/standard/words",            "list-ul",      "Words")
         +menuItem("http://www.forth200x.org",   "wrench",       "Committee")
         +menuItem("http://theforth.net",        "gift",         "Packages" )
         +menuItem("http://forth-ev.de",         "comments-o",   "DE-Community" )
@@ -24,6 +24,33 @@ mixin box
     div.box&attributes(attributes)
         div.container
             block
+
+mixin box-document
+    div.box.sidenav
+        div.container-fluid
+            .row
+                .col-md-3.col-sidenav
+                    ul
+                        each documentBasename in standard.sortedDocuments
+                            - var document = standard.documents[ documentBasename ]
+                            li
+                                a(href="/standard/#{document.basename}")
+                                    = document.name
+                .col-md-9.col-content
+                    block
+
+mixin box-word
+    div.box.sidenav
+        div.container-fluid
+            .row
+                .col-md-3.col-sidenav
+                    ul
+                        each word in wordSet.words
+                            li
+                                a(href="/standard/#{wordSet.name}/#{word.basename}")
+                                    = word.name
+                .col-md-9.col-content
+                    block
 
 html
     head

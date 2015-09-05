@@ -2,11 +2,11 @@
 
 extends layout
 
-//block menu
-//    +menu
+block menu
+    +menu
 
 block content
-    +box
+    +box-word
         h1= word.name
         each section in word.sections
             if section.name !== " "

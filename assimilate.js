@@ -14,7 +14,7 @@ function readFile( filename, callback ) {
 
     fs.readFile( filename, function( err, data ) {
         if( err ) {
-            console.log( "ERROR reading latex-html input".bold.red );
+            console.log( "ERROR reading latex-html core".bold.red );
             callback( err );
         }
 
@@ -47,7 +47,7 @@ function readFile( filename, callback ) {
                 var name = $secName.text();
                 sections[ name ] = {
                     name: name,
-                    html: $secName.next().html()
+                    html: adoptSection( $, $secName.next() ).html()
                 };
             });
             word.stackEffect = getStackEffect( sections );
@@ -59,7 +59,19 @@ function readFile( filename, callback ) {
     });
 }
 
-function readDir( dirname, callback ) {
+function adoptSection( $, $section ) {
+    /* replace links */
+    $section.find("a").each( function() {
+        var $this = $(this);
+        var href = $this.attr( "href" );
+        if( href && href.indexOf( "http" ) != 0 )
+            $this.attr( "href", href.replace( /\.html/g, '' ) );
+    });
+
+    return $section;
+}
+
+function readDir( dirname, reader, callback ) {
     fs.readdir( dirname, function( err, files ) {
         if( err ) {
             console.log( "ERROR reading directory '" + dirname + "' contents".bold.red );
@@ -72,9 +84,19 @@ function readDir( dirname, callback ) {
             if( file.indexOf( "." ) === 0 )
                 return done( null, null );
 
-            /* parse file */
             var filename = path.join( dirname, file );
-            readFile( filename, done );
+            fs.stat( filename, function( err, stat ) {
+                if( err )
+                    return callback( err );
+
+                if( stat.isFile() ) {
+                    /* parse file */
+                    reader( filename, done );
+                }
+                else
+                    done( null, null );
+
+            });
 
         }, callback );
     });
@@ -94,7 +116,7 @@ function readWordsets( prefix, callback ) {
                     return done( err );
 
                 if( stat.isDirectory() ) {
-                    readDir( dirname, function( err, wordArray ) {
+                    readDir( dirname, readFile, function( err, wordArray ) {
                         if( err )
                             return done( err );
 
@@ -153,29 +175,114 @@ function getStackEffect( sections ) {
     return stackEffects;
 }
 
+function readDocument( filename, callback ) {
+    fs.readFile( filename, function( err, data ) {
+        if( err ) {
+            console.log( "ERROR reading latex-html document".bold.red );
+            callback( err );
+        }
+
+        /* skip non-html files */
+        if( filename.indexOf(".html") < 0 )
+            return callback( null, null );
+
+        jsdom.env( data.toString(), function( errs, window ) {
+            if( err ) {
+                console.log( "ERROR creating jsenv".bold.red );
+                callback( err );
+            }
+
+            /* parse document */
+            var $ = jquery(window);
+            var $body = $("body");
+
+            $body.find("a").each( function() {
+                var $this = $(this);
+                var href = $this.attr( "href" );
+                if( href && href.indexOf( "http" ) != 0 )
+                    $this.attr( "href", href.replace( /\.html/g, '' ) );
+            });
+
+            /* parse header */
+            var doc = {
+                basename: path.basename( filename, ".html" ),
+                name: $body.find("h1").text(),
+                html: $body.html()
+            };
+
+            console.log( "DOCUMENT".bold.green, filename.yellow );
+            callback( null, doc );
+        });
+    });
+}
+
+function readDocuments( callback ) {
+    readDir( "latex-html", readDocument, function( err, data ) {
+        if( err )
+            return callback( err );
+    
+        var documents = {}; 
+        for( var i = 0; i < data.length; i++ ) {
+            if( data[i] != null ) {
+                var doc = data[i];
+                //console.log( "ADD DOC!".bold.red, doc.basename );
+                documents[ doc.basename ] = doc;
+            }
+        }
+
+        callback( null, documents );
+    });
+}
+
 
 function assimilateAll( filename ) {
     if( typeof filename  == "unknown" )
         throw new Error( "specify filename" );
 
+    /* read all wordsets */
     readWordsets( "latex-html", function( err, wordSetArray ) {
         if( err )
             throw err;
 
+        /* create dictionary */
         var wordSets = {};
         wordSetArray.forEach( function( wordSet ) {
             if( wordSet !== null )
                 wordSets[ wordSet.name ] = wordSet;
         });
 
-        fs.writeFile( filename, JSON.stringify( wordSets, null, 4 ) );
-        
-        //console.log( "WordSets".bold.magenta, util.inspect( wordSets, { depth: null, colors: true } ) );
+        /* add document */
+        readDocuments( function( err, documents ) {
+            if( err )
+                throw err;
+
+            var standard = {
+                wordSets: wordSets,
+                documents: documents
+            };
+
+            /* add extensions */
+            var extensions = JSON.parse( fs.readFileSync( "standards/" + filename + ".ext.json" ) );
+            _.extend( standard, extensions );
+
+            fs.writeFile( "standards/" + filename + ".json", JSON.stringify( standard, null, 4 ) );
+            
+            //console.log( "WordSets".bold.magenta, util.inspect( wordSets, { depth: null, colors: true } ) );
+        });
+    });
+}
+
+function assimilateDocuments() {
+    readDocuments( function( err, documents ) {
+        if( err )
+            return console.log( err );
+
+        console.log( documents );
     });
 }
 
 function assimilateSelection() {
-    readDir( "latex-html/selected", function( err, wordArray ) {
+    readDir( "latex-html/selected", readFile, function( err, wordArray ) {
         console.log( "DONE".bold.yellow );
         if( err )
             throw err;
@@ -227,4 +334,5 @@ function parseHtml( filename ) {
 
 //assimilateSingleWord();
 //assimilateSelection();
+//assimilateDocuments();
 assimilateAll( process.argv[2] );

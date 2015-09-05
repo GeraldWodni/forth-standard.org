@@ -6,10 +6,10 @@ block menu
     +menu
 
 block content
-    +box
+    +box-document
         h1 Wordsets
         ul.row
-            each wordSet in wordSets
+            each wordSet in standard.wordSets
                 li.col-xs-4
-                    a(href="/words/#{wordSet.name}")
+                    a(href="/standard/#{wordSet.name}")
                         = wordSet.name

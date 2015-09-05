@@ -140,6 +140,23 @@ footer {
     }
 }
 
+.col-sidenav {
+    .mat( "Grey", 200 );
+    color: @white;
+    background: @mat;
+
+    ul {
+        padding: 15px 15px 15px 0px;
+        
+        list-style: none;
+    }
+}
+
+.col-content {
+    margin-top: 15px;
+    padding-top: 20px;
+}
+
 .box {
     color: #333;
     padding: 20px;
@@ -162,6 +179,14 @@ footer {
     @media @only-xs {
         margin-top: 20px;
     }
+}
+
+.box.sidenav {
+    margin-left: 0;
+    padding-left: 0;
+
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .box.forth {
