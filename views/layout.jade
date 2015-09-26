@@ -3,22 +3,30 @@
 doctype html
 include mixins
 +script('/js/jquery.min.js')
++script('/js/site.js')
 
 mixin menuItem( link, icon, text )
     li
-        a(href="#{link}")
+        a(href="#{link}",title=text.all||text)
             +fa(icon)
-            span.hidden-xs
-                | 
-                = text
+            | 
+            if( _.isObject( text ) )
+                each size in ["sm", "md", "lg"]
+                    span(class="inline-#{size}")
+                        if _.has( text, size )
+                            = text[size]
+                        else
+                            = text.all
+            else
+                span.hidden-xs= text
 
 mixin menu
     ul.navbar-nav
         +menuItem("/standard/words",            "list-ul",      "Words")
         +menuItem("http://www.forth200x.org",   "wrench",       "Committee")
-        +menuItem("http://theforth.net",        "gift",         "Packages" )
-        +menuItem("http://forth-ev.de",         "comments-o",   "DE-Community" )
-        +menuItem("http://forth.org",           "comments",     "EN-Community" )
+        +menuItem("http://theforth.net",        "cube",         "Packages" )
+        +menuItem("http://forth-ev.de",         "comments-o",   {sm:"DE",all:"DE-Community"} )
+        +menuItem("http://forth.org",           "comments",     {sm:"EN",all:"EN-Community"} )
 
 mixin box
     div.box&attributes(attributes)
@@ -40,10 +48,15 @@ mixin box-document
                     block
 
 mixin box-word
+    div.show-sidenav.toggle
+        +fa("bars")
+
     div.box.sidenav
         div.container-fluid
             .row
                 .col-md-3.col-sidenav
+                    .toggle
+                        +fa("chevron-left")
                     ul
                         each word in wordSet.words
                             li
@@ -85,6 +98,10 @@ html
                         | ©copyright 2015 
                         a(href="http://wodni.at") 
                             | Gerald Wodni
-
+            div#bootstrapSize
+                div.visible-xs
+                div.visible-sm
+                div.visible-md
+                div.visible-lg
         +script('/js/bootstrap.min.js')
         +scripts

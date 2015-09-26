@@ -27,8 +27,30 @@
 @link-color: @mat-900;
 @link-hover-color: @mat-400;
 
+/* generic helpers */
+@until-sm: ~"(max-width: @{screen-sm-max})";
 @only-xs:  ~"(max-width: @{screen-xs-max})";
+@only-sm:  ~"(min-width: @{screen-sm-min}) and (max-width: @{screen-sm-max})";
+@only-md:  ~"(min-width: @{screen-md-min}) and (max-width: @{screen-md-max})";
+@only-lg:  ~"(min-width: @{screen-lg-min})";
 @from-sm:  ~"(min-width: @{screen-sm-min})";
+
+.inline-xs { display: none; }
+@media @only-xs {
+    .inline-xs { display: inline; }
+}
+.inline-sm { display: none; }
+@media @only-sm {
+    .inline-sm { display: inline; }
+}
+.inline-md { display: none; }
+@media @only-md {
+    .inline-md { display: inline; }
+}
+.inline-lg { display: none; }
+@media @only-lg {
+    .inline-lg { display: inline; }
+}
 
 html, body {
     height: 100%;
@@ -86,6 +108,10 @@ footer {
 
     .navbar-nav {
         padding-left: 0;
+
+        & > li > a {
+            padding: 15px;  // fixed padding also on xs
+        }
     }
 
     @media @only-xs {
@@ -119,6 +145,18 @@ footer {
     a.navbar-brand {
         font-weight: bold;
 
+        @media @only-xs {
+            color: #FF0000;
+        }
+
+        @media @only-sm {
+            color: #FFFF00;
+        }
+
+        @media @only-md {
+            color: #00FF00;
+        }
+
         img {
                 display: inline-block;
                 margin-right: 0.4em;
@@ -140,15 +178,59 @@ footer {
     }
 }
 
+/* sidenav + toggle button */
+.toggle {
+    width: 30px;
+    height: 30px;
+
+    .mat( "Grey", 300 );
+    border: 1px solid @mat-900;
+    border-top: none;
+    border-left: none;
+    border-bottom-right-radius: @border-radius-large;
+
+    color: @white;
+    background: @mat;
+
+    font-size: 20px;
+
+    text-align: center;
+    color: @link-color;
+
+    cursor: pointer;
+}
+
+.show-sidenav {
+    display: none;
+    position: absolute;
+    z-index: 10;
+}
+
+
 .col-sidenav {
-    .mat( "Grey", 200 );
+    .mat( "Grey", 300 );
     color: @white;
     background: @mat;
 
     ul {
         padding: 15px 15px 15px 0px;
-        
+
         list-style: none;
+    }
+
+    .toggle {
+        float: right;
+        width: 30px;
+        position: relative;
+        left: 15px+30px;
+    }
+
+
+    @media @until-sm {
+        border: 1px solid @mat-900;
+        border-top: none;
+        border-left: none;
+        border-bottom-right-radius: @border-radius-large;
     }
 }
 
