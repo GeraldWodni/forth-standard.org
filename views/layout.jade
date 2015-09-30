@@ -34,10 +34,15 @@ mixin box
             block
 
 mixin box-document
+    div.show-sidenav.toggle
+        +fa("bars")
+
     div.box.sidenav
         div.container-fluid
             .row
                 .col-md-3.col-sidenav
+                    .toggle
+                        +fa("chevron-left")
                     ul
                         each documentBasename in standard.sortedDocuments
                             - var document = standard.documents[ documentBasename ]

@@ -8,8 +8,10 @@ block menu
 block content
     +box-document
         h1 Wordsets
-        ul.row
+        ul.row.boxList
             each wordSet in standard.wordSets
                 li.col-xs-4
-                    a(href="/standard/#{wordSet.name}")
-                        = wordSet.name
+                    a(href="/standard/#{wordSet.name}").boxItem
+                        +fa("cube").icon
+                        .name
+                            = wordSet.name
