@@ -8,10 +8,11 @@ block menu
 block content
     +box-document
         h1 Wordsets
+        p Quick access to wordsets.
         ul.row.boxList
-            each wordSet in standard.wordSets
+            each wordSetName in standard.sortedWordSets
                 li.col-xs-4
-                    a(href="/standard/#{wordSet.name}").boxItem
-                        +fa("cube").icon
+                    a(href="/standard/#{wordSetName}").boxItem.wordSet
+                        +fa("list").icon
                         .name
-                            = wordSet.name
+                            = wordSetName

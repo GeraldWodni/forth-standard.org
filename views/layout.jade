@@ -44,11 +44,19 @@ mixin box-document
                     .toggle
                         +fa("chevron-left")
                     ul
+                        - var currentDocument = document;
                         each documentBasename in standard.sortedDocuments
-                            - var document = standard.documents[ documentBasename ]
+                            - var document = standard.documents[ documentBasename ];
                             li
                                 a(href="/standard/#{document.basename}")
                                     = document.name
+                                if currentDocument && currentDocument.basename == documentBasename && documentBasename in standard.wordSets
+                                    - var wordSet = standard.wordSets[ documentBasename ];
+                                    ul
+                                        each word in wordSet.words
+                                            li
+                                                a(href="/standard/#{wordSet.name}/#{word.basename}")
+                                                    = word.name
                 .col-md-9.col-content
                     block
 
@@ -62,6 +70,8 @@ mixin box-word
                 .col-md-3.col-sidenav
                     .toggle
                         +fa("chevron-left")
+                    a(href="/standard/" + wordSet.name).document
+                        = standard.documents[ wordSet.name ].name
                     ul
                         each word in wordSet.words
                             li

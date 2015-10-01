@@ -209,13 +209,23 @@ footer {
 
 .col-sidenav {
     .mat( "Grey", 300 );
-    color: @white;
+    color: @link-color;
     background: @mat;
+
+    a.document {
+        display: block;
+        padding-top: 15px;
+    }
 
     ul {
         padding: 15px 15px 15px 0px;
 
         list-style: none;
+
+        ul {
+            padding: 0 0 0 20px;
+            list-style: disc;
+        }
     }
 
     .toggle {
@@ -355,6 +365,10 @@ footer {
         color: @text-color;
         margin-left: @avatarSize + 5px;
         line-height: @avatarSize;
+    }
+
+    &.wordSet .name {
+        font-size:20px;
     }
 
     &:hover {
