@@ -22,11 +22,16 @@ mixin menuItem( link, icon, text )
 
 mixin menu
     ul.navbar-nav
-        +menuItem("/standard/words",            "list-ul",      "Words")
+        +menuItem("/standard/words",            "list-ul",      "Standard")
         +menuItem("http://www.forth200x.org",   "wrench",       "Committee")
         +menuItem("http://theforth.net",        "cube",         "Packages" )
         +menuItem("http://forth-ev.de",         "comments-o",   {sm:"DE",all:"DE-Community"} )
         +menuItem("http://forth.org",           "comments",     {sm:"EN",all:"EN-Community"} )
+        if loggedIn
+            +menuItem("/profile",    "user",         "Profile"     )
+            +menuItem("/logout",     "sign-out",     "Logout"    )
+        else
+            //+menuItem("/profile",    "sign-in",      "Login/Sign up"     )
 
 mixin box
     div.box&attributes(attributes)
@@ -57,8 +62,9 @@ mixin box-document
                                             li
                                                 a(href="/standard/#{wordSet.name}/#{word.basename}")
                                                     = word.name
-                .col-md-9.col-content
-                    block
+                .col-md-9.col-content.forth-200x
+                    .forth-200x-wrapper
+                        block
 
 mixin box-word
     div.show-sidenav.toggle
@@ -77,8 +83,9 @@ mixin box-word
                             li
                                 a(href="/standard/#{wordSet.name}/#{word.basename}")
                                     = word.name
-                .col-md-9.col-content
-                    block
+                .col-md-9.col-content.forth-200x
+                    .forth-200x-wrapper
+                        block
 
 html
     head
