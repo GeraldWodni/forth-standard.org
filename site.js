@@ -54,6 +54,10 @@ module.exports = {
             k.jade.render( req, res, "todo" );
         });
 
+        k.router.get("/contact", function( req, res ) {
+            k.jade.render( req, res, "contact" );
+        });
+
         k.router.get("/", function( req, res ) {
             k.jade.render( req, res, "home" );
         });
