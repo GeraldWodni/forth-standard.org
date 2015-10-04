@@ -91,7 +91,7 @@ html
     head
         title Forth
         meta(name="viewport",content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width")
-        +favicon("/images/forth-phi-favicon.png")
+        +favicon("/images/favicon.ico")
         +style('/css/index.css')
         +style('/css/font-awesome.min.css')
         +styles
@@ -101,7 +101,7 @@ html
                 div.container
                     div.navbar-header
                         a.navbar-brand(href="/",title="Main Link")
-                            img(src="/images/forth-phi-favicon.png",alt="Forth Standard Icon: colon followed by the greek letter phi")
+                            img(src="/images/favicon.png",alt="Forth Standard Icon: colon followed by semicolon")
                             | Forth
                     block menu
 
@@ -114,12 +114,13 @@ html
                     div.col-xs-4
                         | powered by  
                         a(href='https://github.com/GeraldWodni/kern.js') kern.js
-                    div.col-xs-4.text-center
-                        a(href="/todo") TODOs
-                    div.col-xs-4.text-right
-                        | ©copyright 2015 
-                        a(href="http://wodni.at") 
-                            | Gerald Wodni
+                    //-div.col-xs-4.text-center
+                    //-a(href="/todo") TODOs
+                    div.col-xs-8.text-right
+                        //a(href="http://wodni.at") 
+                        span.debug-size
+                            | ©
+                        | copyright 2015 Forth-Standard-Committee
             div#bootstrapSize
                 div.visible-xs
                 div.visible-sm

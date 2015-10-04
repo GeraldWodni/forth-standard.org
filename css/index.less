@@ -95,6 +95,21 @@ footer {
 
     color: @footer-color;
     background: @footer-background;
+
+
+    .debug-size { 
+        @media @only-xs {
+            color: #FF0000;
+        }
+
+        @media @only-sm {
+            color: #FFFF00;
+        }
+
+        @media @only-md {
+            color: #00FF00;
+        }
+    }
 }
 
 .navbar {
@@ -145,18 +160,6 @@ footer {
 
     a.navbar-brand {
         font-weight: bold;
-
-        @media @only-xs {
-            color: #FF0000;
-        }
-
-        @media @only-sm {
-            color: #FFFF00;
-        }
-
-        @media @only-md {
-            color: #00FF00;
-        }
 
         img {
                 display: inline-block;
@@ -297,6 +300,7 @@ footer {
         img {
             display: inline-block;
             margin-right: 20px;
+            margin-bottom: 7px;
         }
 
         font-size: 50px;
