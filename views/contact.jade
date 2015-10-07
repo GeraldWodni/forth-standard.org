@@ -2,9 +2,16 @@
 
 extends layout
 
+block menu
+    +menu
+
 block content
 
     +box
         h1 Contact
         p
             | This site is still under heavy work, please allow for some more weeks for an contact form.
+        p
+            | Alternatively you can also file an 
+            +elink("https://github.com/GeraldWodni/forth-standard.org/issues", "issue on github")
+            | .

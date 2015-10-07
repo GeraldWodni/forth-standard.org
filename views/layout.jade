@@ -7,7 +7,7 @@ include mixins
 
 mixin menuItem( link, icon, text )
     li
-        a(href="#{link}",title=text.all||text)
+        a(href="#{link}",title=text.all||text,target=(link.indexOf("http://")==0?"_blank":false))
             +fa(icon)
             | 
             if( _.isObject( text ) )
@@ -113,7 +113,7 @@ html
                 div.row
                     div.col-xs-4
                         | powered by  
-                        a(href='https://github.com/GeraldWodni/kern.js') kern.js
+                        a(href='https://github.com/GeraldWodni/kern.js',target="_blank") kern.js
                     //-div.col-xs-4.text-center
                     //-a(href="/todo") TODOs
                     div.col-xs-8.text-right
