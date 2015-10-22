@@ -6,7 +6,7 @@ include mixins
 +script('/js/site.js')
 
 mixin menuItem( link, icon, text )
-    li
+    li&attributes(attributes)
         a(href="#{link}",title=text.all||text,target=(link.indexOf("http://")==0?"_blank":false))
             +fa(icon)
             | 
@@ -25,8 +25,8 @@ mixin menu
         +menuItem("/standard/words",            "list-ul",      "Standard")
         +menuItem("http://www.forth200x.org",   "wrench",       "Committee")
         +menuItem("http://theforth.net",        "cube",         "Packages" )
-        +menuItem("http://forth-ev.de",         "comments-o",   {sm:"DE",all:"DE-Community"} )
-        +menuItem("http://forth.org",           "comments",     {sm:"EN",all:"EN-Community"} )
+        +menuItem("http://forth-ev.de",         "comments-o",   {sm:"DE",all:"DE-Community"} ).hidden-314
+        +menuItem("http://forth.org",           "comments",     {sm:"EN",all:"EN-Community"} ).hidden-370
         if loggedIn
             +menuItem("/profile",    "user",         "Profile"     )
             +menuItem("/logout",     "sign-out",     "Logout"    )

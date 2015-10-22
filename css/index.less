@@ -53,6 +53,14 @@
     .inline-lg { display: inline; }
 }
 
+@media (max-width: 370px) {
+    .hidden-370 { display: none !important; }
+}
+
+@media (max-width: 314px) {
+    .hidden-314 { display: none !important; }
+}
+
 html, body {
     height: 100%;
 }
@@ -275,6 +283,9 @@ footer {
 
     @media @only-xs {
         margin-top: 20px;
+
+        padding: 0;
+        margin: 0;
     }
 }
 
