@@ -31,7 +31,7 @@ function readFile( filename, callback ) {
 
             /* parse header */
             var word = {
-                id:         $wordHead.attr("id"),
+                id:         renameWordset( $wordHead.attr("id") ),
                 number:     $wordHead.find(".wordNumber").text(),
                 name:       $wordHead.find(".wordName").text(),
                 english:    $wordHead.find(".wordEnglish").text(),
@@ -59,13 +59,22 @@ function readFile( filename, callback ) {
     });
 }
 
+function renameWordset( name ) {
+    return name.replace( /floating/, "float" ).replace( /local/, "locals" );
+}
+
+function rewriteLink( href ) {
+    return href.replace( /\.html/g, '' ).replace(/local\//g, "locals/").replace(/floating\//g, "float/" )
+        .replace(/rat:floating/, 'rat:float').replace(/rat:local/, 'rat:locals');
+}
+
 function adoptSection( $, $section ) {
     /* replace links */
     $section.find("a").each( function() {
         var $this = $(this);
         var href = $this.attr( "href" );
         if( href && href.indexOf( "http" ) != 0 )
-            $this.attr( "href", href.replace( /\.html/g, '' ) );
+            $this.attr( "href", rewriteLink( href ) );
     });
 
     return $section;
@@ -200,7 +209,19 @@ function readDocument( filename, callback ) {
                 var $this = $(this);
                 var href = $this.attr( "href" );
                 if( href && href.indexOf( "http" ) != 0 )
-                    $this.attr( "href", href.replace( /\.html/g, '' ) );
+                    $this.attr( "href", rewriteLink( href ) );
+
+                var name = $this.attr( "name" );
+                if( name && name.indexOf( "rat:" ) >= 0 )
+                    $this.attr("name", rewriteLink( name ) );
+            });
+
+            /* rename wordsets */
+            $body.find("[id]").each( function() {
+                var $this = $(this);
+                var id = $this.attr("id");
+                if( id && id.indexOf( "rat:" ) >= 0 )
+                    $this.attr( "id", rewriteLink( id ) );
             });
 
             /* parse header */
@@ -247,8 +268,12 @@ function assimilateAll( filename ) {
         /* create dictionary */
         var wordSets = {};
         wordSetArray.forEach( function( wordSet ) {
-            if( wordSet !== null )
-                wordSets[ wordSet.name ] = wordSet;
+            if( wordSet !== null ) {
+                /* rename wordsets */
+                var name = renameWordset( wordSet.name );
+                wordSet.name = name;
+                wordSets[ name ] = wordSet;
+            }
         });
 
         /* add document */
