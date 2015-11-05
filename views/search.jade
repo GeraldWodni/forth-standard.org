@@ -1,0 +1,38 @@
+//- (c)2015 by Gerald Wodni
+
+extends layout
+
+block menu
+    +menu
+
+block content
+
+    +box
+        h1 Search
+        form(method="post").form-inline
+            .form-group
+                input(type="text",name="search").form-control
+            |  
+            button(type="submit").btn.btn-default
+                +fa("search")
+
+        if matches
+            if matches.length === 0
+                h2 No results
+            else
+                h2 Results:
+                ul.list-group
+                    each match in matches
+                        each word in match
+                            li.list-group-item
+                                a(href="/standard/#{word.list}/#{word.basename}")
+                                    = word.name
+                                |  
+                                a(href="/standard/#{word.list}")
+                                    span.badge
+                                        = word.list
+            
+            
+
+
+            

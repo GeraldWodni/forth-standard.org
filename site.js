@@ -8,12 +8,56 @@ module.exports = {
     setup: function( k ) {
 
         var standard = { wordSets: {} };
+        var searchIndex = {};
+
         k.readHierarchyFile( "forth-standard.org", "standards/2012.json", function( err, content ) {
             standard = JSON.parse( content );
+            _.each( standard.wordSets, function( wordSet ) {
+                _.each( wordSet.words, function( word ) {
+                    var index = word.name.toLowerCase();
+                    var matches = searchIndex[index] || [];
+                    matches.push({
+                        list: wordSet.name,
+                        basename: word.basename,
+                        name: word.name,
+                        english: word.english
+                    });
+                    searchIndex[index] = matches;
+                });
+            });
         });
 
         k.router.get("/standard/words", function( req, res ) {
             k.jade.render( req, res, "words", { standard: standard } );
+        });
+
+        /* search index for matching words */
+        function searchWords( search ) {
+            var matches = [];
+            var keys = _.keys( searchIndex );
+            for( var i = 0; i < keys.length; i++ ) {
+                var key = keys[i];
+                if( key.indexOf( search ) >= 0 )
+                    matches.push( searchIndex[key] );
+            }
+            return matches;
+        }
+
+        /* TODO: rest API for AJAX search */
+        k.router.get("/search/*", function( req, res ) {
+            var search = decodeURI(req.path).substr(8);
+            res.json( searchWords( search ) );
+        });
+
+        k.router.post("/search", function( req, res ) {
+            k.postman( req, res, function() {
+                var search = req.postman.raw("search");
+                k.jade.render( req, res, "search", { matches: searchWords( search ) } );
+            });
+        });
+
+        k.router.get("/search", function( req, res ) {
+            k.jade.render( req, res, "search" );
         });
 
         k.router.get("/standard/:wordSet/:wordBasename", function( req, res ) {
