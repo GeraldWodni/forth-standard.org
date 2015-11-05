@@ -6,7 +6,7 @@ include mixins
 +script('/js/site.js')
 
 mixin menuItem( link, icon, text )
-    li
+    li&attributes(attributes)
         a(href="#{link}",title=text.all||text,target=(link.indexOf("http://")==0?"_blank":false))
             +fa(icon)
             | 
@@ -26,8 +26,8 @@ mixin menu
         +menuItem("http://www.forth200x.org",   "wrench",       "Committee")
         +menuItem("http://theforth.net",        "cube",         "Packages" )
         +menuItem("/search",                    "search",       "Search"   )
-        //+menuItem("http://forth-ev.de",         "comments-o",   {sm:"DE",all:"DE-Community"} )
-        //+menuItem("http://forth.org",           "comments",     {sm:"EN",all:"EN-Community"} )
+        //+menuItem("http://forth-ev.de",         "comments-o",   {sm:"DE",all:"DE-Community"} ).hidden-314
+        //+menuItem("http://forth.org",           "comments",     {sm:"EN",all:"EN-Community"} ).hidden-370
         if loggedIn
             +menuItem("/profile",    "user",         "Profile"     )
             +menuItem("/logout",     "sign-out",     "Logout"    )
@@ -103,7 +103,8 @@ html
                     div.navbar-header
                         a.navbar-brand(href="/",title="Main Link")
                             img(src="/images/favicon.png",alt="Forth Standard Icon: colon followed by semicolon")
-                            | Forth
+                            span.hidden-xs
+                                | Forth
                     block menu
 
             div.main-content
