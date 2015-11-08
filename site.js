@@ -45,13 +45,13 @@ module.exports = {
 
         /* TODO: rest API for AJAX search */
         k.router.get("/search/*", function( req, res ) {
-            var search = decodeURI(req.path).substr(8);
+            var search = decodeURI(req.path).substr(8).toLowerCase();
             res.json( searchWords( search ) );
         });
 
         k.router.post("/search", function( req, res ) {
             k.postman( req, res, function() {
-                var search = req.postman.raw("search");
+                var search = req.postman.raw("search").toLowerCase();
                 k.jade.render( req, res, "search", { matches: searchWords( search ) } );
             });
         });
