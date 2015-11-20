@@ -20,6 +20,10 @@ mixin menuItem( link, icon, text )
             else
                 span.hidden-xs= text
 
+mixin gravatar( emailMd5, name, size, def )
+    - def = def || "retro"
+    img(src="http://www.gravatar.com/avatar/#{emailMd5}?s=#{size}&d=#{def}",alt="avatar of #{name}")&attributes(attributes)
+
 mixin menu
     ul.navbar-nav
         +menuItem("/standard/words",            "list-ul",      "Standard")

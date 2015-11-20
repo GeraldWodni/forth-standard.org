@@ -1,0 +1,31 @@
+//- (c)2015 by Gerald Wodni
+
+extends layout
+
+block content
+    .container
+        .row
+            .col-md-8
+                h2
+                    | Contributions by 
+                    = user.name
+                if manage
+                    //- a.btn.btn-primary(href="/profile/upload")
+                    //-     i.fa.fa-plus
+                    //-     |  Upload package
+                    //- |  
+                    a.btn.btn-default(href="/profile/change-password")
+                        i.fa.fa-key
+                        |  Change password
+
+                uls.fa-ul
+                    each contribution in contributions
+                        li
+                            +fa("li fa fa-cube")
+                            a(href="#{contribution.url}")
+                                h3= contribution.subject
+            .col-md-4
+                h1.text-center
+                    +gravatar( user.emailMd5, user.name, 496 ).img-responsive
+                    = user.name
+
