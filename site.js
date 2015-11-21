@@ -49,7 +49,7 @@ module.exports = {
         k.router.get("/favicon.ico", k.serveStaticFile( "images/favicon.ico" ) );
 
         k.router.get("/standard/words", function( req, res ) {
-            k.jade.render( req, res, "words", { standard: standard } );
+            k.jade.render( req, res, "words", vals( req, { standard: standard } ) );
         });
 
         /* search index for matching words */
@@ -73,12 +73,12 @@ module.exports = {
         k.router.post("/search", function( req, res ) {
             k.postman( req, res, function() {
                 var search = req.postman.raw("search").toLowerCase();
-                k.jade.render( req, res, "search", { matches: searchWords( search ) } );
+                k.jade.render( req, res, "search", vals( req, { matches: searchWords( search ) } ) );
             });
         });
 
         k.router.get("/search", function( req, res ) {
-            k.jade.render( req, res, "search" );
+            k.jade.render( req, res, "search", vals( req ) );
         });
 
         function contributions( callback ) {
@@ -97,12 +97,12 @@ module.exports = {
             var wordBasename = req.requestman.id( "wordBasename" );
 
             if( wordSetName in standard.wordSets && wordBasename in standard.wordSets[ wordSetName ].words )
-                k.jade.render( req, res, "word", {
+                k.jade.render( req, res, "word", vals( req, {
                     standard: standard,
                     wordSet: standard.wordSets[ wordSetName ],
                     word: standard.wordSets[ wordSetName ].words[ wordBasename ],
                     contributions: contributions
-                } );
+                } ) );
             else
                 res.json( { "NOT": "FOUND" } );
         }));
@@ -122,19 +122,19 @@ module.exports = {
             var document = req.requestman.id( "document" );
 
             if( document in standard.documents )
-                k.jade.render( req, res, "document", { standard: standard, document: standard.documents[ document ] } );
+                k.jade.render( req, res, "document", vals( req, { standard: standard, document: standard.documents[ document ] } ) );
             else if( wordSetName in standard.wordSets )
-                k.jade.render( req, res, "wordSet", { standard: standard, wordSet: standard.wordSets[ wordSetName ] } );
+                k.jade.render( req, res, "wordSet", vals( req, { standard: standard, wordSet: standard.wordSets[ wordSetName ] } ) );
             else
                 res.json( { "NOT": "FOUND" } );
         });
 
         k.router.get("/todo", function( req, res ) {
-            k.jade.render( req, res, "todo" );
+            k.jade.render( req, res, "todo", vals( req ) );
         });
 
         k.router.get("/contact", function( req, res ) {
-            k.jade.render( req, res, "contact" );
+            k.jade.render( req, res, "contact", vals( req ) );
         });
 
         /* user management */
@@ -158,6 +158,9 @@ module.exports = {
                 });
             }
         }} );
+
+        /* user management */
+        k.useSiteModule( "/profile", "forth-standard.org", "contributions.js", { setup: { vals: vals } } );
 
         /* home */
         k.router.get("/", function( req, res ) {

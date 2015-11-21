@@ -1,0 +1,33 @@
+extends layout
+
+block menu
+    +menu
+
+block content
+    .container
+        form(method='post',role='form')
+            h3
+                | Contribute to 
+                = url
+            p
+                | Please compose your username out of A-Z, a-z, 0-9, '_' and '-', other characters are stripped.
+                br
+                | We recommend 
+                b GivennameLastname 
+                |  i.e. 
+                b ChuckMoore
+
+            +enum-field("type", "Type", {
+                "example": "Example - Explain how this can be used",
+                "testcase":"Testcase - Suggest new testcases to be added",
+                "comment":"Comment - Augment the current definition"
+            })
+            +text-field("subject", "Subject")
+            .form-group
+                label Text - 
+                    | You can use
+                    a(href="https://help.github.com/articles/markdown-basics/",target="_blank")  Markdown
+                textarea(name="text",rows="10").form-control
+            a.btn.btn-default.pull-right(href=url) Back
+            button.btn.btn-primary(type='submit',name='add',value='yes') Submit
+            button.btn.btn-default(type='submit',name='preview',value='yes') Preview
