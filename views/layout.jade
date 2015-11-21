@@ -36,7 +36,7 @@ mixin menu
             +menuItem("/profile",    "user",         "Profile"     )
             +menuItem("/logout",     "sign-out",     "Logout"    )
         else
-            //+menuItem("/profile",    "sign-in",      "Login/Sign up"     )
+            +menuItem("/profile",    "sign-in",      "Login/Sign up"     )
 
 mixin box
     div.box&attributes(attributes)
@@ -91,6 +91,8 @@ mixin box-word
                 .col-md-9.col-content.forth-200x
                     .forth-200x-wrapper
                         block
+                        include contributions
+
 
 html
     head

@@ -2,7 +2,7 @@
 
 @import "bootstrap";
 @import "materials";
-@import "forth";
+
 
 .material("Red");
 
@@ -35,6 +35,8 @@
 @only-md:  ~"(min-width: @{screen-md-min}) and (max-width: @{screen-md-max})";
 @only-lg:  ~"(min-width: @{screen-lg-min})";
 @from-sm:  ~"(min-width: @{screen-sm-min})";
+
+@import "forth";
 
 .inline-xs { display: none; }
 @media @only-xs {
@@ -75,7 +77,7 @@ html, body {
 
 body {
     background-color: '#FFF';
-    color: #CCC;
+    color: @text-color;
 
     background: @white;
     background-repeat: no-repeat;
