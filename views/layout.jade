@@ -24,6 +24,11 @@ mixin gravatar( emailMd5, name, size, def )
     - def = def || "retro"
     img(src="http://www.gravatar.com/avatar/#{emailMd5}?s=#{size}&d=#{def}",alt="avatar of #{name}")&attributes(attributes)
 
+mixin avatar( user, size )
+    a.avatar(href="/~#{user.name}")
+        span.name= user.name
+        +gravatar( user.emailMd5, user.name, size )
+
 mixin menu
     ul.navbar-nav
         +menuItem("/standard/words",            "list-ul",      "Standard")

@@ -1,0 +1,37 @@
+extends layout
+
+block menu
+    +menu
+
+block content
+    .container
+        h1
+            | Review Contributions
+        p
+            | Contributions submitted by moderated users are shown here.
+
+
+        +messages(messages)
+
+        each contribution in contributions.items
+            .preview.contribution-wrapper
+                a(href=contribution.contributions.url, target="_blank")
+                    = contribution.contributions.url
+                h2
+                    +avatar( contribution.users, 30 )
+                    = contribution.contributions.subject
+                .markdown
+                    != contribution.contributions.markdownText
+
+                .actions
+                    form(method="post")
+                        +hidden-field("id", contribution.contributions.id)
+                        button(type="submit",name="accept").btn.btn-success
+                            +fa("check-square")
+                            |  Accept
+                        |  
+                        button(type="submit",name="delete").btn.btn-danger
+                            +fa("trash")
+                            |  Delete
+
+

@@ -18,13 +18,18 @@ block content
                     //-     |  Upload package
                     //- |  
                     a.btn.btn-default(href="/profile/change-password")
-                        i.fa.fa-key
+                        +fa("key")
                         |  Change password
+                    if user.state=='moderator'
+                        |  
+                        a.btn.btn-default(href="/profile/review-contributions")
+                            +fa("check-square")
+                            |  Review Contributions
 
                 uls.fa-ul
                     each contribution in contributions
                         li
-                            +fa("li fa fa-cube")
+                            +fa("li fa fa-comment-o")
                             a(href="#{contribution.url}")
                                 h3= contribution.subject
             .col-md-4

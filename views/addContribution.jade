@@ -18,9 +18,7 @@ block content
         if preview
             .preview.contribution-wrapper
                 h2
-                    a.avatar(href="/~#{user.name}")
-                        span.name= user.name
-                        +gravatar( user.emailMd5, user.name, 30 )
+                    +avatar( user, 30 )
                     | Preview: 
                     = subject
                 .markdown

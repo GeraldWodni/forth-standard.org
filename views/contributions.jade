@@ -7,4 +7,11 @@ if contributions
                 |  Contribute
             | Contributions
         each contribution in contributions.items
-            h4 Some User Content...
+            .preview.contribution-wrapper
+                h2
+                    +avatar( contribution.users, 48 )
+                    = contribution.contributions.subject
+                    span.created(title="UTC")
+                        = contribution.contributions.createdFormated
+                .markdown
+                    != contribution.contributions.markdownText

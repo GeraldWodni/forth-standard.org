@@ -12,7 +12,7 @@ module.exports = {
             orderBy: "created",
             wheres: {
                 "url": { where: "`url`=?" },
-                "user": { where: "`user`=?" }
+                "user": { where: "`user`=? AND `state`='visible'" }
             }
         } );
 

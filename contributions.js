@@ -5,10 +5,12 @@
 var _       = require('underscore');
 var marked  = require('marked');
 var md5     = require('md5');
+var moment  = require('moment');
 
 module.exports = {
     setup: function( k ) {
 
+        var db = k.getDb();
         var kData = k.getData();
         var vals = k.setupOpts.vals;
         const urlMatch = "/contribute/*";
@@ -42,7 +44,7 @@ module.exports = {
                             url: url,
                             type: type,
                             state: 'new',
-                            created: new Date(),
+                            created: kData.sql.nowUtc(),
                             subject: subject,
                             text: text
                         }, function( err ) {

@@ -1,9 +1,11 @@
 // forth-standard.org main include file
 // (c)copyright 2015 by Gerald Wodni <gerald.wodni@gmail.com>
 
-var fs  = require("fs");
-var _   = require("underscore");
-var md5 = require("md5");
+var fs      = require("fs");
+var _       = require("underscore");
+var marked  = require('marked');
+var md5     = require("md5");
+var moment  = require("moment");
 
 module.exports = {
     setup: function( k ) {
@@ -45,6 +47,7 @@ module.exports = {
         }
 
         var kData = k.getData();
+        var db = k.getDb();
 
         k.router.get("/favicon.ico", k.serveStaticFile( "images/favicon.ico" ) );
 
@@ -81,16 +84,27 @@ module.exports = {
             k.jade.render( req, res, "search", vals( req ) );
         });
 
-        function contributions( callback ) {
+        function contributions( where, callback ) {
             return function( req, res, next ) {
-                kData.contributions.readWhere("url", [ req.path ], function( err, contributions ) {
+                db.query({ sql: "SELECT * FROM contributions"
+                    + " INNER JOIN users ON users.id=contributions.user"
+                    + " " + where, nestTables: true
+                    }, [ req.path ], function( err, contributions ) {
                     if( err ) return next( err );
+
+                    _.each( contributions, function( contribution ) {
+                        contribution.contributions.markdownText = marked( contribution.contributions.text );
+                        contribution.contributions.createdFormated = moment( contribution.contributions.created ).format( kData.sql.dateTimeFormat );
+                        contribution.users.emailMd5 = md5( contribution.users.email );
+                    });
+
                     callback( req, res, next, { path: req.path, items: contributions } );
                 });
             };
         }
 
-        k.router.get("/standard/:wordSet/:wordBasename", contributions( function( req, res, next, contributions ) {
+        k.router.get("/standard/:wordSet/:wordBasename",
+            contributions( "WHERE contributions.url=? AND contributions.state='visible'", function( req, res, next, contributions ) {
             k.requestman( req );
 
             var wordSetName  = req.requestman.id( "wordSet" );
@@ -164,6 +178,44 @@ module.exports = {
             vals: vals,
             httpStatus: httpStatus
         } } );
+
+        k.router.post("/profile/review-contributions", function( req, res, next ) {
+            k.postman( req, res, function() {
+                var id = req.postman.id();
+                var accept = req.postman.exists( "accept" );
+                var remove = req.postman.exists( "delete" );
+                
+                var newState = accept ? "visible" : remove ? "deleted" : false;
+                if( !newState )
+                    return httpStatus( req, res, 422 );
+
+                kData.contributions.update( id, { state: newState }, function( err ) {
+                    if( err ) return next( err );
+                    req.method = "GET";
+                    req.messages = [{ type: "success", title: "Success", text: "Contribution reviewed" }];
+                    console.log( "NEW STATE:", newState );
+                    next();
+                });
+            });
+        });
+
+        k.router.get("/profile/review-contributions",
+            contributions( "WHERE contributions.state='new'", function( req, res, next, contributions ) {
+    
+            if( !req.session || ! req.session.loggedInUsername )
+                return httpStatus( req, res, 403 );
+
+            kData.users.readWhere( "name", [ req.session.loggedInUsername ], function( err, users ) {
+                if( err ) return next( err );
+                if( users.length == 0 ) return httpStatus( req, res, 404 );
+                if( users[0].state != 'moderator' ) return httpStatus( req, res, 403 );
+
+                k.jade.render( req, res, "reviewContributions", vals( req, {
+                    messages: req.messages,
+                    contributions: contributions
+                }));
+            });
+        }));
 
         /* home */
         k.router.get("/", function( req, res ) {

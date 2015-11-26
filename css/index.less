@@ -408,24 +408,39 @@ footer {
     border: 1px solid @mat;
     margin-top: 20px;
     margin-bottom: 20px;
-}
 
-.markdown {
-    padding: 5px 10px;
-
-    h2 { /* reset any wrapper's h2 */
-        background: transparent;
-        padding: 0;
-        margin: 20px 0 10px 0;
+    .actions {
+        border-top: 1px solid @mat;
+        padding: 10px;
     }
 }
 
-h2 .avatar {
-    float: right;
-    font-size: 14px;
-    span {
-        //padding-top: 4px;
-        vertical-align: top;
-        padding: 0 5px;
+.contribution-wrapper {
+    .markdown {
+        padding: 5px 10px;
+
+        h2 { /* reset any wrapper's h2 */
+            background: transparent;
+            padding: 0;
+            margin: 20px 0 10px 0;
+        }
+    }
+
+    h2 .avatar {
+        float: right;
+        font-size: 14px;
+        span {
+            //padding-top: 4px;
+            vertical-align: top;
+            padding: 0 5px;
+        }
+    }
+
+    h2 .created {
+        margin-top: 4px;
+        display: block;
+        font-size: 14px;
+        line-height: 14px;
+        height: 14px;
     }
 }
