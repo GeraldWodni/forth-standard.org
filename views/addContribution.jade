@@ -5,29 +5,44 @@ block menu
 
 block content
     .container
-        form(method='post',role='form')
-            h3
-                | Contribute to 
-                = url
-            p
-                | Please compose your username out of A-Z, a-z, 0-9, '_' and '-', other characters are stripped.
-                br
-                | We recommend 
-                b GivennameLastname 
-                |  i.e. 
-                b ChuckMoore
+        h3
+            | Contribute to 
+            = url
+        p
+            | Upon submission we will review it at our first chance. Do not worry, we merely want to avoid spam and insults. So please contribute 
+            +fa("smile-o")
+            |.
 
-            +enum-field("type", "Type", {
-                "example": "Example - Explain how this can be used",
-                "testcase":"Testcase - Suggest new testcases to be added",
-                "comment":"Comment - Augment the current definition"
-            })
-            +text-field("subject", "Subject")
-            .form-group
-                label Text - 
-                    | You can use
-                    a(href="https://help.github.com/articles/markdown-basics/",target="_blank")  Markdown
-                textarea(name="text",rows="10").form-control
-            a.btn.btn-default.pull-right(href=url) Back
-            button.btn.btn-primary(type='submit',name='add',value='yes') Submit
-            button.btn.btn-default(type='submit',name='preview',value='yes') Preview
+        +messages(messages)
+
+        if preview
+            .preview.contribution-wrapper
+                h2
+                    a.avatar(href="/~#{user.name}")
+                        span.name= user.name
+                        +gravatar( user.emailMd5, user.name, 30 )
+                    | Preview: 
+                    = subject
+                .markdown
+                    != preview
+
+        if hideForm
+            p
+                a.btn.btn-default.pull-right(href=url) Back
+        else
+            form(method='post',role='form')
+
+                +enum-field("type", "Type", {
+                    "example": "Example - Explain how this can be used",
+                    "testcase":"Testcase - Suggest new testcases to be added",
+                    "comment":"Comment - Augment the current definition"
+                },type)
+                +text-field("subject", "Subject", subject)
+                .form-group
+                    label Text - 
+                        | You can use
+                        a(href="https://help.github.com/articles/markdown-basics/",target="_blank")  Markdown
+                    textarea(name="text",rows="10").form-control= text
+                a.btn.btn-default.pull-right(href=url) Back
+                button.btn.btn-primary(type='submit',name='create',value='yes') Submit
+                button.btn.btn-default(type='submit',name='preview',value='yes') Preview

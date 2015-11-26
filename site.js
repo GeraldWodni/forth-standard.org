@@ -160,7 +160,10 @@ module.exports = {
         }} );
 
         /* user management */
-        k.useSiteModule( "/profile", "forth-standard.org", "contributions.js", { setup: { vals: vals } } );
+        k.useSiteModule( "/profile", "forth-standard.org", "contributions.js", { setup: {
+            vals: vals,
+            httpStatus: httpStatus
+        } } );
 
         /* home */
         k.router.get("/", function( req, res ) {

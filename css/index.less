@@ -1,17 +1,19 @@
 // (c) 2014 by Gerald Wodni
 
-@import "bootstrap";
+@import "variables";
 @import "materials";
 
 
 .material("Red");
 
 @navbar-height: 50px;
+@footer-margin: 20px;
 @footer-height: 30px;
 @light-90: rgba( 255, 255, 255, 0.9 );
 
 @brand-darker:  #3b5998;
 @brand-dark:    @mat-900;
+@brand-primary:    @mat-900;
 @brand-light:   #dfe3ee;
 @brand-lighter: #f7f7f7;
 
@@ -25,8 +27,7 @@
 @footer-color: darken(@navbar-color, 30%);
 @footer-background: @navbar-background;
 
-@link-color: @mat-900;
-@link-hover-color: @mat-400;
+@import "bootstrap";
 
 /* generic helpers */
 @until-sm: ~"(max-width: @{screen-sm-max})";
@@ -67,12 +68,8 @@ html, body {
     height: 100%;
 }
 
-.main-content a {
-    color: @link-color;
-
-    &:hover {
-        color: @link-hover-color;
-    }
+a:hover {
+    text-decoration: none;
 }
 
 body {
@@ -92,7 +89,7 @@ body > .wrapper {
     height: auto; min-height: 100%;
 
     padding-top: @navbar-height;
-    padding-bottom: @footer-height;
+    padding-bottom: @footer-height + @footer-margin;
 }
 
 footer {
@@ -403,5 +400,32 @@ footer {
         font-size: @avatarSize * 0.8;
         padding-left: @avatarSize * 0.1;
         padding-top: @avatarSize * 0.1;
+    }
+}
+
+.preview {
+    .mat( "Grey", 300 );
+    border: 1px solid @mat;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.markdown {
+    padding: 5px 10px;
+
+    h2 { /* reset any wrapper's h2 */
+        background: transparent;
+        padding: 0;
+        margin: 20px 0 10px 0;
+    }
+}
+
+h2 .avatar {
+    float: right;
+    font-size: 14px;
+    span {
+        //padding-top: 4px;
+        vertical-align: top;
+        padding: 0 5px;
     }
 }
