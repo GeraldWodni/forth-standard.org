@@ -84,42 +84,100 @@ module.exports = {
             k.jade.render( req, res, "search", vals( req ) );
         });
 
-        function contributions( where, callback ) {
-            return function( req, res, next ) {
-                db.query({ sql: "SELECT * FROM contributions"
-                    + " INNER JOIN users ON users.id=contributions.user"
-                    + " " + where, nestTables: true
-                    }, [ req.path ], function( err, contributions ) {
-                    if( err ) return next( err );
-
-                    _.each( contributions, function( contribution ) {
-                        contribution.contributions.markdownText = marked( contribution.contributions.text );
-                        contribution.contributions.createdFormated = moment( contribution.contributions.created ).format( kData.sql.dateTimeFormat );
-                        contribution.users.emailMd5 = md5( contribution.users.email );
-                    });
-
-                    callback( req, res, next, { path: req.path, items: contributions } );
-                });
-            };
+        function formatUserContents( dataTable, userTable, items ) {
+            _.each( items, function( item ) {
+                formatUserContent( dataTable, userTable, item );
+            });
+            return items;
         }
 
-        k.router.get("/standard/:wordSet/:wordBasename",
-            contributions( "WHERE contributions.url=? AND contributions.state='visible'", function( req, res, next, contributions ) {
-            k.requestman( req );
+        function formatUserContent( dataTable, userTable, item ) {
+            item[dataTable].markdownText = marked( item[dataTable].text );
+            item[dataTable].createdFormated = moment( item[dataTable].created ).format( kData.sql.dateTimeFormat );
+            item[userTable].emailMd5 = md5( item[userTable].email );
+            return item;
+        }
 
-            var wordSetName  = req.requestman.id( "wordSet" );
-            var wordBasename = req.requestman.id( "wordBasename" );
+        function userContent( table, where, whereParameters, next, callback ) {
+            db.query({ sql: "SELECT * FROM " + table
+                + " INNER JOIN users ON users.id=" + table + ".user"
+                + " " + where, nestTables: true
+                }, whereParameters, function( err, items ) {
+                if( err ) return next( err );
 
-            if( wordSetName in standard.wordSets && wordBasename in standard.wordSets[ wordSetName ].words )
-                k.jade.render( req, res, "word", vals( req, {
-                    standard: standard,
-                    wordSet: standard.wordSets[ wordSetName ],
-                    word: standard.wordSets[ wordSetName ].words[ wordBasename ],
-                    contributions: contributions
-                } ) );
-            else
-                res.json( { "NOT": "FOUND" } );
-        }));
+                formatUserContents( table, "users", items );
+                callback( items );
+            });
+        }
+
+        function contributions( where, callback ) {
+            return function( req, res, next ) {
+                userContent( "contributions", where, [req.path], next, function( items ) {
+                    callback( req, res, next, { path: req.path, items: items } );
+                });
+            }
+        }
+
+        function replies( where, whereParameters, callback ) {
+            return function( req, res, next ) {
+                userContent( "replies", where, whereParameters, next, function( items ) {
+                    callback( req, res, next, { path: req.path, items: items } );
+                });
+            }
+        }
+
+        function urlContributions( urlPath, next, callback ) {
+            db.query( { sql: "SELECT * FROM contributions"
+                + " INNER JOIN users ON users.id=contributions.user"
+                + " LEFT JOIN replies ON replies.contribution=contributions.id"
+                + " LEFT JOIN users AS replyUsers ON replyUsers.id=replies.user"
+                + " WHERE contributions.url=? AND contributions.state='visible' AND replies.state='visible'",
+                nestTables: true }, [ urlPath ], function( err, items ) {
+
+                if( err ) return next( err );
+
+                var groupedContributions = [];
+                var lastContribution = { contributions: { id: 0 } };
+                items.forEach( function ( item ) {
+                    /* new contribution */
+                    if( item.contributions.id != lastContribution.contributions.id ) {
+                        lastContribution = formatUserContent( "contributions", "users", {
+                            contributions: item.contributions,
+                            users: item.users,
+                            replies: []
+                        });
+                        groupedContributions.push( lastContribution );
+                    }
+
+                    lastContribution.replies.push( formatUserContent( "replies", "replyUsers", {
+                        replies: item.replies,
+                        replyUsers: item.replyUsers
+                    }));
+                });
+
+                callback( groupedContributions );
+            });
+        }
+
+        k.router.get("/standard/:wordSet/:wordBasename", function( req, res, next ) {
+            urlContributions( req.path, next, function( contributions ) {
+                k.requestman( req );
+
+                var wordSetName  = req.requestman.id( "wordSet" );
+                var wordBasename = req.requestman.id( "wordBasename" );
+
+                if( wordSetName in standard.wordSets && wordBasename in standard.wordSets[ wordSetName ].words )
+                    k.jade.render( req, res, "word", vals( req, {
+                        standard: standard,
+                        wordSet: standard.wordSets[ wordSetName ],
+                        word: standard.wordSets[ wordSetName ].words[ wordBasename ],
+                        urlPath: req.path,
+                        contributions: contributions
+                    } ) );
+                else
+                    res.json( { "NOT": "FOUND" } );
+            });
+        });
 
         //k.router.get("/standard/:wordSet", function( req, res ) {
         //    k.requestman( req );
@@ -131,12 +189,19 @@ module.exports = {
         //        res.json( { "NOT": "FOUND" } );
         //});
 
-        k.router.get("/standard/:document", function( req, res ) {
+        k.router.get("/standard/:document", function( req, res, next ) {
             k.requestman( req );
             var document = req.requestman.id( "document" );
 
             if( document in standard.documents )
-                k.jade.render( req, res, "document", vals( req, { standard: standard, document: standard.documents[ document ] } ) );
+                urlContributions( req.path, next, function( contributions ) {
+                    k.jade.render( req, res, "document", vals( req, {
+                        standard: standard,
+                        document: standard.documents[ document ],
+                        urlPath: req.path,
+                        contributions: contributions
+                    }));
+                });
             else if( wordSetName in standard.wordSets )
                 k.jade.render( req, res, "wordSet", vals( req, { standard: standard, wordSet: standard.wordSets[ wordSetName ] } ) );
             else
@@ -183,6 +248,7 @@ module.exports = {
             httpStatus: httpStatus
         } } );
 
+        /* review contributions */
         k.router.post("/profile/review-contributions", function( req, res, next ) {
             k.postman( req, res, function() {
                 var id = req.postman.id();
@@ -197,7 +263,6 @@ module.exports = {
                     if( err ) return next( err );
                     req.method = "GET";
                     req.messages = [{ type: "success", title: "Success", text: "Contribution reviewed" }];
-                    console.log( "NEW STATE:", newState );
                     next();
                 });
             });
@@ -217,6 +282,45 @@ module.exports = {
                 k.jade.render( req, res, "reviewContributions", vals( req, {
                     messages: req.messages,
                     contributions: contributions
+                }));
+            });
+        }));
+
+        /* review replies */
+        k.router.post("/profile/review-replies", function( req, res, next ) {
+            k.postman( req, res, function() {
+                var id = req.postman.id();
+                var accept = req.postman.exists( "accept" );
+                var remove = req.postman.exists( "delete" );
+                
+                var newState = accept ? "visible" : remove ? "deleted" : false;
+                if( !newState )
+                    return httpStatus( req, res, 422 );
+
+                kData.replies.update( id, { state: newState }, function( err ) {
+                    if( err ) return next( err );
+                    req.method = "GET";
+                    req.messages = [{ type: "success", title: "Success", text: "Reply reviewed" }];
+                    next();
+                });
+            });
+        });
+
+        k.router.get("/profile/review-replies",
+            replies( "INNER JOIN contributions ON contributions.id=replies.contribution"
+                +" WHERE replies.state='new'", [], function( req, res, next, items ) {
+    
+            if( !req.session || ! req.session.loggedInUsername )
+                return httpStatus( req, res, 403 );
+
+            kData.users.readWhere( "name", [ req.session.loggedInUsername ], function( err, users ) {
+                if( err ) return next( err );
+                if( users.length == 0 ) return httpStatus( req, res, 404 );
+                if( users[0].state != 'moderator' ) return httpStatus( req, res, 403 );
+
+                k.jade.render( req, res, "reviewReplies", vals( req, {
+                    messages: req.messages,
+                    userContent: items
                 }));
             });
         }));

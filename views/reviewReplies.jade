@@ -1,0 +1,38 @@
+extends layout
+
+block menu
+    +menu
+
+block content
+    .container
+        h1
+            | Review Replies
+        p
+            | Replies submitted by moderated users are shown here.
+
+
+        +messages(messages)
+
+        each item in userContent.items
+            .preview.contribution-wrapper
+                a(href=item.contributions.url, target="_blank")
+                    = item.contributions.url
+                h2
+                    +avatar( item.users, 30 )
+                    | Reply to: 
+                    = item.contributions.subject
+                .markdown
+                    != item.replies.markdownText
+
+                .actions
+                    form(method="post")
+                        +hidden-field("id", item.replies.id)
+                        button(type="submit",name="accept").btn.btn-success
+                            +fa("check-square")
+                            |  Accept
+                        |  
+                        button(type="submit",name="delete").btn.btn-danger
+                            +fa("trash")
+                            |  Delete
+
+

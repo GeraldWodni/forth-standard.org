@@ -2,11 +2,11 @@
 if contributions
     .contributions-wrapper
         h2
-            a(href="/profile/contribute"+contributions.path).btn.btn-default
+            a(href="/profile/contribute"+urlPath).btn.btn-default
                 +fa("plus")
                 |  Contribute
             | Contributions
-        each contribution in contributions.items
+        each contribution in contributions
             .contribution-wrapper
                 h2
                     +avatar( contribution.users, 48 )

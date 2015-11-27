@@ -23,8 +23,12 @@ block content
                     if user.state=='moderator'
                         |  
                         a.btn.btn-default(href="/profile/review-contributions")
-                            +fa("check-square")
+                            +fa("comment-o")
                             |  Review Contributions
+                        |  
+                        a.btn.btn-default(href="/profile/review-replies")
+                            +fa("comments-o")
+                            |  Review Replies
 
                 uls.fa-ul
                     each contribution in contributions
