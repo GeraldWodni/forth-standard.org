@@ -98,40 +98,13 @@ module.exports = {
             return item;
         }
 
-        function userContent( table, where, whereParameters, next, callback ) {
-            db.query({ sql: "SELECT * FROM " + table
-                + " INNER JOIN users ON users.id=" + table + ".user"
-                + " " + where, nestTables: true
-                }, whereParameters, function( err, items ) {
-                if( err ) return next( err );
-
-                formatUserContents( table, "users", items );
-                callback( items );
-            });
-        }
-
-        function contributions( where, callback ) {
-            return function( req, res, next ) {
-                userContent( "contributions", where, [req.path], next, function( items ) {
-                    callback( req, res, next, { path: req.path, items: items } );
-                });
-            }
-        }
-
-        function replies( where, whereParameters, callback ) {
-            return function( req, res, next ) {
-                userContent( "replies", where, whereParameters, next, function( items ) {
-                    callback( req, res, next, { path: req.path, items: items } );
-                });
-            }
-        }
-
+        /* get all contributions to a specific url */
         function urlContributions( urlPath, next, callback ) {
             db.query( { sql: "SELECT * FROM contributions"
                 + " INNER JOIN users ON users.id=contributions.user"
-                + " LEFT JOIN replies ON replies.contribution=contributions.id"
+                + " LEFT JOIN replies ON replies.contribution=contributions.id AND replies.state='visible'"
                 + " LEFT JOIN users AS replyUsers ON replyUsers.id=replies.user"
-                + " WHERE contributions.url=? AND contributions.state='visible' AND replies.state='visible'",
+                + " WHERE contributions.url=? AND contributions.state='visible'",
                 nestTables: true }, [ urlPath ], function( err, items ) {
 
                 if( err ) return next( err );
@@ -149,10 +122,11 @@ module.exports = {
                         groupedContributions.push( lastContribution );
                     }
 
-                    lastContribution.replies.push( formatUserContent( "replies", "replyUsers", {
-                        replies: item.replies,
-                        replyUsers: item.replyUsers
-                    }));
+                    if( item.replies.id && item.replyUsers.id )
+                        lastContribution.replies.push( formatUserContent( "replies", "replyUsers", {
+                            replies: item.replies,
+                            replyUsers: item.replyUsers
+                        }));
                 });
 
                 callback( groupedContributions );
@@ -248,29 +222,10 @@ module.exports = {
             httpStatus: httpStatus
         } } );
 
-        /* review contributions */
-        k.router.post("/profile/review-contributions", function( req, res, next ) {
-            k.postman( req, res, function() {
-                var id = req.postman.id();
-                var accept = req.postman.exists( "accept" );
-                var remove = req.postman.exists( "delete" );
-                
-                var newState = accept ? "visible" : remove ? "deleted" : false;
-                if( !newState )
-                    return httpStatus( req, res, 422 );
 
-                kData.contributions.update( id, { state: newState }, function( err ) {
-                    if( err ) return next( err );
-                    req.method = "GET";
-                    req.messages = [{ type: "success", title: "Success", text: "Contribution reviewed" }];
-                    next();
-                });
-            });
-        });
-
-        k.router.get("/profile/review-contributions",
-            contributions( "WHERE contributions.state='new'", function( req, res, next, contributions ) {
-    
+        /** reviews **/
+        /* load user and check for moderator */
+        function checkIsModerator( req, res, next, callback ) {
             if( !req.session || ! req.session.loggedInUsername )
                 return httpStatus( req, res, 403 );
 
@@ -278,54 +233,66 @@ module.exports = {
                 if( err ) return next( err );
                 if( users.length == 0 ) return httpStatus( req, res, 404 );
                 if( users[0].state != 'moderator' ) return httpStatus( req, res, 403 );
-
-                k.jade.render( req, res, "reviewContributions", vals( req, {
-                    messages: req.messages,
-                    contributions: contributions
-                }));
+                callback();
             });
-        }));
+        }
 
-        /* review replies */
-        k.router.post("/profile/review-replies", function( req, res, next ) {
-            k.postman( req, res, function() {
-                var id = req.postman.id();
-                var accept = req.postman.exists( "accept" );
-                var remove = req.postman.exists( "delete" );
-                
-                var newState = accept ? "visible" : remove ? "deleted" : false;
-                if( !newState )
-                    return httpStatus( req, res, 422 );
+        function routeReview( opts ) {
+            /* accept / delete */
+            k.router.post( "/profile/review-" + opts.table, function( req, res, next ) {
+                checkIsModerator( req, res, next, function() {
+                    k.postman( req, res, function() {
+                        var id = req.postman.id();
+                        var accept = req.postman.exists( "accept" );
+                        var remove = req.postman.exists( "delete" );
 
-                kData.replies.update( id, { state: newState }, function( err ) {
-                    if( err ) return next( err );
-                    req.method = "GET";
-                    req.messages = [{ type: "success", title: "Success", text: "Reply reviewed" }];
-                    next();
+                        var newState = accept ? "visible" : remove ? "deleted" : false;
+                        if( !newState )
+                            return httpStatus( req, res, 422 );
+
+                        kData[ opts.table ].update( id, { state: newState }, function( err ) {
+                            if( err ) return next( err );
+                            req.method = "GET";
+                            req.messages = [{ type: "success", title: "Success", text: opts.successText }];
+                            next();
+                        });
+                    });
                 });
             });
+
+            /* list open items */
+            k.router.get("/profile/review-" + opts.table, function( req, res, next ) {
+                checkIsModerator( req, res, next, function() {
+                    db.query({ sql: opts.query, nestTables: true }, [], function( err, items ) {
+
+                        formatUserContents( opts.table, "users", items );
+
+                        k.jade.render( req, res, opts.jadeFile, vals( req, {
+                            messages: req.messages,
+                            items: items
+                        }));
+                    });
+                });
+            });
+        }
+
+        routeReview({
+            table: "contributions",
+            successText: "Contribution reviewed",
+            query: "SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id"
+                + " WHERE contributions.state='new'",
+            jadeFile: "reviewContributions"
         });
 
-        k.router.get("/profile/review-replies",
-            replies( "INNER JOIN contributions ON contributions.id=replies.contribution"
-                +" WHERE replies.state='new'", [], function( req, res, next, items ) {
-    
-            if( !req.session || ! req.session.loggedInUsername )
-                return httpStatus( req, res, 403 );
+        routeReview({
+            table: "replies",
+            successText: "Replies reviewed",
+            query: "SELECT * FROM replies INNER JOIN users ON replies.user=users.id"
+                + " INNER JOIN contributions ON replies.contribution=contributions.id WHERE replies.state='new'",
+            jadeFile: "reviewReplies"
+        });
 
-            kData.users.readWhere( "name", [ req.session.loggedInUsername ], function( err, users ) {
-                if( err ) return next( err );
-                if( users.length == 0 ) return httpStatus( req, res, 404 );
-                if( users[0].state != 'moderator' ) return httpStatus( req, res, 403 );
-
-                k.jade.render( req, res, "reviewReplies", vals( req, {
-                    messages: req.messages,
-                    userContent: items
-                }));
-            });
-        }));
-
-        /* home */
+        /** home **/
         k.router.get("/", function( req, res ) {
             console.log( "HVALS:", vals( req ) );
             k.jade.render( req, res, "home", vals(req) );

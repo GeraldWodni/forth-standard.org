@@ -15,6 +15,18 @@ if contributions
                         = contribution.contributions.createdFormated
                 .markdown
                     != contribution.contributions.markdownText
-                    a(href="/profile/reply/"+contribution.contributions.id).btn.btn-default.reply
-                        +fa("reply")
-                        |  Reply
+
+                .replies-wrapper
+                    each reply in contribution.replies
+                        .reply-wrapper
+                            h3
+                                +avatar( reply.replyUsers, 48 )
+                                span.created(title="UTC")
+                                    = reply.replies.createdFormated
+
+                            .markdown
+                                != reply.replies.markdownText
+
+                a(href="/profile/reply/"+contribution.contributions.id).btn.btn-default.reply
+                    +fa("reply")
+                    |  Reply

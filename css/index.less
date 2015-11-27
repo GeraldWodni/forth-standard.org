@@ -428,6 +428,7 @@ footer {
 }
 
 .contribution-wrapper {
+    .clearfix();
 
     .mat( "Grey", 300 );
     border: 1px solid @mat;
@@ -440,7 +441,6 @@ footer {
     }
 
     .markdown {
-        .clearfix();
         padding: 5px 10px;
 
         h2 { /* reset any wrapper's h2 */
@@ -448,14 +448,10 @@ footer {
             padding: 0;
             margin: 20px 0 10px 0;
         }
-
-        .btn.reply {
-            float: right;
-            margin-bottom: 7px;
-        }
     }
 
-    h2 .avatar {
+    h2 .avatar,
+    h3 .avatar {
         float: right;
         font-size: 14px;
         span {
@@ -465,16 +461,31 @@ footer {
         }
     }
 
-    h2 .created {
+    h2 .created,
+    h3 .created {
         margin-top: 4px;
         display: block;
         font-size: 14px;
         line-height: 14px;
         height: 14px;
     }
+
+    .replies-wrapper {
+    }
+
+    .btn.reply {
+        float: right;
+        margin: 7px;
+    }
 }
 
 .reply-wrapper {
+    .clearfix();
+    border-bottom: 1px solid @white;
+
+    .mat( "Grey", 100 );
+    background: @mat;
+
     &.preview {
         .mat( "Grey", 300 );
         border: 1px solid @mat;
@@ -488,7 +499,6 @@ footer {
     h3 {
         font-size: 14px;
         margin: 10px;
-        float: right;
 
         span {
             vertical-align: top;
@@ -497,6 +507,6 @@ footer {
     }
 
     .markdown {
-        padding: 10px;
+        padding: 0 10px 10px 10px;
     }
 }
