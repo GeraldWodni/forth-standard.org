@@ -16,9 +16,14 @@ module.exports = {
             }
         } );
 
+        var replies = k.crud.sql( db, { table: "replies", key: "id", foreignName: "text",
+            orderBy: "created"
+        } );
+
         return {
             users:          users,
-            contributions:  contributions
+            contributions:  contributions,
+            replies:        replies
         };
     }
 }

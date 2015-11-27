@@ -404,6 +404,31 @@ footer {
 }
 
 .preview {
+    margin-bottom: 20px;
+}
+
+.contributions-wrapper {
+        margin-top: 50px;
+}
+
+.contributions-wrapper h2,
+.contribution-wrapper h2 {
+    margin-top: 0;
+    .mat( "Grey", 300 );
+    color: @text-color;
+    background: @mat;
+
+    padding: 10px;
+    .clearfix();
+
+    a.btn {
+            float: right;
+            color: @text-color;
+    }
+}
+
+.contribution-wrapper {
+
     .mat( "Grey", 300 );
     border: 1px solid @mat;
     margin-top: 20px;
@@ -413,16 +438,20 @@ footer {
         border-top: 1px solid @mat;
         padding: 10px;
     }
-}
 
-.contribution-wrapper {
     .markdown {
+        .clearfix();
         padding: 5px 10px;
 
         h2 { /* reset any wrapper's h2 */
             background: transparent;
             padding: 0;
             margin: 20px 0 10px 0;
+        }
+
+        .btn.reply {
+            float: right;
+            margin-bottom: 7px;
         }
     }
 
@@ -442,5 +471,32 @@ footer {
         font-size: 14px;
         line-height: 14px;
         height: 14px;
+    }
+}
+
+.reply-wrapper {
+    &.preview {
+        .mat( "Grey", 300 );
+        border: 1px solid @mat;
+
+        h2 {
+            margin-top: 0;
+            background-color: @mat
+        }
+    }
+
+    h3 {
+        font-size: 14px;
+        margin: 10px;
+        float: right;
+
+        span {
+            vertical-align: top;
+            padding: 0 5px;
+        }
+    }
+
+    .markdown {
+        padding: 10px;
     }
 }

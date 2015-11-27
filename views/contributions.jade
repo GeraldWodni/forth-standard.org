@@ -1,13 +1,13 @@
 //- (c)2015 by Gerald Wodni
 if contributions
-    .contribution-wrapper
+    .contributions-wrapper
         h2
             a(href="/profile/contribute"+contributions.path).btn.btn-default
                 +fa("plus")
                 |  Contribute
             | Contributions
         each contribution in contributions.items
-            .preview.contribution-wrapper
+            .contribution-wrapper
                 h2
                     +avatar( contribution.users, 48 )
                     = contribution.contributions.subject
@@ -15,3 +15,6 @@ if contributions
                         = contribution.contributions.createdFormated
                 .markdown
                     != contribution.contributions.markdownText
+                    a(href="/profile/reply/"+contribution.contributions.id).btn.btn-default.reply
+                        +fa("reply")
+                        |  Reply

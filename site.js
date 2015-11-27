@@ -178,6 +178,10 @@ module.exports = {
             vals: vals,
             httpStatus: httpStatus
         } } );
+        k.useSiteModule( "/profile", "forth-standard.org", "replies.js", { setup: {
+            vals: vals,
+            httpStatus: httpStatus
+        } } );
 
         k.router.post("/profile/review-contributions", function( req, res, next ) {
             k.postman( req, res, function() {

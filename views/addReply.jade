@@ -6,8 +6,8 @@ block menu
 block content
     .container
         h3
-            | Contribute to 
-            = url
+            | Reply to 
+            = contribution.subject
         p
             | Upon submission we will review it at our first chance. Do not worry, we merely want to avoid spam and insults. So please contribute 
             +fa("smile-o")
@@ -16,11 +16,10 @@ block content
         +messages(messages)
 
         if preview
-            .contribution-wrapper
-                h2
+            .preview.reply-wrapper
+                h2 Preview
+                h3
                     +avatar( user, 30 )
-                    | Preview: 
-                    = subject
                 .markdown
                     != preview
 
@@ -30,12 +29,6 @@ block content
         else
             form(method='post',role='form')
 
-                +enum-field("type", "Type", {
-                    "example": "Example - Explain how this can be used",
-                    "testcase":"Testcase - Suggest new testcases to be added",
-                    "comment":"Comment - Augment the current definition"
-                },type)
-                +text-field("subject", "Subject", subject)
                 .form-group
                     label Text - 
                         | You can use
