@@ -14,7 +14,7 @@ module.exports = {
         var kData = k.getData();
         var vals = k.setupOpts.vals;
 
-        const urlMatch = "/reply/:id";
+        var urlMatch = "/reply/:id";
         function getContribution( callback ){
             return function( req, res, next ) {
                 k.requestman( req );

@@ -13,7 +13,7 @@ module.exports = {
         var db = k.getDb();
         var kData = k.getData();
         var vals = k.setupOpts.vals;
-        const urlMatch = "/contribute/*";
+        var urlMatch = "/contribute/*";
         function getUrl( req ) { return req.path.substr( "/contribute".length ); }
 
         k.router.post( urlMatch, function( req, res, next ) {
