@@ -5,6 +5,11 @@ extends layout
 block menu
     +menu
 
+block title
+    = word.name
+    |  - 
+    = word.list
+
 block content
     +box-word
         h1= word.name

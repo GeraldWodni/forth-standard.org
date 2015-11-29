@@ -102,7 +102,9 @@ mixin box-word
 
 html
     head
-        title Forth
+        title
+            block title
+                = title || "Forth"
         meta(name="viewport",content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width")
         +favicon("/images/favicon.ico")
         +style('/css/index.css')
