@@ -470,6 +470,18 @@ footer {
         height: 14px;
     }
 
+    span.type {
+        display: block;
+
+        .mat( "Grey", 300 );
+        background: @mat;
+        font-size: 14px;
+        color: @link-color;
+        font-weight: bold;
+
+        margin: 0;
+    }
+
     .replies-wrapper {
     }
 
@@ -502,11 +514,16 @@ footer {
 
         span {
             vertical-align: top;
-            padding: 0 5px;
         }
     }
 
     .markdown {
         padding: 0 10px 10px 10px;
+    }
+}
+
+.contribution-list {
+    h3 {
+        margin: 0;
     }
 }

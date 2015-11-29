@@ -36,7 +36,14 @@ module.exports = {
                 values = {};
 
             _.extend( values, {
-                loggedIn: "session" in req
+                loggedIn: "session" in req,
+                contributionTypeName: {
+                    "example": "Example",
+                    "testcase":"Suggested Testcase",
+                    "requestClarification":"Request for clarification",
+                    "referenceImplementation":"Suggested reference implementation",
+                    "comment":"Comment"
+                }
             });
 
             return values;
@@ -206,7 +213,21 @@ module.exports = {
                         if( err ) return next( err );
 
                         user.emailMd5 = md5( user.email );
-                        k.jade.render( req, res, "user", vals( req, { user: user, contributions: contributions, manage: req.session && user.name==req.session.loggedInUsername, title: user.name } ) );
+
+                        db.query( "SELECT contributions.* FROM contributions"
+                            + " INNER JOIN replies ON contributions.id=replies.contribution WHERE replies.user=? GROUP BY contributions.id",
+                            [ user.id ], function( err, replyContributions ) {
+                            if( err ) return next( err );
+
+                            k.jade.render( req, res, "user", vals( req, {
+                                user: user,
+                                contributions: contributions,
+                                replyContributions: replyContributions,
+                                manage: req.session && user.name==req.session.loggedInUsername,
+                                title: user.name
+                            } ) );
+
+                        });
                     });
                 });
             }
