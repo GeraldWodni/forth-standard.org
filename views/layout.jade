@@ -34,14 +34,14 @@ mixin menu
         +menuItem("/standard/words",            "list-ul",      "Standard")
         +menuItem("http://www.forth200x.org",   "wrench",       "Committee")
         +menuItem("http://theforth.net",        "cube",         "Packages" )
-        +menuItem("/search",                    "search",       "Search"   )
         //+menuItem("http://forth-ev.de",         "comments-o",   {sm:"DE",all:"DE-Community"} ).hidden-314
         //+menuItem("http://forth.org",           "comments",     {sm:"EN",all:"EN-Community"} ).hidden-370
         if loggedIn
-            +menuItem("/profile",    "user",         "Profile"     )
+            +menuItem("/profile",    "user",         {sm:"Me",all:"Profile"}     )
             +menuItem("/logout",     "sign-out",     "Logout"    )
         else
-            +menuItem("/profile",    "sign-in",      "Login/Sign up"     )
+            +menuItem("/profile",    "sign-in",      {sm:"Login",all:"Login/Sign up"}     )
+        +menuItem("/search",                    "search",       {sm:"",all:"Search"}   )
 
 mixin box
     div.box&attributes(attributes)
