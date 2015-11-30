@@ -5,14 +5,15 @@ extends layout
 block menu
     +menu
 
+block title
+    = user.name
+
 block content
     .container
         .row
             .col-md-8
-                h2
-                    | Contributions by 
-                    = user.name
                 if manage
+                    h2 Manage profile
                     //- a.btn.btn-primary(href="/profile/upload")
                     //-     i.fa.fa-plus
                     //-     |  Upload package
@@ -30,12 +31,39 @@ block content
                             +fa("comments-o")
                             |  Review Replies
 
-                uls.fa-ul
+                h2
+                    | Contributions by 
+                    = user.name
+
+                ul.fa-ul.contribution-list
                     each contribution in contributions
                         li
                             +fa("li fa fa-comment-o")
                             a(href="#{contribution.url}")
                                 h3= contribution.subject
+                                p
+                                    = contributionTypeName[ contribution.type ]
+
+                    if contributions.length == 0
+                        li
+                            +fa("li fa fa-ban")
+                            i None
+
+                h2
+                    | Replies by 
+                    = user.name
+                ul.fa-ul.contribution-list
+                    each contribution in replyContributions
+                        li
+                            +fa("li fa fa-comments-o")
+                            a(href="#{contribution.url}")
+                                h3= contribution.subject
+                                p
+                                    = contributionTypeName[ contribution.type ]
+                    if replyContributions.length == 0
+                        li
+                            +fa("li fa fa-ban")
+                            i None
             .col-md-4
                 h1.text-center
                     +gravatar( user.emailMd5, user.name, 496 ).img-responsive
