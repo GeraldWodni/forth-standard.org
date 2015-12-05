@@ -109,7 +109,8 @@ module.exports = {
             item[dataTable].markdownText = marked( item[dataTable].text );
             item[dataTable].createdFormated = moment( item[dataTable].created ).format( kData.sql.dateTimeFormat );
             item[userTable].emailMd5 = md5( item[userTable].email );
-            item[dataTable].title = urlToTitle( item.contributions.url );
+	    if( item.contributions && item.contributions.url )
+            	item[dataTable].title = urlToTitle( item.contributions.url );
             return item;
         }
 
