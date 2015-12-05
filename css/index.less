@@ -531,3 +531,38 @@ footer {
 .communities p {
     min-height: 50px;
 }
+
+.contribution-latest {
+    li {
+        .mat( "Grey"; 300 );
+        padding: @grid-gutter-width/4;
+        margin-bottom: @grid-gutter-width/2;
+
+        color: @black;
+        background-color: @mat-50;
+        border-radius: @border-radius-small;
+        border: 1px solid @mat;
+
+        .document {
+            font-weight: bold;
+            margin: 0 0 5px 0;
+        }
+
+        .subject {
+            color: @text-color;
+            margin: 0 0 5px 0;
+        }
+
+        .type {
+            margin: 0 0 5px 0;
+        }
+
+        .date {
+            color: @text-color;
+        }
+
+        .user {
+            float: right;
+        }
+    }
+}

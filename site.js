@@ -102,6 +102,10 @@ module.exports = {
             item[dataTable].markdownText = marked( item[dataTable].text );
             item[dataTable].createdFormated = moment( item[dataTable].created ).format( kData.sql.dateTimeFormat );
             item[userTable].emailMd5 = md5( item[userTable].email );
+            var urlParts = item.contributions.url.split("/");
+            urlParts.shift();
+            urlParts.shift();
+            item[dataTable].title = urlParts.join(", ");
             return item;
         }
 
@@ -315,8 +319,16 @@ module.exports = {
 
         /** home **/
         k.router.get("/", function( req, res ) {
-            console.log( "HVALS:", vals( req ) );
-            k.jade.render( req, res, "home", vals(req) );
+            db.query( { sql: "SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id"
+                + " WHERE contributions.state='visible' ORDER BY contributions.created DESC LIMIT 4;"
+                + " SELECT * FROM replies INNER JOIN contributions ON replies.contribution = contributions.id"
+                + " INNER JOIN users ON replies.user=users.id"
+                + " WHERE replies.state='visible' ORDER BY replies.created DESC LIMIT 4",
+                nestTables: true }, [], function( err, items ) {
+                contributions   = formatUserContents( "contributions",  "users", items[0] );
+                replies         = formatUserContents( "replies",        "users", items[1] );
+                k.jade.render( req, res, "home", vals( req, { contributions: contributions, replies: replies } ) );
+            });
         });
     }
 };

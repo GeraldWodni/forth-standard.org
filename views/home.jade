@@ -67,6 +67,38 @@ block content
             |  or browsing it our 
             a(href="http://www.forth200x.org",target="_blank") workgroup website
             | .
+        h2 Be part of a living standard
+        p Become part of the decision making process and meet your fellow 
+            a(href="/users") Forthers
+            | .
+
+        mixin latestContribution( item, dataTable )
+            a(href=item.contributions.url)
+                div.user(title=item.users.name)
+                    +gravatar(item.users.emailMd5, item.users.name, 40)
+                h5.document
+                    = item[dataTable].title
+                h5.subject
+                    = item.contributions.subject
+                h6.type
+                    = contributionTypeName[ item.contributions.type ]
+                div.date
+                    = item[dataTable].createdFormated
+        .row
+            .col-sm-6
+                h3 Latest contributions:
+                ul.fa-ul.contribution-latest
+                    each contribution in contributions
+                        li
+                            +fa("li fa fa-comment-o")
+                            +latestContribution( contribution, "contributions" )
+            .col-sm-6
+                h3 Latest replies:
+                ul.fa-ul.contribution-latest
+                    each reply in replies
+                        li
+                            +fa("li fa fa-comments-o")
+                            +latestContribution( reply, "replies" )
 
     +box.systems
         h1 Systems
