@@ -40,7 +40,8 @@ block content
                         li
                             +fa("li fa fa-comment-o")
                             a(href="#{contribution.url}")
-                                h3= contribution.subject
+                                h3= contribution.title
+                                h4= contribution.subject
                                 p
                                     = contributionTypeName[ contribution.type ]
 
@@ -57,7 +58,8 @@ block content
                         li
                             +fa("li fa fa-comments-o")
                             a(href="#{contribution.url}")
-                                h3= contribution.subject
+                                h3= contribution.title
+                                h4= contribution.subject
                                 p
                                     = contributionTypeName[ contribution.type ]
                     if replyContributions.length == 0

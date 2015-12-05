@@ -91,6 +91,13 @@ module.exports = {
             k.jade.render( req, res, "search", vals( req ) );
         });
 
+        function urlToTitle( url ) {
+            var urlParts = url.split("/");
+            urlParts.shift();
+            urlParts.shift();
+            return urlParts.join(", ");
+        }
+
         function formatUserContents( dataTable, userTable, items ) {
             _.each( items, function( item ) {
                 formatUserContent( dataTable, userTable, item );
@@ -102,10 +109,7 @@ module.exports = {
             item[dataTable].markdownText = marked( item[dataTable].text );
             item[dataTable].createdFormated = moment( item[dataTable].created ).format( kData.sql.dateTimeFormat );
             item[userTable].emailMd5 = md5( item[userTable].email );
-            var urlParts = item.contributions.url.split("/");
-            urlParts.shift();
-            urlParts.shift();
-            item[dataTable].title = urlParts.join(", ");
+            item[dataTable].title = urlToTitle( item.contributions.url.split("/") );
             return item;
         }
 
@@ -223,6 +227,13 @@ module.exports = {
                             [ user.id ], function( err, replyContributions ) {
                             if( err ) return next( err );
 
+                            contributions.forEach( function( contribution ) {
+                                contribution.title = urlToTitle( contribution.url );
+                            });
+                            replyContributions.forEach( function( reply ) {
+                                reply.title = urlToTitle( reply.url );
+                            });
+
                             k.jade.render( req, res, "user", vals( req, {
                                 user: user,
                                 contributions: contributions,
@@ -316,6 +327,8 @@ module.exports = {
                 + " INNER JOIN contributions ON replies.contribution=contributions.id WHERE replies.state='new'",
             jadeFile: "reviewReplies"
         });
+
+
 
         /** home **/
         k.router.get("/", function( req, res ) {
