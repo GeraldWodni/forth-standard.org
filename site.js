@@ -346,5 +346,10 @@ module.exports = {
                 k.jade.render( req, res, "home", vals( req, { contributions: contributions, replies: replies } ) );
             });
         });
+
+        /* catch all */
+        k.router.all("*", function( req, res ) {
+            httpStatus( req, res, 404 );
+        });
     }
 };
