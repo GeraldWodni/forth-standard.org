@@ -2,6 +2,7 @@
 // (c)copyright 2015 by Gerald Wodni <gerald.wodni@gmail.com>
 
 var fs      = require("fs");
+var path    = require("path");
 var _       = require("underscore");
 var marked  = require('marked');
 var md5     = require("md5");
@@ -329,7 +330,8 @@ module.exports = {
             jadeFile: "reviewReplies"
         });
 
-
+        /* gravatar proxy */
+        k.proxyCache.gravatar( k.website, k.router );
 
         /** home **/
         k.router.get("/", function( req, res ) {
