@@ -49,7 +49,7 @@ mixin box
         div.container
             block
 
-mixin box-document
+mixin box-document(opts)
     div.show-sidenav.toggle
         +fa("bars")
 
@@ -76,7 +76,8 @@ mixin box-document
                 .col-md-9.col-content.forth-200x
                     .forth-200x-wrapper
                         block
-                        include contributions
+                        unless opts && opts.hideContributions
+                            include contributions
 
 mixin box-word
     div.show-sidenav.toggle

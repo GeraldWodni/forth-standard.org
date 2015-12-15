@@ -22,7 +22,7 @@ if contributions
                     != contribution.contributions.markdownText
 
                 .replies-wrapper
-                    each reply in contribution.replies
+                    each reply in contribution.replies || []
                         .reply-wrapper
                             h3
                                 +avatar( reply.replyUsers, 48 )

@@ -60,7 +60,8 @@ module.exports = {
         k.router.get("/favicon.ico", k.serveStaticFile( "images/favicon.ico" ) );
 
         k.router.get("/standard/words", function( req, res ) {
-            k.jade.render( req, res, "words", vals( req, { standard: standard } ) );
+            var values = vals( req, { standard: standard } );
+            k.jade.render( req, res, "words", values );
         });
 
         /* search index for matching words */
