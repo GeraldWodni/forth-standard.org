@@ -8,6 +8,7 @@ var jsdom = require("jsdom");
 var jquery = require("jquery");
 var async = require("async");
 var util = require("util");
+var mkdirp = require("mkdirp");
 var _ = require("underscore");
 
 function readFile( filename, callback ) {
@@ -68,6 +69,10 @@ function rewriteLink( href ) {
         .replace(/rat:floating/, 'rat:float').replace(/rat:local/, 'rat:locals');
 }
 
+function rewriteSrc( opts, src ) {
+    return path.join( opts.mediaHttpPrefix, src );
+}
+
 function adoptSection( $, $section ) {
     /* replace links */
     $section.find("a").each( function() {
@@ -116,6 +121,8 @@ function readWordsets( prefix, callback ) {
     fs.readdir( prefix, function( err, dirs ) {
         if( err )
             return callback( err );
+
+        dirs= _.without( dirs, "selected" ); /* selected is used for debugging only */
 
         async.map( dirs, function( dir, done ) {
 
@@ -184,7 +191,7 @@ function getStackEffect( sections ) {
     return stackEffects;
 }
 
-function readDocument( filename, callback ) {
+function readDocument( opts, filename, callback ) {
     fs.readFile( filename, function( err, data ) {
         if( err ) {
             console.log( "ERROR reading latex-html document".bold.red );
@@ -216,6 +223,15 @@ function readDocument( filename, callback ) {
                     $this.attr("name", rewriteLink( name ) );
             });
 
+            $body.find("img").each( function() {
+                var $this = $(this);
+                var src = $this.attr("src");
+                if( !_.contains( opts.mediaFiles, src ) )
+                    opts.mediaFiles.push( src );
+
+                $this.attr("src", rewriteSrc( opts, src ) );
+            });
+
             /* rename wordsets */
             $body.find("[id]").each( function() {
                 var $this = $(this);
@@ -237,8 +253,8 @@ function readDocument( filename, callback ) {
     });
 }
 
-function readDocuments( callback ) {
-    readDir( "latex-html", readDocument, function( err, data ) {
+function readDocuments( opts, callback ) {
+    readDir( "latex-html", _.partial( readDocument, opts ), function( err, data ) {
         if( err )
             return callback( err );
     
@@ -261,7 +277,8 @@ function assimilateAll( filename ) {
         throw new Error( "specify filename" );
 
     /* read all wordsets */
-    readWordsets( "latex-html", function( err, wordSetArray ) {
+    var prefix = "latex-html";
+    readWordsets( prefix, function( err, wordSetArray ) {
         if( err )
             throw err;
 
@@ -277,7 +294,12 @@ function assimilateAll( filename ) {
         });
 
         /* add document */
-        readDocuments( function( err, documents ) {
+        var docOpts = {
+            mediaHttpPrefix: path.join( "/images/standards/", filename ),
+            mediaFilePrefix: path.join(  "images/standards/", filename ),
+            mediaFiles: []
+        };
+        readDocuments( docOpts, function( err, documents ) {
             if( err )
                 throw err;
 
@@ -291,6 +313,22 @@ function assimilateAll( filename ) {
             _.extend( standard, extensions );
 
             fs.writeFile( "standards/" + filename + ".json", JSON.stringify( standard, null, 4 ) );
+
+            /* copy media files */
+            if( docOpts.mediaFiles.length > 0 ) {
+                mkdirp( docOpts.mediaFilePrefix, function( err ) {
+                    if( err )
+                        throw err;
+
+                    async.map( docOpts.mediaFiles, function( mediaFile, done ) {
+                        var src  = path.join( prefix, mediaFile );
+                        var dest = path.join( docOpts.mediaFilePrefix, mediaFile );
+                        fs.createReadStream( src )
+                            .pipe( fs.createWriteStream( dest ) )
+                            .on( "close", done );
+                    });
+                });
+            }
             
             //console.log( "WordSets".bold.magenta, util.inspect( wordSets, { depth: null, colors: true } ) );
         });
@@ -298,7 +336,7 @@ function assimilateAll( filename ) {
 }
 
 function assimilateDocuments() {
-    readDocuments( function( err, documents ) {
+    readDocuments( {}, function( err, documents ) {
         if( err )
             return console.log( err );
 
