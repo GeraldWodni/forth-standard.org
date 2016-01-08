@@ -200,6 +200,15 @@ module.exports = {
                 res.json( { "NOT": "FOUND" } );
         });
 
+        k.router.get("/meta-discussion", function( req, res, next ) {
+            urlContributions( req.path, next, function( contributions ) {
+                k.jade.render( req, res, "meta-discussion", vals( req, {
+                    urlPath: req.path,
+                    contributions: contributions
+                }));
+            });
+        });
+
         k.router.get("/todo", function( req, res ) {
             k.jade.render( req, res, "todo", vals( req ) );
         });
