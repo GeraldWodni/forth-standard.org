@@ -113,6 +113,9 @@ module.exports = {
                 })));
             });
         }
+        k.router.all("/profile/manage-users", function( req, res, next ) {
+            k.setupOpts.checkIsModerator( req, res, next, next );
+        });
         k.router.post("/profile/manage-users", function( req, res, next ) {
             k.postman( req, res, function() {
                 kData.users.update( req.postman.id("user"), { state: req.postman.alpha("state") }, function( err ) {

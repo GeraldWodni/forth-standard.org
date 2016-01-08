@@ -27,6 +27,7 @@ module.exports = {
                     var type    = req.postman.id("type");
                     var subject = req.postman.text("subject");
                     var text    = req.postman.text("text");
+                    var state   = user.state == "moderated" ? "new" : "visible";
 
                     if( req.postman.exists("preview" ) ) {
                         k.jade.render( req, res, "addContribution", vals( req, {
@@ -43,7 +44,7 @@ module.exports = {
                             user: user.id,
                             url: url,
                             type: type,
-                            state: 'new',
+                            state: state,
                             created: kData.sql.nowUtc(),
                             subject: subject,
                             text: text
@@ -53,7 +54,7 @@ module.exports = {
                             k.jade.render( req, res, "addContribution", vals( req, {
                                 url: getUrl( req ),
                                 hideForm: true,
-                                messages: [{type: "success", title: "Success", text: "Thank you, your contribution is now being processed"}]
+                                messages: [{type: "success", title: "Success", text: "Thank you, your contribution is now " + ( state == "visible" ? "online" : "being processed")}]
                             } ));
                         });
                     }

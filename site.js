@@ -212,6 +212,7 @@ module.exports = {
         k.useSiteModule( "/", "forth-standard.org", "userManagement.js", { setup: {
             vals: vals,
             httpStatus: httpStatus,
+            checkIsModerator: checkIsModerator,
             renderUser: function _renderUser( userLink, req, res, next ) {
                 /* user */
                 kData.users.readWhere( "name", [ userLink ], function( err, users ) {
