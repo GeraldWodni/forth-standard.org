@@ -378,9 +378,16 @@ footer {
     margin-bottom: 15px;
     .clearfix();
 
-    .name {
+    .topLine, .bottomLine, .name {
         color: @text-color;
         margin-left: @avatarSize + 5px;
+    }
+
+    .topLine, .bottomLine {
+        line-height: @avatarSize / 2;
+    }
+
+    .name {
         line-height: @avatarSize;
     }
 
@@ -400,6 +407,27 @@ footer {
         font-size: @avatarSize * 0.8;
         padding-left: @avatarSize * 0.1;
         padding-top: @avatarSize * 0.1;
+    }
+}
+
+/* user states */
+.boxItem.user {
+    .bottomLine {
+        .mat( "Grey"; 600 );
+        color: @mat;
+    }
+
+    &.moderated {
+        background-color: @white;
+    }
+    &.unmoderated {
+        background-color: @mat-100;
+    }
+    &.moderator {
+        background-color: @mat-200;
+    }
+    &.moderator {
+        background-color: @mat-300;
     }
 }
 
@@ -569,4 +597,8 @@ footer {
             float: right;
         }
     }
+}
+
+.form-inline {
+    display: inline;
 }

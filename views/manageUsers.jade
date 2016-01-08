@@ -1,0 +1,55 @@
+//- (c)2015 by Gerald Wodni
+
+extends layout
+
+block menu
+    +menu
+
+block title
+    | Manage users
+
+mixin setStateForm( user, state, title, icon )
+    form.form-inline.pull-right(method="post")
+        +hidden-field("user", user.id)
+        +hidden-field("state", state)
+        button.btn.btn-sm.btn-default(title=title)
+            +fa(icon)
+
+block content
+    .container
+        h1
+            | Manage users
+        h4
+            | User states:
+        ul
+            li
+                b moderated
+                |  every new users starts here, all contributions will be hidden until moderated
+            li
+                b unmoderated
+                |  all contributions are immediately visible
+            li
+                b moderator
+                |  allows to moderate users and switch their levels between moderated and unmoderated
+            //- TODO
+            //- li
+            //-     b administrator
+            //-     |  like moderator, but allows switching between all levels for each user
+        +messages( messages )
+
+
+    .container
+        .row
+            each user in users
+                .col-sm-6.col-md-4.col-lg-3
+                    a.boxItem.user(href="/~#{user.name}",class=user.state,target="_blank")
+                        +gravatar( user.emailMd5, user.name, 48 ).pull-left
+                        if user.state == "moderated"
+                            +setStateForm(user, "unmoderated", "Set unmoderated", "arrow-up")
+                        else if user.state == "unmoderated"
+                            +setStateForm(user, "moderated", "Set moderated", "arrow-down")
+                        .topLine
+                            = user.name
+                        .bottomLine
+                            = user.state
+

@@ -13,15 +13,8 @@ block content
         .row
             .col-md-8
                 if manage
-                    h2 Manage profile
-                    //- a.btn.btn-primary(href="/profile/upload")
-                    //-     i.fa.fa-plus
-                    //-     |  Upload package
-                    //- |  
-                    a.btn.btn-default(href="/profile/change-password")
-                        +fa("key")
-                        |  Change password
                     if user.state=='moderator'
+                        h2 Moderate
                         |  
                         a.btn.btn-default(href="/profile/review-contributions")
                             +fa("comment-o")
@@ -30,6 +23,19 @@ block content
                         a.btn.btn-default(href="/profile/review-replies")
                             +fa("comments-o")
                             |  Review Replies
+                        |  
+                        a.btn.btn-default(href="/profile/manage-users")
+                            +fa("users")
+                            |  Manage Users
+
+                    h2 Manage profile
+                    a.btn.btn-default(href="/profile/settings")
+                        +fa("cog")
+                        |  Settings
+                    |  
+                    a.btn.btn-default(href="/profile/change-password")
+                        +fa("key")
+                        |  Change password
 
                 h2
                     | Contributions by 
