@@ -85,7 +85,10 @@ module.exports = {
         }
         k.router.post("/profile/settings", function( req, res, next ) {
             k.postman( req, res, function() {
-                kDb.query("UPDATE users SET dailyDigest=? WHERE name=?", [ req.postman.exists( "dailyDigest" )?1:0, req.session.loggedInUsername ], function( err ) {
+                kData.query("updateUserSettings", {
+                    dailyDigest: req.postman.exists( "dailyDigest" )?1:0,
+                    userName: req.session.loggedInUsername,
+                }, function( err ) {
                     var message;
                     if( err )
                         message = { error: err.toString() };

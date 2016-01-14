@@ -118,13 +118,7 @@ module.exports = {
 
         /* get all contributions to a specific url */
         function urlContributions( urlPath, next, callback ) {
-            db.query( { sql: "SELECT * FROM contributions"
-                + " INNER JOIN users ON users.id=contributions.user"
-                + " LEFT JOIN replies ON replies.contribution=contributions.id AND replies.state='visible'"
-                + " LEFT JOIN users AS replyUsers ON replyUsers.id=replies.user"
-                + " WHERE contributions.url=? AND contributions.state='visible'",
-                nestTables: true }, [ urlPath ], function( err, items ) {
-
+            kData.query( "urlContributions", { url: urlPath }, function( err, items ) {
                 if( err ) return next( err );
 
                 var groupedContributions = [];
@@ -235,9 +229,7 @@ module.exports = {
 
                         user.emailMd5 = md5( user.email );
 
-                        db.query( "SELECT contributions.* FROM contributions"
-                            + " INNER JOIN replies ON contributions.id=replies.contribution WHERE replies.user=? GROUP BY contributions.id",
-                            [ user.id ], function( err, replyContributions ) {
+                        kData.query( "userContributionsReplies", { user: user.id }, function( err, replyContributions ) {
                             if( err ) return next( err );
 
                             contributions.forEach( function( contribution ) {
@@ -312,11 +304,10 @@ module.exports = {
             /* list open items */
             k.router.get("/profile/review-" + opts.table, function( req, res, next ) {
                 checkIsModerator( req, res, next, function() {
-                    db.query({ sql: opts.query, nestTables: true }, [], function( err, items ) {
-
+                    kData.query( opts.name, function( err, items ) {
                         formatUserContents( opts.table, "users", items );
 
-                        k.jade.render( req, res, opts.jadeFile, vals( req, {
+                        k.jade.render( req, res, opts.name, vals( req, {
                             messages: req.messages,
                             items: items
                         }));
@@ -328,17 +319,13 @@ module.exports = {
         routeReview({
             table: "contributions",
             successText: "Contribution reviewed",
-            query: "SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id"
-                + " WHERE contributions.state='new'",
-            jadeFile: "reviewContributions"
+            name: "reviewContributions"
         });
 
         routeReview({
             table: "replies",
             successText: "Replies reviewed",
-            query: "SELECT * FROM replies INNER JOIN users ON replies.user=users.id"
-                + " INNER JOIN contributions ON replies.contribution=contributions.id WHERE replies.state='new'",
-            jadeFile: "reviewReplies"
+            name: "reviewReplies"
         });
 
         /* gravatar proxy */

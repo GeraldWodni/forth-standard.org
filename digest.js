@@ -23,20 +23,7 @@ module.exports = {
 
         function sendDigests() {
             /* get all undigested contributions and replies and the new item counts */
-            kDb.query(
-                  " SELECT users.name, contributions.created, contributions.url, contributions.type, contributions.subject, contributions.text"
-                + " FROM contributions"
-                + " INNER JOIN users ON users.id=contributions.user"
-                + " WHERE contributions.dailyDigest=0 AND contributions.state='visible';"
-
-                + " SELECT users.name, replies.created, contributions.url, contributions.type, contributions.subject, replies.text"
-                + " FROM replies"
-                + " INNER JOIN contributions ON contributions.id=replies.contribution"
-                + " INNER JOIN users ON users.id=contributions.user"
-                + " WHERE replies.dailyDigest=0 AND replies.state='visible';"
-
-                + " SELECT COUNT(1) FROM contributions WHERE state='new';"
-                + " SELECT COUNT(1) FROM replies WHERE state='new'", [], function( err, data ) {
+            kData.query( "dailyDigestItems", function( err, data ) {
 
                 if( err )
                     return console.log( "DIGEST FAILED!".bold.red, err );
@@ -86,7 +73,7 @@ module.exports = {
                 /* TODO: insert into dailyDigests */
                 /* TODO: email digest once every 5 minutes if pending on startup / after creation */
 
-                console.log( "DIGEST DATA:".bold.green, text );
+                //console.log( "DIGEST DATA:".bold.green, text );
             });
 
             console.log( "DIGEST".bold.red );
