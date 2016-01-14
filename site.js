@@ -358,6 +358,9 @@ module.exports = {
             });
         });
 
+        /* digest daemon */
+        k.useSiteModule( null, "forth-standard.org", "digest.js" );
+
         /* catch all */
         k.router.all("*", function( req, res ) {
             httpStatus( req, res, 404 );
