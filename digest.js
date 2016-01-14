@@ -21,12 +21,10 @@ module.exports = {
             return text.match( RegExp( regex, 'g' ) ).join( separator );
         }
 
-        function sendDigests() {
+        function sendDigests( next ) {
             /* get all undigested contributions and replies and the new item counts */
             kData.query( "dailyDigestItems", function( err, data ) {
-
-                if( err )
-                    return console.log( "DIGEST FAILED!".bold.red, err );
+                if( err ) return next( err );
 
                 /* prepare text */
                 var text = "";
@@ -67,6 +65,39 @@ module.exports = {
                     text += "\n| see: https://forth-standard.org" + reply.url;
                 });
 
+                /* create new digest */
+                if( contributions.length > 0 || replies.counts > 0 ) {
+                    kData.transaction.begin( function( err, conn ) {
+                        if( err ) return next( err );
+
+                        kData.transaction.query( conn, "insertDailyDigest", { text: text }, function( err, result ) {
+                            if( err ) return kData.transaction.rollback( conn, _.partial( next, err ) );
+
+                            /* update contribution's dailyDigest */
+                            kData.transaction.mapQuery( conn, "updateContributionDailyDigest", contributions, function( args, done ) {
+                                console.log( { id: args.id, dailyDigest: result.insertId });
+                                done( null, { id: args.id, dailyDigest: result.insertId });
+
+                            }, function( err ) {
+                                if( err ) return kData.transaction.rollback( conn, _.partial( next, err ) );
+
+                                /* update reply's dailyDigest */
+                                kData.transaction.mapQuery( conn, "updateReplyDailyDigest", replies, function( args, done ) {
+                                    done( null, { id: args.id, dailyDigest: result.insertId });
+                                }, function( err ) {
+                                    if( err ) return kData.transaction.rollback( conn, _.partial( next, err ) );
+
+                                    kData.transaction.commitOrRollback( conn, function( err ) {
+                                        next( err, "created" );
+                                    });
+                                });
+                            });
+                        });
+                    });
+                }
+                else
+                    next( null, "skipped" );
+
 
                 /* TODO: get moderator text */
                 /* TODO: create table dailyDigests */
@@ -105,7 +136,12 @@ module.exports = {
 
 
         //console.log( "FiFi".bold.red, nextTime.toDate() );
-        sendDigests();
+        sendDigests( function( err, success) {
+            if( err )
+                console.log( "sendDigest".bold.red, err );
+            else
+                console.log( "sendDigest".bold.green, success );
+        });
     }
 }
 

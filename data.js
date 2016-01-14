@@ -1,3 +1,4 @@
+var async   = require("async");
 var _       = require("underscore");
 
 module.exports = {
@@ -50,12 +51,12 @@ module.exports = {
             },
             /* get all undigested contributions and replies and the new item counts */
             dailyDigestItems: { sql:
-                  " SELECT users.name, contributions.created, contributions.url, contributions.type, contributions.subject, contributions.text"
+                  " SELECT users.name, contributions.id, contributions.created, contributions.url, contributions.type, contributions.subject, contributions.text"
                 + " FROM contributions"
                 + " INNER JOIN users ON users.id=contributions.user"
                 + " WHERE contributions.dailyDigest=0 AND contributions.state='visible';"
 
-                + " SELECT users.name, replies.created, contributions.url, contributions.type, contributions.subject, replies.text"
+                + " SELECT users.name, replies.id, replies.created, contributions.url, contributions.type, contributions.subject, replies.text"
                 + " FROM replies"
                 + " INNER JOIN contributions ON contributions.id=replies.contribution"
                 + " INNER JOIN users ON users.id=contributions.user"
@@ -67,12 +68,18 @@ module.exports = {
             updateUserSettings: { args: [ "dailyDigest", "userName" ], sql:
                 "UPDATE users SET dailyDigest=? WHERE name=?"
             },
-            insertDailyDigest: { args: [ "text" ], sql: 
-                ""
+            updateContributionDailyDigest: { args: [ "dailyDigest", "id" ], sql:
+                "UPDATE contributions SET dailyDigest=? WHERE id=?"
+            },
+            updateReplyDailyDigest: { args: [ "dailyDigest", "id" ], sql:
+                "UPDATE replies SET dailyDigest=? WHERE id=?"
+            },
+            insertDailyDigest: { args: [ "text" ], sql:
+                "INSERT INTO dailyDigests (created, text) VALUES(NOW(), ?)"
             }
         }
 
-        function query( name, args, callback ) {
+        function query( connection, name, args, callback ) {
             if( ! _.has( queries, name ) )
                 return callback( new Error( "Unknown query >" + name + "<" ) );
 
@@ -89,14 +96,66 @@ module.exports = {
                 callback = args;
 
             /* perform query (without args) */
-            db.query( _.omit( query, "args" ), values, callback );
+            connection.query( _.omit( query, "args" ), values, callback );
         }
 
-        return {
+        function mapQuery( connection, name, args, mapFunction, callback ) {
+            /* map all arguments */
+            async.mapSeries( args, function( arg, done ) {
+                /* callback */
+                mapFunction( arg, function( err, values ) {
+                    if( err ) return done( err );
+                    query( connection, name, values, done );
+                });
+            }, callback );
+
+            //async.mapSeries( args, _.bind( query, name ), callback );
+        }
+
+        /* get connection and begin transaction */
+        function beginTransaction( callback ) {
+            db.getConnection( function( err, connection ) {
+                if( err ) return callback( err );
+
+                connection.beginTransaction( function( err ) {
+                    callback( err, connection );
+                });
+            });
+        }
+
+        /* rollback and release connection */
+        function rollback( connection, callback ) {
+            connection.rollback( function() {
+                connection.release();
+                callback();
+            });
+        }
+
+        /* attempt to commit, rollback on error */
+        function commitOrRollback( connection, callback ) {
+            connection.commit( function( err ) {
+                if( err ) return rollback( connection, function() { callback( err ); });
+                connection.release();
+                callback();
+            });
+        }
+
+        console.log( "DATA --- 1" );
+        var x ={
             users:          users,
             contributions:  contributions,
             replies:        replies,
-            query:          query
+            query:          _.partial( query, db ),    /* bind to pool */
+            mapQuery:       _.partial( mapQuery, db ), /* bind to pool */
+            transaction:   {
+                begin:              beginTransaction,
+                commitOrRollback:   commitOrRollback,
+                rollback:           rollback,
+                query:              query,
+                mapQuery:           mapQuery
+            }
         };
+        console.log( "DATA --- 2" );
+        return x;
     }
 }
