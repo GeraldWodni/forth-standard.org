@@ -25,6 +25,8 @@ module.exports = {
 
         /* keep all sql queries in this file for easy maintenance */
         var queries = {
+
+            /** contributions & replies  **/
             /* review contributions, all new contributions */
             reviewContributions: { nestTables: true, sql:
                   " SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id"
@@ -49,6 +51,8 @@ module.exports = {
                 + " LEFT JOIN users AS replyUsers ON replyUsers.id=replies.user"
                 + " WHERE contributions.url=? AND contributions.state='visible'"
             },
+
+            /** digests **/
             /* get all undigested contributions and replies and the new item counts */
             dailyDigestItems: { sql:
                   " SELECT users.name, contributions.id, contributions.created, contributions.url, contributions.type, contributions.subject, contributions.text"
@@ -60,13 +64,31 @@ module.exports = {
                 + " FROM replies"
                 + " INNER JOIN contributions ON contributions.id=replies.contribution"
                 + " INNER JOIN users ON users.id=contributions.user"
-                + " WHERE replies.dailyDigest=0 AND replies.state='visible';"
-
-                + " SELECT COUNT(1) FROM contributions WHERE state='new';"
-                + " SELECT COUNT(1) FROM replies WHERE state='new'"
+                + " WHERE replies.dailyDigest=0 AND replies.state='visible'"
+            },
+            pendingContributionsReplies: { sql:
+                  " SELECT COUNT(1) AS `count` FROM contributions WHERE state='new';"
+                + " SELECT COUNT(1) AS `count` FROM replies WHERE state='new';"
+                + " SELECT id, email FROM users"
+                + " WHERE state='moderator' AND dailyDigest"
+                + " AND DATE_ADD( lastModerationReminder, INTERVAL 23 HOUR ) < NOW()"
+            },
+            unsentDailyDigests: { sql:
+                  " SELECT users.id AS userId, users.email, dailyDigests.id, dailyDigests.created, dailyDigests.text"
+                + " FROM users"
+                + " INNER JOIN dailyDigests"
+                + " ON dailyDigests.id = (SELECT MAX(id) FROM dailyDigests)"
+                + " AND users.lastDailyDigest <> dailyDigests.id"
+                + " WHERE users.dailyDigest"
             },
             updateUserSettings: { args: [ "dailyDigest", "userName" ], sql:
                 "UPDATE users SET dailyDigest=? WHERE name=?"
+            },
+            updateUserLastDailyDigest: { args: [ "lastDailyDigest", "userId" ], sql:
+                "UPDATE users SET lastDailyDigest=? WHERE id=?"
+            },
+            updateUserLastModerationReminder: { args: [ "userId" ], sql:
+                "UPDATE users SET lastModerationReminder=NOW() WHERE id=?"
             },
             updateContributionDailyDigest: { args: [ "dailyDigest", "id" ], sql:
                 "UPDATE contributions SET dailyDigest=? WHERE id=?"
@@ -140,8 +162,7 @@ module.exports = {
             });
         }
 
-        console.log( "DATA --- 1" );
-        var x ={
+        return {
             users:          users,
             contributions:  contributions,
             replies:        replies,
@@ -155,7 +176,5 @@ module.exports = {
                 mapQuery:           mapQuery
             }
         };
-        console.log( "DATA --- 2" );
-        return x;
     }
 }

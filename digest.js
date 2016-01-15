@@ -1,27 +1,27 @@
 // digest daemon
 // (c)copyright 2015 by Gerald Wodni <gerald.wodni@gmail.com>
 
-var moment  = require("moment");
-var _       = require("underscore");
+var async           = require("async");
+var moment          = require("moment");
+var _               = require("underscore");
+var nodemailer      = require("nodemailer");
+var smtpTransport   = require("nodemailer-smtp-transport");
 
 module.exports = {
     setup: function( k ) {
 
         var kData = k.getData();
         var kDb = k.getDb();
+        var config = k.getWebsiteConfig( "dailyDigests", {} );
 
-        var maxLineLength = 78 - 2;
-        var dateTimeFormat = 'YYYY-MM-DD HH:mm:ss';
-        function formatDate( date ) {
-            return moment( date ).format( dateTimeFormat );
+
+
+        /** create digests **/
+        function formatDate( date, format ) {
+            return moment( date ).format( format || config.dateTimeFormat );
         }
 
-        function wordwrap( text, width, separator ) {
-            var regex = '.{1,' + width + '}(\s|$)|\S+?(\s|$)';
-            return text.match( RegExp( regex, 'g' ) ).join( separator );
-        }
-
-        function sendDigests( next ) {
+        function createDigest( next ) {
             /* get all undigested contributions and replies and the new item counts */
             kData.query( "dailyDigestItems", function( err, data ) {
                 if( err ) return next( err );
@@ -30,8 +30,6 @@ module.exports = {
                 var text = "";
                 var contributions    = data[0];
                 var replies          = data[1];
-                var newContributions = data[2][0][0];
-                var newReplies       = data[3][0][0];
 
                 /* contributions */
                 if( contributions.length > 0 ) {
@@ -75,7 +73,6 @@ module.exports = {
 
                             /* update contribution's dailyDigest */
                             kData.transaction.mapQuery( conn, "updateContributionDailyDigest", contributions, function( args, done ) {
-                                console.log( { id: args.id, dailyDigest: result.insertId });
                                 done( null, { id: args.id, dailyDigest: result.insertId });
 
                             }, function( err ) {
@@ -97,51 +94,148 @@ module.exports = {
                 }
                 else
                     next( null, "skipped" );
-
-
-                /* TODO: get moderator text */
-                /* TODO: create table dailyDigests */
-                /* TODO: insert into dailyDigests */
-                /* TODO: email digest once every 5 minutes if pending on startup / after creation */
-
-                //console.log( "DIGEST DATA:".bold.green, text );
             });
-
-            console.log( "DIGEST".bold.red );
         }
 
         /* first fire */
         var nextTime = moment.utc();
-        nextTime.set("hour",   10);
-        nextTime.set("minute",  0);
+        nextTime.set("hour",   config.sendHourUTC);
+        nextTime.set("minute",  5);
         nextTime.set("seconds", 0);
 
         /* server started late, add a day */
         if( nextTime < moment.utc() ) {
-            console.log( "FiAdd".bold.red );
             nextTime.add( 1, "days" );
         }
 
         /* perform tick and setup next tick */
         function tick() {
-            sendDigests();
+            createDigest( function( err, success ) {
+                if( err )
+                    console.log( "createDigest".bold.red, err );
+                else {
+                    console.log( "createDigest".bold.green, success );
+                    startSendDigests();
+                }
+            });
             nextTime.add( 1, "days" );
             arm( nextTime, tick );
         }
         function arm( targetTime, callback ) {
             setTimeout( callback, targetTime - moment.utc() );
         }
-
+        /* arm for first tick */
         arm( nextTime, tick );
 
 
-        //console.log( "FiFi".bold.red, nextTime.toDate() );
-        sendDigests( function( err, success) {
-            if( err )
-                console.log( "sendDigest".bold.red, err );
-            else
-                console.log( "sendDigest".bold.green, success );
-        });
+
+        /** sending digests **/
+        var emailTransport = nodemailer.createTransport( smtpTransport({
+            host: config.smtp.host,
+            port: config.smtp.port || 25,
+            tls: {
+                rejectUnauthorized: false
+            },
+            auth: {
+                user: config.smtp.user,
+                pass: config.smtp.password
+            }
+        }));
+
+        function sendEmail( email, subject, text, callback ) {
+            /* send email */
+            emailTransport.sendMail({
+                from: config.smtp.email,
+                to: email,
+                subject: subject,
+                text: text
+            }, callback );
+        }
+
+        function sendDigest( row, callback ) {
+            var subject = config.subject
+                .replace( /{id}/g, row.id )
+                .replace( /{created}/g, formatDate( row.created, config.dateFormat ) );
+            var text = config.text
+                .replace( /{text}/g, row.text );
+
+            /* send email */
+            console.log( "Sending dailyDigest", subject, " to", row.email );
+            sendEmail( row.email, subject, text, function( err ){
+                if( err ) return callback( err );
+                kData.query( "updateUserLastDailyDigest", { lastDailyDigest: row.id, userId: row.userId }, callback );
+            });
+        }
+
+        function sendDigests( callback ) {
+            kData.query( "unsentDailyDigests", function( err, data ) {
+                if( err ) return callback( err );
+
+                async.mapSeries( data, function( row, done ) {
+                    sendDigest( row, function( err ) {
+                        if( err ) return done( err );
+
+                        setTimeout( done, config.sendDelay * 1000 );
+                    });
+                }, callback);
+            });
+        }
+
+        function sendPendingReminders( callback ) {
+            kData.query( "pendingContributionsReplies", function( err, data ) {
+                if( err ) return callback( err );
+
+                var newContributions = data[0][0].count;
+                var newReplies       = data[1][0].count;
+                var moderatorEmails  = data[2];
+
+                var subject = config.moderationReminder.subject
+                    .replace( /{newContributions}/g, newContributions )
+                    .replace( /{newReplies}/g, newReplies );
+                var text = config.moderationReminder.text;
+
+                /* send out all reminders */
+                if( newContributions > 0 || newReplies > 0 )
+                    async.mapSeries( moderatorEmails, function( row, done ) {
+
+                        /* send email */
+                        console.log( "Sending moderationReminder", subject, " to", row.email );
+                        sendEmail( row.email, subject, text, function( err ){
+                            if( err ) return done( err );
+                            kData.query( "updateUserLastModerationReminder", { userId: row.id }, function( err ) {
+                                if( err ) return done( err );
+                                setTimeout( done, config.sendDelay * 1000 );
+                            });
+                        });
+                    }, callback);
+                else
+                    callback( null, "skipped" );
+            });
+        }
+
+
+        function startSendDigests() {
+            setTimeout( function() {
+                sendDigests( function( err, success ) {
+                    if( err )
+                        console.log( "sendDigests".bold.red, err );
+                    else {
+                        console.log( "sendDigests".bold.green, success );
+                        sendPendingReminders( function( err, success ) {
+                            if( err )
+                                console.log( "sendPendingReminders".bold.red, err );
+                            else
+                                console.log( "sendPendingReminders".bold.green, success );
+                        });
+                    }
+                });
+            }, config.initalDelay * 1000 );
+        }
+
+        /* start sending any unfinished digests if it won't collide with next digest */
+        var gapSeconds = (nextTime - moment.utc()) / 1000;
+        if( gapSeconds > config.sendGap )
+            startSendDigests();
     }
 }
 
