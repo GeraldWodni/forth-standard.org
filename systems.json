@@ -1,0 +1,290 @@
+[
+    {
+        "stars": null,
+        "name": "AmForth",
+        "link": "https://github.com/search?q=amforth&type=Repositories&s=updated",
+        "lang": "Assembly",
+        "cpu": "AVR, MSP430",
+        "description": "<em>(13 repositories)</em>"
+    },
+    {
+        "stars": 126,
+        "name": "pijFORTHos",
+        "link": "https://github.com/organix/pijFORTHos",
+        "lang": "Assembly",
+        "cpu": "ARM",
+        "description": "Bare-metal FORTH operating system for Raspberry Pi"
+    },
+    {
+        "stars": 53,
+        "name": "Swapforth",
+        "link": "https://github.com/jamesbowman/swapforth",
+        "lang": "Assembly",
+        "cpu": "J1, FT900, x64",
+        "description": "Cross-platform 32-bit ANS Forth"
+    },
+    {
+        "stars": 44,
+        "name": "jonesforth",
+        "link": "https://github.com/chengchangwu/jonesforth",
+        "lang": "Assembly",
+        "cpu": "x86",
+        "description": "ANS FORTH version of jonesforth"
+    },
+    {
+        "stars": 30,
+        "name": "DCPU",
+        "link": "https://github.com/hellige/dcpu",
+        "lang": "Assembly",
+        "cpu": "DCPU-16",
+        "description": "Forth for Notch's DCPU-16"
+    },
+    {
+        "stars": 29,
+        "name": "CoreForth",
+        "link": "https://github.com/ekoeppen/CoreForth",
+        "lang": "Assembly",
+        "cpu": "ARM",
+        "description": "Forth for the Cortex-M3"
+    },
+    {
+        "stars": 23,
+        "name": "JonesForth-arm",
+        "link": "https://github.com/M2IHP13-admin/JonesForth-arm",
+        "lang": "Assembly",
+        "cpu": "ARM",
+        "description": "ARM port of JonesForth"
+    },
+    {
+        "stars": 22,
+        "name": "DurexForth",
+        "link": "https://github.com/jkotlinski/durexforth",
+        "lang": "Assembly",
+        "cpu": "6502",
+        "description": "Modern C64 Forth"
+    },
+    {
+        "stars": 13,
+        "name": "asforth",
+        "link": "https://github.com/nfz/asforth",
+        "lang": "Assembly",
+        "cpu": "AVR",
+        "description": "Subroutine threaded Forth for Atmega328"
+    },
+    {
+        "stars": 9,
+        "name": "PETTIL",
+        "link": "https://github.com/chitselb/pettil",
+        "lang": "Assembly",
+        "cpu": "6502",
+        "description": "Forth for the Commodore PET 2001"
+    },
+    {
+        "stars": 8,
+        "name": "FlashForth",
+        "link": "https://github.com/oh2aun/flashforth",
+        "lang": "Assembly",
+        "cpu": "PIC, AVR",
+        "description": "Forth system for the Microchip PIC 18, 24, 30, 33 and the Atmel Atmega"
+    },
+    {
+        "stars": 7,
+        "name": "feline",
+        "link": "https://github.com/gnooth/feline",
+        "lang": "Assembly",
+        "cpu": "x64",
+        "description": "64-bit native code Forth 200x"
+    },
+    {
+        "stars": 6,
+        "name": "OSX-Forth",
+        "link": "https://github.com/vygr/OSX-Forth",
+        "lang": "Assembly",
+        "cpu": "x86",
+        "description": "Forth for OSX"
+    },
+    {
+        "stars": 3,
+        "name": "j1eforth",
+        "link": "https://github.com/samawati/j1eforth",
+        "lang": "Assembly",
+        "cpu": "J1",
+        "description": "eForth for the j1"
+    },
+    {
+        "stars": 3,
+        "name": "megaforth",
+        "link": "https://github.com/ehaliewicz/megaforth",
+        "lang": "Assembly",
+        "cpu": "68000",
+        "description": "Forth designed for the Sega Megadrive"
+    },
+    {
+        "stars": 2,
+        "name": "MecrispStellaris",
+        "link": "https://github.com/jjonethal/mecrisp-stellaris",
+        "lang": "Assembly",
+        "cpu": "ARM Cortex",
+        "description": "Mecrisp Stellaris Forth for ARM Cortex Architectures"
+    },
+    {
+        "stars": 1,
+        "name": "CF430R",
+        "link": "https://github.com/mikalus/CF430FR",
+        "lang": "Assembly",
+        "cpu": "MSP430",
+        "description": "CamelForth for MSP430"
+    },
+    {
+        "stars": 1,
+        "name": "Mecrisp",
+        "link": "http://mecrisp.sourceforge.net",
+        "lang": "Assembly",
+        "cpu": "MSP430",
+        "description": "Mecrisp Forth for MSP430"
+    },
+    {
+        "stars": 49,
+        "name": "lbForth",
+        "link": "https://github.com/larsbrinkhoff/lbForth",
+        "lang": "Forth",
+        "cpu": "x86",
+        "description": "Self-hosting metacompiled Forth, bootstrapping from a few lines of C"
+    },
+    {
+        "stars": 8,
+        "name": "PicForth",
+        "link": "https://github.com/samueltardieu/picforth",
+        "lang": "Forth",
+        "cpu": "PIC16",
+        "description": "Forth cross-compiler for PIC16Fxxx"
+    },
+    {
+        "stars": 8,
+        "name": "myforth-arduino",
+        "link": "https://github.com/CharleyShattuck/myforth-arduino",
+        "lang": "Forth",
+        "cpu": "AVR",
+        "description": "Simple, non-standard, tethered Forth for the Arduino"
+    },
+    {
+        "stars": 7,
+        "name": "m3forth",
+        "link": "https://github.com/oco2000/m3forth",
+        "lang": "Forth",
+        "cpu": "ARM",
+        "description": "Cross-compiler for Cortex-M3"
+    },
+    {
+        "stars": 6,
+        "name": "cmFORTH",
+        "link": "https://github.com/ForthHub/cmFORTH",
+        "lang": "Forth",
+        "cpu": "NC4016",
+        "description": ""
+    },
+    {
+        "stars": 5,
+        "name": "FIG-Forth",
+        "link": "https://github.com/ForthHub/FIG-Forth",
+        "lang": "Forth",
+        "cpu": "6502",
+        "description": ""
+    },
+    {
+        "stars": 2,
+        "name": "sbc09 Forth",
+        "link": "https://github.com/6809/sbc09",
+        "lang": "Forth",
+        "cpu": "6809",
+        "description": ""
+    },
+    {
+        "stars": 61,
+        "name": "Easy Forth",
+        "link": "https://github.com/skilldrick/easyforth",
+        "lang": "JavaScript",
+        "cpu": "",
+        "description": "Small ebook for learning Forth"
+    },
+    {
+        "stars": 4,
+        "name": "project-k",
+        "link": "https://github.com/hcchengithub/project-k",
+        "lang": "JavaScript",
+        "cpu": "",
+        "description": "Forth kernel in JavaScript"
+    },
+    {
+        "stars": 3,
+        "name": "Sonnet",
+        "link": "https://github.com/doy/sonnet",
+        "lang": "Lua",
+        "cpu": "",
+        "description": "forth-like language interpreter, written in lua"
+    },
+    {
+        "stars": 3,
+        "name": "forthlike",
+        "link": "https://github.com/Omnifarious/forthlike",
+        "lang": "Python",
+        "cpu": "",
+        "description": "A very simple Forth-like language implemented in Python"
+    },
+    {
+        "stars": 2,
+        "name": "jeforth.3we",
+        "link": "https://github.com/hcchengithub/jeforth.3we",
+        "lang": "JavaScript",
+        "cpu": "",
+        "description": "jeforth 3 words engine"
+    },
+    {
+        "stars": 41,
+        "name": "pForth",
+        "link": "https://github.com/philburk/pforth",
+        "lang": "C",
+        "cpu": "",
+        "description": "Portable Forth"
+    },
+    {
+        "stars": 20,
+        "name": "Gforth",
+        "link": "https://github.com/forthy42/gforth",
+        "lang": "C",
+        "cpu": "",
+        "description": "Gforth mirror"
+    },
+    {
+        "stars": 13,
+        "name": "staapl",
+        "link": "https://github.com/zwizwa/staapl",
+        "lang": "Racket",
+        "cpu": "PIC18",
+        "description": "Racket-based Forth / Macro Assembler on steroids for PIC18F"
+    },
+    {
+        "stars": 3,
+        "name": "uForth",
+        "link": "https://github.com/tcoram/uforth",
+        "lang": "C",
+        "cpu": "",
+        "description": "Very portable (embeddable) switch threaded Forth"
+    },
+    {
+        "stars": 3,
+        "name": "rtForth",
+        "link": "https://github.com/chengchangwu/rtforth",
+        "lang": "Rust",
+        "cpu": "",
+        "description": "Forth implemented in Rust for realtime application"
+    },
+    {
+        "stars": 3,
+        "name": "Creole Forth",
+        "link": "https://github.com/tiluser/Creole-Forth",
+        "lang": "Pascal",
+        "cpu": "",
+        "description": "Scripting language in the form of a Delphi/Lazarus component"
+    }
+]

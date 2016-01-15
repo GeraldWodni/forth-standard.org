@@ -12,8 +12,10 @@ module.exports = {
     setup: function( k ) {
 
         var standard = { wordSets: {} };
+        var systems = [];
         var searchIndex = {};
 
+        /* read standard */
         k.readHierarchyFile( "forth-standard.org", "standards/2012.json", function( err, content ) {
             standard = JSON.parse( content );
             _.each( standard.wordSets, function( wordSet ) {
@@ -29,6 +31,11 @@ module.exports = {
                     searchIndex[index] = matches;
                 });
             });
+        });
+
+        /* read systems */
+        k.readHierarchyFile( "forth-standard.org", "systems.json", function( err, content ) {
+            systems = JSON.parse( content );
         });
 
         /* add common values for rendering */
@@ -111,8 +118,8 @@ module.exports = {
             item[dataTable].markdownText = marked( item[dataTable].text );
             item[dataTable].createdFormated = moment( item[dataTable].created ).format( kData.sql.dateTimeFormat );
             item[userTable].emailMd5 = md5( item[userTable].email );
-	    if( item.contributions && item.contributions.url )
-            	item[dataTable].title = urlToTitle( item.contributions.url );
+            if( item.contributions && item.contributions.url )
+                item[dataTable].title = urlToTitle( item.contributions.url );
             return item;
         }
 
@@ -192,6 +199,10 @@ module.exports = {
                 k.jade.render( req, res, "wordSet", vals( req, { standard: standard, wordSet: standard.wordSets[ wordSetName ] } ) );
             else
                 res.json( { "NOT": "FOUND" } );
+        });
+
+        k.router.get("/systems", function( req, res, next ) {
+            k.jade.render( req, res, "systems", vals( req, { systems: systems } ) );
         });
 
         k.router.get("/meta-discussion", function( req, res, next ) {

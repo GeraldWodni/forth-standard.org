@@ -1,0 +1,32 @@
+//- (c)2016 by Gerald Wodni
+
+extends layout
+
+block menu
+    +menu
+
+block title
+    | Systems
+
+block content
+    +box
+        h1 Systems
+        p
+            | List of Forth Systems hosted on github, taken from the 
+            a(href="https://github.com/ForthHub/wiki/wiki/Forth-Systems")
+                | ForthHub wiki
+            | .
+
+        each system in systems
+            div.system
+                div.row
+                    div.col-lg-2
+                        a(href=system.link)
+                            = system.name
+                    div.col-lg-2
+                        = system.lang
+                    div.col-lg-2
+                        = system.cpu
+                    div.col-lg-6
+                        != system.description
+            
