@@ -43,6 +43,7 @@ module.exports = {
                     "testcase":"Suggested Testcase",
                     "requestClarification":"Request for clarification",
                     "referenceImplementation":"Suggested reference implementation",
+                    "proposal":"Proposal",
                     "comment":"Comment"
                 }
             });
@@ -188,8 +189,8 @@ module.exports = {
                         contributions: contributions
                     }));
                 });
-            else if( wordSetName in standard.wordSets )
-                k.jade.render( req, res, "wordSet", vals( req, { standard: standard, wordSet: standard.wordSets[ wordSetName ] } ) );
+            else if( document in standard.wordSets )
+                k.jade.render( req, res, "wordSet", vals( req, { standard: standard, wordSet: standard.wordSets[ document ] } ) );
             else
                 res.json( { "NOT": "FOUND" } );
         });
@@ -330,6 +331,18 @@ module.exports = {
 
         /* gravatar proxy */
         k.proxyCache.gravatar( k.website, k.router );
+
+        /** proposals **/
+        k.router.get("/proposals", function( req, res ) {
+            db.query( { sql: "SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id"
+                + " WHERE contributions.state='visible' AND `contributions`.`type`='proposal'"
+                + " ORDER BY contributions.created DESC",
+                nestTables: true }, [], function( err, contributions ) {
+                contributions   = formatUserContents( "contributions",  "users", contributions );
+                k.jade.render( req, res, "proposals", vals( req, { contributions: contributions } ) );
+            });
+        });
+
 
         /** home **/
         k.router.get("/", function( req, res ) {

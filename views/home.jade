@@ -75,18 +75,6 @@ block content
             a(href="/meta-discussion") Meta Discussion
             | .
 
-        mixin latestContribution( item, dataTable )
-            a(href=item.contributions.url)
-                div.user(title=item.users.name)
-                    +gravatar(item.users.emailMd5, item.users.name, 40)
-                h5.document
-                    = item[dataTable].title
-                h5.subject
-                    = item.contributions.subject
-                h6.type
-                    = contributionTypeName[ item.contributions.type ]
-                div.date
-                    = item[dataTable].createdFormated
         .row
             .col-sm-6
                 h3 Latest contributions:

@@ -33,7 +33,8 @@ mixin avatar( user, size )
 mixin menu
     ul.navbar-nav
         +menuItem("/standard/words",            "list-ul",      "Standard")
-        +menuItem("http://www.forth200x.org",   "wrench",       "Committee")
+        //+menuItem("http://www.forth200x.org",   "wrench",       "Committee")
+        +menuItem("/proposals",   "wrench",       "Proposals")
         +menuItem("http://theforth.net",        "cube",         "Packages" )
         //+menuItem("http://forth-ev.de",         "comments-o",   {sm:"DE",all:"DE-Community"} ).hidden-314
         //+menuItem("http://forth.org",           "comments",     {sm:"EN",all:"EN-Community"} ).hidden-370
@@ -101,6 +102,18 @@ mixin box-word
                         block
                         include contributions
 
+mixin latestContribution( item, dataTable )
+    a(href=item.contributions.url)
+        div.user(title=item.users.name)
+            +gravatar(item.users.emailMd5, item.users.name, 40)
+        h5.document
+            = item[dataTable].title
+        h5.subject
+            = item.contributions.subject
+        h6.type
+            = contributionTypeName[ item.contributions.type ]
+        div.date
+            = item[dataTable].createdFormated
 
 html
     head
