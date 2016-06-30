@@ -344,6 +344,21 @@ module.exports = {
         });
 
 
+        /** atom feed **/
+        k.router.get("/feeds/latest", function( req, res ) {
+            db.query( { sql: "SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id"
+                + " WHERE contributions.state='visible' ORDER BY contributions.created DESC LIMIT 4;"
+                + " SELECT * FROM replies INNER JOIN contributions ON replies.contribution = contributions.id"
+                + " INNER JOIN users ON replies.user=users.id"
+                + " WHERE replies.state='visible' ORDER BY replies.created DESC LIMIT 4",
+                nestTables: true }, [], function( err, items ) {
+                contributions   = formatUserContents( "contributions",  "users", items[0] );
+                replies         = formatUserContents( "replies",        "users", items[1] );
+                k.jade.render( req, res, "feed", vals( req, { contributions: contributions, replies: replies } ) );
+            });
+        });
+
+
         /** home **/
         k.router.get("/", function( req, res ) {
             db.query( { sql: "SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id"
