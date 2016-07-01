@@ -7,7 +7,7 @@ if contributions
                 |  Contribute
             | Contributions
         each contribution in contributions
-            .contribution-wrapper
+            .contribution-wrapper(id="contribution-#{contribution.contributions.id}")
                 h2
                     +avatar( contribution.users, 48 )
                     // TODO: make h2 a .header, use badge and colors?
@@ -23,7 +23,7 @@ if contributions
 
                 .replies-wrapper
                     each reply in contribution.replies || []
-                        .reply-wrapper
+                        .reply-wrapper(id="reply-#{reply.replies.id}")
                             h3
                                 +avatar( reply.replyUsers, 48 )
                                 span.created(title="UTC")

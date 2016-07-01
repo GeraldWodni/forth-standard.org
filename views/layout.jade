@@ -103,7 +103,12 @@ mixin box-word
                         include contributions
 
 mixin latestContribution( item, dataTable )
-    a(href=item.contributions.url)
+    - var link = item.contributions.url;
+    if dataTable == "contributions"
+        - link += "#contribution-" + item.contributions.id
+    else
+        - link += "#reply-" + item.replies.id
+    a(href=link)
         div.user(title=item.users.name)
             +gravatar(item.users.emailMd5, item.users.name, 40)
         h5.document

@@ -4,21 +4,26 @@ mixin gravatar( emailMd5, name, size, def )
     - def = def || "retro"
     img(src="/proxy/gravatar/#{emailMd5}/#{size}/#{def}",alt="avatar of #{name}")&attributes(attributes)
 
-feed(xml:base="https://forth-standard.org")
+feed(xml:base="https://forth-standard.org",xmlns="http://www.w3.org/2005/Atom")
+    // TODO: add link from layout to this feed
     // TODO: add anchor to links
-    // TODO: merge contributions and comments
+    // TODO: merge contributions and comments and distinguish between replies and contributions"
     title Forth Standard
     id https://forth-standard.org/feeds/latest
     icon /images/favicon.png
     logo /images/forth.png
     link(rel="self",href="https://forth-standard.org/feeds/latest")
-    updated TODO
+    - var latest = _.max( contributions, function(e){ return e.contributions.created; } ).contributions.created;
+    updated= moment(latest).toISOString()
     each entry in contributions
         entry
-            link= entry.contributions.url
+            if entry.replies && entry.replies.id
+                link= entry.contributions.url + "#reply-#{entry.replies.id}"
+            else
+                link= entry.contributions.url + "#contribution-" + entry.contributions.id
             title= "[" + contributionTypeName[entry.contributions.type] + "] " + entry.contributions.subject
             icon= "/proxy/gravatar/" + entry.users.emailMd5 + "/40/retro"
             author
                 uri= "/~" + entry.users.name
                 name= entry.users.name
-            updated TODO
+            updated= moment(entry.contributions.created).toISOString()
