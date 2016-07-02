@@ -5,20 +5,16 @@ mixin gravatar( emailMd5, name, size, def )
     img(src="/proxy/gravatar/#{emailMd5}/#{size}/#{def}",alt="avatar of #{name}")&attributes(attributes)
 
 feed(xml:base="https://forth-standard.org",xmlns="http://www.w3.org/2005/Atom")
-    // TODO: add link from layout to this feed
-    // TODO: add anchor to links
-    // TODO: merge contributions and comments and distinguish between replies and contributions"
     title Forth Standard
     id https://forth-standard.org/feeds/latest
     icon /images/favicon.png
     logo /images/forth.png
     link(rel="self",href="https://forth-standard.org/feeds/latest")
-    - var latest = _.max( contributions, function(e){ return e.contributions.created; } ).contributions.created;
-    updated= moment(latest).toISOString()
+    updated= moment(contributions[0][''].updated).toISOString()
     each entry in contributions
         entry
-            if entry.replies && entry.replies.id
-                link= entry.contributions.url + "#reply-#{entry.replies.id}"
+            if entry[''].replyId > 0
+                link= entry.contributions.url + "#reply-" + entry[''].replyId
             else
                 link= entry.contributions.url + "#contribution-" + entry.contributions.id
             title= "[" + contributionTypeName[entry.contributions.type] + "] " + entry.contributions.subject
@@ -27,3 +23,4 @@ feed(xml:base="https://forth-standard.org",xmlns="http://www.w3.org/2005/Atom")
                 uri= "/~" + entry.users.name
                 name= entry.users.name
             updated= moment(entry.contributions.created).toISOString()
+            updated= moment(entry[''].updated).toISOString()

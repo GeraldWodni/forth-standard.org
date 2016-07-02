@@ -112,8 +112,8 @@ module.exports = {
             item[dataTable].markdownText = marked( item[dataTable].text );
             item[dataTable].createdFormated = moment( item[dataTable].created ).format( kData.sql.dateTimeFormat );
             item[userTable].emailMd5 = md5( item[userTable].email );
-	    if( item.contributions && item.contributions.url )
-            	item[dataTable].title = urlToTitle( item.contributions.url );
+            if( item.contributions && item.contributions.url )
+                item[dataTable].title = urlToTitle( item.contributions.url );
             return item;
         }
 
@@ -346,10 +346,15 @@ module.exports = {
 
         /** atom feed **/
         k.router.get("/feeds/latest", function( req, res ) {
-            db.query( { sql: "SELECT DISTINCT contributions.*, users.* FROM contributions INNER JOIN users ON contributions.user=users.id"
+            db.query( { sql: "SELECT contributions.*, users.*,"
+                + " IFNULL( MAX( replies.id ), 0 ) AS `replyId`,"
+                + " GREATEST( contributions.created, IFNULL( MAX(replies.created), '0000' ) ) AS `updated`"
+                + " FROM contributions INNER JOIN users ON contributions.user=users.id"
                 + " LEFT JOIN replies ON replies.contribution=contributions.id"
-                + " WHERE contributions.state='visible' AND ( replies.state='visible' OR replies.state IS NULL )"
-                + " ORDER BY GREATEST( contributions.created, replies.created ) DESC LIMIT 10",
+                + " AND replies.state='visible'"
+                + " WHERE contributions.state='visible'"
+                + " GROUP BY contributions.id"
+                + " ORDER BY GREATEST( contributions.created, IFNULL( MAX(replies.created), '0000' ) ) DESC LIMIT 10",
                 nestTables: true }, [], function( err, items ) {
                 contributions   = formatUserContents( "contributions",  "users", items );
                 k.jade.render( req, res, "feed", vals( req, { contributions: contributions } ) );
