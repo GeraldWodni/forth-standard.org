@@ -345,7 +345,7 @@ module.exports = {
 
 
         /** atom feed **/
-        k.router.get("/feeds/latest", function( req, res ) {
+        k.router.get("/feeds/contributions", function( req, res ) {
             db.query( { sql: "SELECT contributions.*, users.*,"
                 + " IFNULL( MAX( replies.id ), 0 ) AS `replyId`,"
                 + " GREATEST( contributions.created, IFNULL( MAX(replies.created), '0000' ) ) AS `updated`"

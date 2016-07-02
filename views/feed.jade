@@ -14,13 +14,14 @@ feed(xml:base="https://forth-standard.org",xmlns="http://www.w3.org/2005/Atom")
     each entry in contributions
         entry
             if entry[''].replyId > 0
-                link= entry.contributions.url + "#reply-" + entry[''].replyId
+                id= "https://forth-standard.org" + entry.contributions.url + "#reply-" + entry[''].replyId
+                link(href=entry.contributions.url + "#reply-" + entry[''].replyId)
             else
-                link= entry.contributions.url + "#contribution-" + entry.contributions.id
+                id= "https://forth-standard.org" + entry.contributions.url + "#contribution-" + entry.contributions.id
+                link(href= entry.contributions.url + "#contribution-" + entry.contributions.id)
             title= "[" + contributionTypeName[entry.contributions.type] + "] " + entry.contributions.subject
-            icon= "/proxy/gravatar/" + entry.users.emailMd5 + "/40/retro"
+            //- icon= "/proxy/gravatar/" + entry.users.emailMd5 + "/40/retro"
             author
                 uri= "/~" + entry.users.name
                 name= entry.users.name
-            updated= moment(entry.contributions.created).toISOString()
             updated= moment(entry[''].updated).toISOString()
