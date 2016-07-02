@@ -346,17 +346,23 @@ module.exports = {
 
         /** atom feed **/
         k.router.get("/feeds/contributions", function( req, res ) {
-            db.query( { sql: "SELECT contributions.*, users.*, replies.text,"
-                + " IFNULL( MAX( replies.id ), 0 ) AS `replyId`,"
-                + " GREATEST( contributions.created, IFNULL( MAX(replies.created), '0000' ) ) AS `updated`"
-                + " FROM contributions INNER JOIN users ON contributions.user=users.id"
-                + " LEFT JOIN replies ON replies.contribution=contributions.id"
-                + " AND replies.state='visible'"
-                + " WHERE contributions.state='visible'"
-                + " GROUP BY contributions.id"
-                + " ORDER BY GREATEST( contributions.created, IFNULL( MAX(replies.created), '0000' ) ) DESC LIMIT 10",
+            db.query( { sql: "SELECT contributions.*, users.*, feed.*, replies.text"
+                + " FROM ("
+                + "     SELECT contributions.id AS `contributionId`, IFNULL( MAX( replies.id ), 0 ) AS `replyId`,"
+                + "     GREATEST( contributions.created, IFNULL( MAX(replies.created), '0000' ) ) AS `updated`"
+                + "     FROM contributions"
+                + "     LEFT JOIN replies ON replies.contribution=contributions.id"
+                + "     AND replies.state='visible'"
+                + "     WHERE contributions.state='visible'"
+                + "     GROUP BY contributions.id"
+                + "     ORDER BY GREATEST( contributions.created, IFNULL( MAX(replies.created), '0000' ) ) DESC LIMIT 10"
+                + " ) AS `feed`"
+                + " INNER JOIN contributions ON feed.contributionId=contributions.id"
+                + " INNER JOIN users ON contributions.user=users.id"
+                + " LEFT JOIN replies ON feed.replyId=replies.id",
                 nestTables: true }, [], function( err, items ) {
                 contributions   = formatUserContents( "contributions",  "users", items );
+                res.header( "Content-Type", "application/atom+xml" );
                 k.jade.render( req, res, "feed", vals( req, { contributions: contributions } ) );
             });
         });
