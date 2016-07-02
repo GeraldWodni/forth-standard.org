@@ -6,10 +6,10 @@ mixin gravatar( emailMd5, name, size, def )
 
 feed(xml:base="https://forth-standard.org",xmlns="http://www.w3.org/2005/Atom")
     title Forth Standard
-    id https://forth-standard.org/feeds/latest
+    id https://forth-standard.org/feeds/contributions
     icon /images/favicon.png
     logo /images/forth.png
-    link(rel="self",href="https://forth-standard.org/feeds/latest")
+    link(rel="self",href="https://forth-standard.org/feeds/contributions")
     updated= moment(contributions[0].feed.updated).toISOString()
     each entry in contributions
         entry
