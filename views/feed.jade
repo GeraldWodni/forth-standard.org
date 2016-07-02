@@ -16,9 +16,11 @@ feed(xml:base="https://forth-standard.org",xmlns="http://www.w3.org/2005/Atom")
             if entry[''].replyId > 0
                 id= "https://forth-standard.org" + entry.contributions.url + "#reply-" + entry[''].replyId
                 link(href=entry.contributions.url + "#reply-" + entry[''].replyId)
+                content(type="text")= entry.replies.text
             else
                 id= "https://forth-standard.org" + entry.contributions.url + "#contribution-" + entry.contributions.id
                 link(href= entry.contributions.url + "#contribution-" + entry.contributions.id)
+                content(type="text")= entry.contributions.text
             title= "[" + contributionTypeName[entry.contributions.type] + "] " + entry.contributions.subject
             //- icon= "/proxy/gravatar/" + entry.users.emailMd5 + "/40/retro"
             author
