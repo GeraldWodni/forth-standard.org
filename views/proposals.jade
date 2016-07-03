@@ -1,0 +1,32 @@
+//- (c)2015 by Gerald Wodni
+
+extends layout
+
+block menu
+    +menu
+
+block title
+    | Proposals
+
+block content
+
+    +box
+        h1 Proposals
+        p
+            | The main portion of proposals and committee work is on our sister-site 
+            +elink("http://www.forth200x.org", "http://www.forth200x.org")
+            | .
+            br
+            | Should it be decided by the committee we will migrate the (older) proposals.
+        p
+            | Recently we enabled the discussion of proposals directly on forth-standard.org .
+            br
+            | See list of proposals discussed on forth-standard.org below:
+
+        h3 Proposals (most recent first)
+        ul.fa-ul.contribution-latest
+            each contribution in contributions
+                li
+                    +fa("li fa fa-comment-o")
+                    +latestContribution( contribution, "contributions" )
+

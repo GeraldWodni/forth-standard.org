@@ -50,6 +50,7 @@ module.exports = {
                     "testcase":"Suggested Testcase",
                     "requestClarification":"Request for clarification",
                     "referenceImplementation":"Suggested reference implementation",
+                    "proposal":"Proposal",
                     "comment":"Comment"
                 }
             });
@@ -195,8 +196,8 @@ module.exports = {
                         contributions: contributions
                     }));
                 });
-            else if( wordSetName in standard.wordSets )
-                k.jade.render( req, res, "wordSet", vals( req, { standard: standard, wordSet: standard.wordSets[ wordSetName ] } ) );
+            else if( document in standard.wordSets )
+                k.jade.render( req, res, "wordSet", vals( req, { standard: standard, wordSet: standard.wordSets[ document ] } ) );
             else
                 res.json( { "NOT": "FOUND" } );
         });
@@ -341,6 +342,42 @@ module.exports = {
 
         /* gravatar proxy */
         k.proxyCache.gravatar( k.website, k.router );
+
+        /** proposals **/
+        k.router.get("/proposals", function( req, res ) {
+            db.query( { sql: "SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id"
+                + " WHERE contributions.state='visible' AND `contributions`.`type`='proposal'"
+                + " ORDER BY contributions.created DESC",
+                nestTables: true }, [], function( err, contributions ) {
+                contributions   = formatUserContents( "contributions",  "users", contributions );
+                k.jade.render( req, res, "proposals", vals( req, { contributions: contributions } ) );
+            });
+        });
+
+
+        /** atom feed **/
+        k.router.get("/feeds/contributions", function( req, res ) {
+            db.query( { sql: "SELECT contributions.*, users.*, feed.*, replies.text"
+                + " FROM ("
+                + "     SELECT contributions.id AS `contributionId`, IFNULL( MAX( replies.id ), 0 ) AS `replyId`,"
+                + "     GREATEST( contributions.created, IFNULL( MAX(replies.created), '0000' ) ) AS `updated`"
+                + "     FROM contributions"
+                + "     LEFT JOIN replies ON replies.contribution=contributions.id"
+                + "     AND replies.state='visible'"
+                + "     WHERE contributions.state='visible'"
+                + "     GROUP BY contributions.id"
+                + "     ORDER BY GREATEST( contributions.created, IFNULL( MAX(replies.created), '0000' ) ) DESC LIMIT 10"
+                + " ) AS `feed`"
+                + " INNER JOIN contributions ON feed.contributionId=contributions.id"
+                + " INNER JOIN users ON contributions.user=users.id"
+                + " LEFT JOIN replies ON feed.replyId=replies.id",
+                nestTables: true }, [], function( err, items ) {
+                contributions   = formatUserContents( "contributions",  "users", items );
+                res.header( "Content-Type", "application/atom+xml" );
+                k.jade.render( req, res, "feed", vals( req, { contributions: contributions } ) );
+            });
+        });
+
 
         /** home **/
         k.router.get("/", function( req, res ) {
