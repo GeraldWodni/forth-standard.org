@@ -599,6 +599,28 @@ footer {
     }
 }
 
+.feed-icon {
+    display: block;
+    float: right;
+    position: relative;
+    top: -@grid-gutter-width/2;
+    @media @only-xs {
+        top: -@grid-gutter-width/4;
+    }
+
+    @s: 34px;
+    width: @s;
+    height: @s;
+    text-align: center;
+    vertical-align: middle;
+    line-height: @s;
+
+    background-color: @mat-400;
+    .fa {
+        color: @navbar-background;
+    }
+}
+
 .form-inline {
     display: inline;
 }

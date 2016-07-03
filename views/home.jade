@@ -84,7 +84,10 @@ block content
                             +fa("li fa fa-comment-o")
                             +latestContribution( contribution, "contributions" )
             .col-sm-6
-                h3 Latest replies:
+                h3
+                    a(href="/feeds/contributions",title="contribution feed").feed-icon
+                        +fa("rss")
+                    | Latest replies:
                 ul.fa-ul.contribution-latest
                     each reply in replies
                         li
