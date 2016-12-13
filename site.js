@@ -380,17 +380,27 @@ module.exports = {
 
 
         /** home **/
-        k.router.get("/", function( req, res ) {
+        function renderContributions( req, res, next, limit, template ) {
+            limit = limit > 0 ? " LIMIT " + limit : "";
             db.query( { sql: "SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id"
-                + " WHERE contributions.state='visible' ORDER BY contributions.created DESC LIMIT 4;"
+                + " WHERE contributions.state='visible' ORDER BY contributions.created DESC" + limit + ";"
                 + " SELECT * FROM replies INNER JOIN contributions ON replies.contribution = contributions.id"
                 + " INNER JOIN users ON replies.user=users.id"
-                + " WHERE replies.state='visible' ORDER BY replies.created DESC LIMIT 4",
+                + " WHERE replies.state='visible' ORDER BY replies.created DESC" + limit,
                 nestTables: true }, [], function( err, items ) {
+                if( err ) return next( err );
                 contributions   = formatUserContents( "contributions",  "users", items[0] );
                 replies         = formatUserContents( "replies",        "users", items[1] );
-                k.jade.render( req, res, "home", vals( req, { contributions: contributions, replies: replies } ) );
+                k.jade.render( req, res, template, vals( req, { contributions: contributions, replies: replies } ) );
             });
+        }
+
+        k.router.get("/contributions", function( req, res, next ) {
+            renderContributions( req, res, next, 0, "listContributions" );
+        });
+
+        k.router.get("/", function( req, res, next ) {
+            renderContributions( req, res, next, 4, "home" );
         });
 
         /* digest daemon */

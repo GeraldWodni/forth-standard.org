@@ -1,0 +1,29 @@
+//- (c)2016 by Gerald Wodni
+
+extends layout
+
+block menu
+    +menu
+
+block content
+    +box.standard
+        h1 Contributions
+        p
+            | These are all contributions and replies sorted latest first.
+
+        .row
+            .col-sm-6
+                h3 Contributions:
+                ul.fa-ul.contribution-latest
+                    each contribution in contributions
+                        li
+                            +fa("li fa fa-comment-o")
+                            +latestContribution( contribution, "contributions" )
+            .col-sm-6
+                h3
+                    | Replies:
+                ul.fa-ul.contribution-latest
+                    each reply in replies
+                        li
+                            +fa("li fa fa-comments-o")
+                            +latestContribution( reply, "replies" )
