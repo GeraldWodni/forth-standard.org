@@ -14,7 +14,8 @@ module.exports = {
         var kDb = k.getDb();
         var config = k.getWebsiteConfig( "dailyDigests", {} );
 
-
+        if( config.disabled )
+            return;
 
         /** create digests **/
         function formatDate( date, format ) {

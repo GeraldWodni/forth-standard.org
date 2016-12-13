@@ -519,8 +519,31 @@ footer {
     }
 }
 
+.new-version-wrapper,
 .reply-wrapper {
     .clearfix();
+
+    & > h3 {
+        font-size: 14px;
+        margin: 10px;
+
+        span {
+            vertical-align: top;
+        }
+    }
+
+    .markdown {
+        padding: 0 10px 10px 10px;
+    }
+}
+
+.new-version-wrapper {
+    span.type {
+        background: transparent;
+    }
+}
+
+.reply-wrapper {
     border-bottom: 1px solid @white;
 
     .mat( "Grey", 100 );
@@ -534,19 +557,6 @@ footer {
             margin-top: 0;
             background-color: @mat
         }
-    }
-
-    h3 {
-        font-size: 14px;
-        margin: 10px;
-
-        span {
-            vertical-align: top;
-        }
-    }
-
-    .markdown {
-        padding: 0 10px 10px 10px;
     }
 }
 

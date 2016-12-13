@@ -37,6 +37,7 @@ module.exports = {
 
                     var text    = req.postman.text("text");
                     var state   = user.state == "moderated" ? "new" : "visible";
+                    var newVersion = req.postman.exists("newVersion") ? 1 : 0;
 
                     if( req.postman.exists("preview" ) ) {
                         k.jade.render( req, res, "addReply", vals( req, {
@@ -45,6 +46,8 @@ module.exports = {
                             text: text,
                             contribution: contribution,
                             user: _.extend( { emailMd5: md5( user.email ) }, user ),
+                            isOriginalAuthor: contribution.user == user.id,
+                            newVersion: newVersion,
                             preview: marked( text )
                         } ));
                     }
@@ -54,6 +57,7 @@ module.exports = {
                             contribution: contribution.id,
                             state: state,
                             created: kData.sql.nowUtc(),
+                            newVersion: newVersion,
                             text: text
                         }, function( err ) {
                             if( err ) return next( err );
@@ -74,7 +78,9 @@ module.exports = {
 
         /* add contribution */
         k.router.get( urlMatch, getContribution( function( req, res, next, contribution ) {
-            k.jade.render( req, res, "addReply", vals( req, { contribution: contribution, url: "xxx" } ));
+            kData.users.readWhere("name", [req.session.loggedInUsername], function( err, users ) {
+                k.jade.render( req, res, "addReply", vals( req, { contribution: contribution, url: "xxx", isOriginalAuthor: contribution.user == users[0].id } ));
+            });
         }));
     }
 }

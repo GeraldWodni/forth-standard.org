@@ -31,7 +31,8 @@ block content
                 a.btn.btn-default.pull-right(href=url) Back
         else
             form(method='post',role='form')
-
+                if isOriginalAuthor
+                    +checkbox-field("newVersion", "Publish as new contribution text (will be shown on top instead of current content)", newVersion)
                 .form-group
                     label Text - 
                         | You can use
