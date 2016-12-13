@@ -51,18 +51,6 @@ module.exports = {
 
         k.router.use( k.users.loginRequired( "login", { path: "/profile" } ) );
 
-        //k.useSiteModule( "/profile", "theforth.net", "upload.js", { setup: { vals: vals } } );
-        /* upload package */
-        //k.router.post("/profile/add-package", function( req, res ) {
-        //    k.postman( req, res, function() {
-        //        console.log( "UPLOAD:", req.postman.raw("set") );
-        //        k.jade.render( req, res, "addPackage", vals( req, { title: "Upload package" } ) );
-        //    });
-        //});
-        //k.router.get("/profile/add-package", function( req, res ) {
-        //    k.jade.render( req, res, "addPackage", vals( req, { title: "Upload package" } ) );
-        //});
-
         /* change password */
         k.router.post("/profile/change-password", function( req, res, next ) {
             k.users.changePassword( req, res, function( err ) {
@@ -83,19 +71,17 @@ module.exports = {
                 k.jade.render( req, res, "settings", vals( req, _.extend( obj || {}, { dailyDigest: user[0].dailyDigest } ) ) );
             });
         }
-        k.router.post("/profile/settings", function( req, res, next ) {
-            k.postman( req, res, function() {
-                kData.query("updateUserSettings", {
-                    dailyDigest: req.postman.exists( "dailyDigest" )?1:0,
-                    userName: req.session.loggedInUsername,
-                }, function( err ) {
-                    var message;
-                    if( err )
-                        message = { error: err.toString() };
-                    else
-                        message = { success: "settings saved" };
-                    renderProfileSettings( req, res, next, message );
-                });
+        k.router.postman("/profile/settings", function( req, res, next ) {
+            kData.query("updateUserSettings", {
+                dailyDigest: req.postman.exists( "dailyDigest" )?1:0,
+                userName: req.session.loggedInUsername,
+            }, function( err ) {
+                var message;
+                if( err )
+                    message = { error: err.toString() };
+                else
+                    message = { success: "settings saved" };
+                renderProfileSettings( req, res, next, message );
             });
         });
         k.router.get("/profile/settings", function( req, res, next ) { renderProfileSettings( req, res, next ); } );
@@ -119,17 +105,14 @@ module.exports = {
         k.router.all("/profile/manage-users", function( req, res, next ) {
             k.setupOpts.checkIsModerator( req, res, next, next );
         });
-        k.router.post("/profile/manage-users", function( req, res, next ) {
-            k.postman( req, res, function() {
-                kData.users.update( req.postman.id("user"), { state: req.postman.alpha("state") }, function( err ) {
-                    var message;
-                    if( err )
-                        message = { type: "danger", text: err };
-                    else
-                        message = { type: "success", title: "success", text: "User state changed" };
-
-                    renderManageUsers( req, res, next, { messages: [message] } );
-                });
+        k.router.postman("/profile/manage-users", function( req, res, next ) {
+            kData.users.update( req.postman.id("user"), { state: req.postman.alpha("state") }, function( err ) {
+                var message;
+                if( err )
+                    message = { type: "danger", text: err };
+                else
+                    message = { type: "success", title: "success", text: "User state changed" };
+                renderManageUsers( req, res, next, { messages: [message] } );
             });
         });
         k.router.get("/profile/manage-users", function( req, res, next ) {
