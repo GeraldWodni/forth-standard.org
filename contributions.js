@@ -35,7 +35,7 @@ module.exports = {
                             type: type,
                             subject: subject,
                             text: text,
-                            user: _.extend( { emailMd5: md5( user.email ) }, user ),
+                            user: _.extend( { emailMd5: md5( user.email.toLowerCase() ) }, user ),
                             preview: marked( text )
                         } ));
                     }

@@ -118,7 +118,7 @@ module.exports = {
         function formatUserContent( dataTable, userTable, item ) {
             item[dataTable].markdownText = marked( item[dataTable].text );
             item[dataTable].createdFormated = moment( item[dataTable].created ).format( kData.sql.dateTimeFormat );
-            item[userTable].emailMd5 = md5( item[userTable].email );
+            item[userTable].emailMd5 = md5( item[userTable].email.toLowerCase() );
             if( item.contributions && item.contributions.url )
                 item[dataTable].title = urlToTitle( item.contributions.url );
             return item;
@@ -239,7 +239,7 @@ module.exports = {
                     kData.contributions.readWhere( "user", [ user.id ], function( err, contributions ) {
                         if( err ) return next( err );
 
-                        user.emailMd5 = md5( user.email );
+                        user.emailMd5 = md5( user.email.toLowerCase() );
 
                         kData.query( "userContributionsReplies", { user: user.id }, function( err, replyContributions ) {
                             if( err ) return next( err );
