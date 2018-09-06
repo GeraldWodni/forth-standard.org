@@ -32,6 +32,14 @@
         "description": "ANS FORTH version of jonesforth"
     },
     {
+        "stars": 32,
+        "name": "STM8EF",
+        "link": "https://github.com/TG9541/stm8ef",
+        "lang": "Assembly",
+        "cpu": "STM8S",
+        "description": "eForth with extensions for $0.20 µCs"
+    },
+    {
         "stars": 30,
         "name": "DCPU",
         "link": "https://github.com/hellige/dcpu",
@@ -86,6 +94,14 @@
         "lang": "Assembly",
         "cpu": "PIC, AVR",
         "description": "Forth system for the Microchip PIC 18, 24, 30, 33 and the Atmel Atmega"
+    },
+    {
+        "stars": 8,
+        "name": "FastForth",
+        "link": "https://github.com/jean-michel/FAST-FORTH",
+        "lang": "Assembly",
+        "cpu": "MSP430",
+        "description": "Forth for all MSP430 FRAM devices, with SD card FAT16/32 and much more"
     },
     {
         "stars": 7,
@@ -144,6 +160,14 @@
         "description": "Mecrisp Forth for MSP430"
     },
     {
+        "stars": 1,
+        "name": "hForth",
+        "link": "https://github.com/nealcrook/hForth",
+        "lang": "Assembly",
+        "cpu": "8086, Z80, ARM",
+        "description": "hForth for i8086, Z80 and ARM"
+    },
+    {
         "stars": 49,
         "name": "lbForth",
         "link": "https://github.com/larsbrinkhoff/lbForth",
@@ -200,6 +224,14 @@
         "description": ""
     },
     {
+        "stars": 2,
+        "name": "CamelForth",
+        "link": "https://github.com/nealcrook/multicomp6809/tree/master/camelforth",
+        "lang": "Forth",
+        "cpu": "6809",
+        "description": ""
+    },
+    {
         "stars": 61,
         "name": "Easy Forth",
         "link": "https://github.com/skilldrick/easyforth",
@@ -238,6 +270,22 @@
         "lang": "JavaScript",
         "cpu": "",
         "description": "jeforth 3 words engine"
+    },
+    {
+        "stars": 9,
+        "name": "TclForth",
+        "link": "https://github.com/wolfwejgaard/tclforth",
+        "lang": "Tcl/Tk",
+        "cpu": "",
+        "description": "Multi-OS Forth using Tcl as its native language"
+    },
+    {
+        "stars": 15,
+        "name": "jsforth",
+        "link": "https://github.com/eatonphil/jsforth",
+        "lang": "Javascript",
+        "cpu": "",
+        "description": "A simple Forth-like language with a web-based REPL"
     },
     {
         "stars": 41,

@@ -20,13 +20,13 @@ block content
         each system in systems
             div.system
                 div.row
-                    div.col-lg-2
+                    div.col-lg-2.col-sm-6
                         a(href=system.link)
                             = system.name
-                    div.col-lg-2
+                    div.col-lg-2.col-sm-3
                         = system.lang
-                    div.col-lg-2
+                    div.col-lg-2.col-sm-3
                         = system.cpu
-                    div.col-lg-6
+                    div.col-lg-6.col-sm-12
                         != system.description
             

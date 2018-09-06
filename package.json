@@ -4,10 +4,13 @@
   "description": "official forth standard website",
   "author": "Gerald Wodni <gerald@wodni.at>",
   "license": "GPLv3",
+  "scripts": {
+    "crawlSystems": "node crawlSystems.js"
+  },
   "dependencies": {
     "async": "^1.4.2",
     "colors": "^1.1.2",
-    "jquery": "^2.1.4",
+    "jquery": "^3.0.0",
     "jsdom": "^7.0.0",
     "underscore": "^1.8.3"
   }
