@@ -12,21 +12,64 @@ block content
 
     +box
         h1 Proposals
-        p
-            | The main portion of proposals and committee work is on our sister-site 
-            +elink("http://www.forth200x.org", "http://www.forth200x.org")
-            | .
-            br
-            | Should it be decided by the committee we will migrate the (older) proposals.
-        p
-            | Recently we enabled the discussion of proposals directly on forth-standard.org .
-            br
-            | See list of proposals discussed on forth-standard.org below:
+        .row
+            .col-md-6
+                p
+                    | The main portion of proposals and committee work is on our sister-site 
+                    +elink("http://www.forth200x.org", "http://www.forth200x.org")
+                    | .
+                    //br
+                    //| Should it be decided by the committee we will migrate the (older) proposals.
+                p
+                    | 2018 we enabled the discussion of proposals directly on forth-standard.org .
+                    br
+                    | See list of proposals discussed on forth-standard.org below:
+            .col-md-6
+                h4
+                    | How to write your own proposal:
+                ol
+                    li Pick a word or wordset which best relates to your proposal
+                    li
+                        | Click on
+                        i Contribute
+                        | , set type to
+                        i proposal
+                    li Use preview before submitting your proposal
+                    li Thanks for your proposal, buckle up and get ready to defend it
+
 
         h3 Proposals (most recent first)
         ul.fa-ul.contribution-latest
             each contribution in contributions
                 li
                     +fa("li fa fa-comment-o")
-                    +latestContribution( contribution, "contributions" )
+                    - var link = contribution.contributions.url;
+                    a(href=link+"#contribution-" + contribution.contributions.id)
+                        div.user(title=contribution.users.name)
+                            +gravatar(contribution.users.emailMd5, contribution.users.name, 40)
+                        h5.document
+                            = contribution.contributions.subject
+                        h5.subject
+                            | in 
+                            = contribution.contributions.title
+                        div.state
+                            | State: 
+                            if contribution[""].answerCount
+                                | Discussion
+                            else
+                                | New
+                        h5 Versions:
+                        div.date
+                            | V0: 
+                            = contribution.contributions.createdFormated
+                        if contribution[""].newVersionsId && contribution[""].newVersionsId.length
+                            - newVersions = contribution[""].newVersionsId.split(",")
+                            - newCreateds = contribution[""].newVersionsCreated.split(",")
+                            each index in _.range( newVersions.length )
+                                div.date
+                                    a(href=link+"#reply-" + newVersions[index])
+                                        | V
+                                        = index+1
+                                        | : 
+                                        = newCreateds[index]
 

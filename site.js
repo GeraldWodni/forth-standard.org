@@ -344,11 +344,23 @@ module.exports = {
         k.proxyCache.gravatar( k.website, k.router );
 
         /** proposals **/
-        k.router.get("/proposals", function( req, res ) {
-            db.query( { sql: "SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id"
+        k.router.get("/proposals", function( req, res, next ) {
+            db.query( { sql: "SELECT contributions.*, users.*,"
+                + " COUNT(answers.id) AS answerCount,"
+                + " GROUP_CONCAT( DISTINCT newVersions.id ORDER BY newVersions.id ) AS newVersionsId,"
+                + " GROUP_CONCAT( DISTINCT newVersions.created ORDER BY newVersions.id ) AS newVersionsCreated"
+                + " FROM contributions INNER JOIN users ON contributions.user=users.id"
+                + " LEFT JOIN replies AS answers"
+                + " ON answers.contribution=contributions.id AND NOT answers.newVersion"
+                + " LEFT JOIN replies AS newVersions"
+                + " ON newVersions.contribution=contributions.id AND newVersions.newVersion"
                 + " WHERE contributions.state='visible' AND `contributions`.`type`='proposal'"
+                + " GROUP BY contributions.id"
                 + " ORDER BY contributions.created DESC",
                 nestTables: true }, [], function( err, contributions ) {
+                if( err ) return next( err );
+                contributions.forEach( c => console.log( "C:", c.id, c[""] ) );
+                //console.log( "CONTR:", contributions );
                 contributions   = formatUserContents( "contributions",  "users", contributions );
                 k.jade.render( req, res, "proposals", vals( req, { contributions: contributions } ) );
             });
