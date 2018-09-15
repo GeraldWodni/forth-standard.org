@@ -106,7 +106,20 @@ module.exports = {
             k.setupOpts.checkIsModerator( req, res, next, next );
         });
         k.router.postman("/profile/manage-users", function( req, res, next ) {
-            kData.users.update( req.postman.id("user"), { state: req.postman.alpha("state") }, function( err ) {
+            var update = {};
+            console.log( "CM",
+                ">" + req.postman.alpha("committeeMember") + "<",
+                req.postman.alpha("committeeMember") == "committeeMember"
+            );
+
+            if( req.postman.exists("state") )
+                update.state = req.postman.alpha("state");
+            if( req.postman.exists("committeeMember") )
+                update.committeeMember = req.postman.alpha("committeeMember") == "committeeMember" ? "1" : "0";
+
+            //return res.json( update );
+
+            kData.users.update( req.postman.id("user"), update, function( err ) {
                 var message;
                 if( err )
                     message = { type: "danger", text: err };

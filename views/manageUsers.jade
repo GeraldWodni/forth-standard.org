@@ -8,12 +8,18 @@ block menu
 block title
     | Manage users
 
-mixin setStateForm( user, state, title, icon )
+mixin buttonForm( user, field, value, title, icon )
     form.form-inline.pull-right(method="post")
         +hidden-field("user", user.id)
-        +hidden-field("state", state)
-        button.btn.btn-sm.btn-default(title=title)
+        +hidden-field(field, value)
+        button.btn.btn-sm.btn-default(title=title)&attributes(attributes)
             +fa(icon)
+
+mixin setStateForm( user, state, title, icon )
+    +buttonForm( user, "state", state, title, icon )&attributes(attributes)
+
+mixin setCommitteeMemberForm( user, committeeMember, title, icon )
+    +buttonForm( user, "committeeMember", committeeMember, title, icon )&attributes(attributes)
 
 block content
     .container
@@ -44,6 +50,10 @@ block content
                 .col-sm-6.col-md-4.col-lg-3
                     a.boxItem.user(href="/~#{user.name}",class=user.state,target="_blank")
                         +gravatar( user.emailMd5, user.name, 48 ).pull-left
+                        if user.committeeMember
+                            +setCommitteeMemberForm(user, "noCommitteeMember", "Remove from committee", "user-times").btn-primary
+                        else
+                            +setCommitteeMemberForm(user, "committeeMember", "Add as committee member", "user-plus")
                         if user.state == "moderated"
                             +setStateForm(user, "unmoderated", "Set unmoderated", "arrow-up")
                         else if user.state == "unmoderated"

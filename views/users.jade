@@ -2,20 +2,14 @@
 
 extends layout
 
-block menu
-    +menu
-
-block title
-    | Users
-
-block content
+mixin userList( header, text, users )
     .container
         .row
             .col-md-6
                 h1
-                    | Users
+                    = header
                 h4
-                    | Say hello to your fellow Forthers
+                    = text
 
     .container
         .row
@@ -24,4 +18,16 @@ block content
                     a.boxItem.user(href="/~#{user.name}")
                         +gravatar( user.emailMd5, user.name, 48 ).pull-left
                         .name= user.name
+
+
+
+block menu
+    +menu
+
+block title
+    | Users
+
+block content
+    +userList( "Committee", "Forth Standard committee members", _.filter( users, user => user.committeeMember ) )
+    +userList( "Users", "Say hello to your fellow Forthers",    _.reject( users, user => user.committeeMember ) )
 
