@@ -168,6 +168,14 @@
         "description": "hForth for i8086, Z80 and ARM"
     },
     {
+        "stars": 0,
+        "name": "Mecrisp-Quintus",
+        "link": "http://mecrisp.sourceforge.net",
+        "lang": "Assembly",
+        "cpu": "RISC-V, MIPS",
+        "description": "Mecrisp Quintus Forth for RISC-V RV32IM and PIC32MX (MIPS M4K)"
+    },
+    {
         "stars": 49,
         "name": "lbForth",
         "link": "https://github.com/larsbrinkhoff/lbForth",
@@ -272,7 +280,7 @@
         "description": "jeforth 3 words engine"
     },
     {
-        "stars": 9,
+        "stars": 30,
         "name": "TclForth",
         "link": "https://github.com/wolfwejgaard/tclforth",
         "lang": "Tcl/Tk",
@@ -288,7 +296,7 @@
         "description": "A simple Forth-like language with a web-based REPL"
     },
     {
-        "stars": 41,
+        "stars": 165,
         "name": "pForth",
         "link": "https://github.com/philburk/pforth",
         "lang": "C",
@@ -296,7 +304,7 @@
         "description": "Portable Forth"
     },
     {
-        "stars": 20,
+        "stars": 49,
         "name": "Gforth",
         "link": "https://github.com/forthy42/gforth",
         "lang": "C",
@@ -304,23 +312,15 @@
         "description": "Gforth mirror"
     },
     {
-        "stars": 13,
-        "name": "staapl",
-        "link": "https://github.com/zwizwa/staapl",
-        "lang": "Racket",
-        "cpu": "PIC18",
-        "description": "Racket-based Forth / Macro Assembler on steroids for PIC18F"
-    },
-    {
-        "stars": 3,
-        "name": "uForth",
-        "link": "https://github.com/tcoram/uforth",
+        "stars": 30,
+        "name": "reforth",
+        "link": "https://github.com/seanpringle/reforth",
         "lang": "C",
         "cpu": "",
-        "description": "Very portable (embeddable) switch threaded Forth"
+        "description": "Rethinking Forth"
     },
     {
-        "stars": 3,
+        "stars": 25,
         "name": "rtForth",
         "link": "https://github.com/chengchangwu/rtforth",
         "lang": "Rust",
@@ -328,11 +328,35 @@
         "description": "Forth implemented in Rust for realtime application"
     },
     {
-        "stars": 3,
+        "stars": 23,
+        "name": "staapl",
+        "link": "https://github.com/zwizwa/staapl",
+        "lang": "Racket",
+        "cpu": "PIC18",
+        "description": "Racket-based Forth / Macro Assembler on steroids for PIC18F"
+    },
+    {
+        "stars": 7,
+        "name": "uForth",
+        "link": "https://github.com/tcoram/uforth",
+        "lang": "C",
+        "cpu": "",
+        "description": "Very portable (embeddable) switch threaded Forth"
+    },
+    {
+        "stars": 4,
         "name": "Creole Forth",
         "link": "https://github.com/tiluser/Creole-Forth",
         "lang": "Pascal",
         "cpu": "",
         "description": "Scripting language in the form of a Delphi/Lazarus component"
+    },
+    {
+        "stars": 1,
+        "name": "dclang",
+        "link": "https://github.com/akjmicro/dclang",
+        "lang": "C",
+        "cpu": "",
+        "description": "Forth-inspired RPN language"
     }
 ]
