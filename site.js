@@ -93,7 +93,13 @@ module.exports = {
         k.router.post("/search", function( req, res ) {
             k.postman( req, res, function() {
                 var search = req.postman.raw("search").toLowerCase();
-                k.jade.render( req, res, "search", vals( req, { matches: searchWords( search ) } ) );
+                var matches = searchWords( search );
+                if( matches.length == 1 && matches[0].length == 1 ) {
+                    let word = matches[0][0];
+                    res.statusCode = 302;
+                    res.header("Location", `${req.protocol}://${req.kern.website}/standard/${word.list}/${word.basename}`);
+                }
+                k.jade.render( req, res, "search", vals( req, { matches: matches } ) );
             });
         });
 
