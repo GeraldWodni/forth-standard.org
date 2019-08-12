@@ -14,10 +14,14 @@ block content
         h1 Search
         form(method="post").form-inline
             .form-group
-                input(type="text",name="search").form-control
+                input(type="text",name="search", list="uniqueWordNames", autofocus="autofocus").form-control
             |  
             button(type="submit").btn.btn-default
                 +fa("search")
+
+        datalist(id="uniqueWordNames")
+            each word in uniqueWordNames
+                option(value=word)
 
         if matches
             if matches.length === 0

@@ -14,6 +14,7 @@ module.exports = {
         var standard = { wordSets: {} };
         var systems = [];
         var searchIndex = {};
+        var uniqueWordNames = [];
 
         /* read standard */
         k.readHierarchyFile( "forth-standard.org", "standards/2012.json", function( err, content ) {
@@ -29,6 +30,8 @@ module.exports = {
                         english: word.english
                     });
                     searchIndex[index] = matches;
+                    if( uniqueWordNames.indexOf( index ) < 0 )
+                        uniqueWordNames.push( index );
                 });
             });
         });
@@ -45,6 +48,7 @@ module.exports = {
 
             _.extend( values, {
                 loggedIn: "session" in req,
+                uniqueWordNames: uniqueWordNames,
                 contributionTypeName: {
                     "example": "Example",
                     "testcase":"Suggested Testcase",
