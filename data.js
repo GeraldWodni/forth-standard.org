@@ -50,6 +50,7 @@ module.exports = {
                 + " LEFT JOIN replies ON replies.contribution=contributions.id AND replies.state='visible'"
                 + " LEFT JOIN users AS replyUsers ON replyUsers.id=replies.user"
                 + " WHERE contributions.url=? AND contributions.state='visible'"
+                + " ORDER BY contributions.id, replies.id"
             },
 
             /** digests **/
