@@ -354,6 +354,18 @@ module.exports = {
         k.proxyCache.gravatar( k.website, k.router );
 
         /** proposals **/
+        k.router.get("/proposals/*", function( req, res, next ) {
+            urlContributions( req.path, next, function( contributions ) {
+                if( contributions.length == 0 )
+                    return httpStatus( req, res, 404 );
+
+                k.jade.render( req, res, "proposalWrapper", vals( req, {
+                    urlPath: req.path,
+                    contributions: contributions
+                }));
+            });
+        });
+
         k.router.get("/proposals", function( req, res, next ) {
             db.query( { sql: "SELECT contributions.*, users.*,"
                 + " COUNT(answers.id) AS answerCount,"

@@ -1,0 +1,24 @@
+extends layout
+include addContributionForm
+
+block menu
+    +menu
+
+block title
+    | Contribute
+
+block content
+    .container
+        h3
+            | Create a new proposal
+        p
+            | Propose an augmentation to the standard, please read 
+            a(href="http://www.forth200x.org/rfd-guide.html", target="_blank")
+                | How to write Forth extension RfDs
+            |  first and the complete the template below.
+        p
+            | Upon submission we will review it at our first chance. Do not worry, we merely want to avoid spam and insults. So please contribute 
+            +fa("smile-o")
+            |.
+
+        +addContributionForm({ fixedType: "proposal" })

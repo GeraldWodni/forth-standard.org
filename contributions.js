@@ -16,33 +16,41 @@ module.exports = {
         var urlMatch = "/contribute/*";
         function getUrl( req ) { return req.path.substr( "/contribute".length ); }
 
-        k.router.post( urlMatch, function( req, res, next ) {
-            var url = getUrl( req );
+        function postContribution( req, res, next, opts ) {
             kData.users.readWhere("name", [req.session.loggedInUsername], function( err, user ) {
                 if( err ) return next( err );
                 user = user[0];
+                const messages = [];
 
                 k.postman( req, res, function() {
 
-                    var type    = req.postman.id("type");
+                    var type    = opts.type ? opts.type : req.postman.id("type");
                     var subject = req.postman.text("subject");
                     var text    = req.postman.text("text");
                     var state   = user.state == "moderated" ? "new" : "visible";
 
-                    if( req.postman.exists("preview" ) ) {
-                        k.jade.render( req, res, "addContribution", vals( req, {
-                            url: getUrl( req ),
+                    if( opts.url == "proposal-derived-from-subject" ) {
+                        const urlSubject = subject.toLowerCase().replace( /[^-_a-z0-9]/g, "-" ).replace( /-+/g, '-' );
+                        opts.url = "/proposals/" + urlSubject
+                        if( urlSubject.length == 0 )
+                            messages.push({type:"danger", title:"Error", text: "Subject cannot be empty"});
+                    }
+
+                    if( req.postman.exists("preview" ) || messages.length ) {
+                        k.jade.render( req, res, opts.jadeFile, vals( req, {
+                            url: opts.url,
                             type: type,
                             subject: subject,
                             text: text,
                             user: _.extend( { emailMd5: md5( user.email.toLowerCase() ) }, user ),
-                            preview: marked( text )
+                            preview: marked( text ),
+                            messages: messages
                         } ));
                     }
                     else if( req.postman.exists("create" ) ) {
                         kData.contributions.create({
                             user: user.id,
-                            url: url,
+                            url: opts.url,
                             type: type,
                             state: state,
                             created: kData.sql.nowUtc(),
@@ -51,8 +59,8 @@ module.exports = {
                         }, function( err ) {
                             if( err ) return next( err );
 
-                            k.jade.render( req, res, "addContribution", vals( req, {
-                                url: getUrl( req ),
+                            k.jade.render( req, res, opts.jadeFile, vals( req, {
+                                url: opts.url,
                                 hideForm: true,
                                 messages: [{type: "success", title: "Success", text: "Thank you, your contribution is now " + ( state == "visible" ? "online" : "being processed")}]
                             } ));
@@ -61,6 +69,29 @@ module.exports = {
                     else
                         k.setupOpts.httpStatus( req, res, 422 );
                 });
+            });
+        }
+
+        /* proposal */
+        k.router.post( "/proposals/add", ( req, res, next ) => {
+            postContribution( req, res, next, {
+                jadeFile: "addProposal",
+                type: "proposal",
+                url: "proposal-derived-from-subject"
+            });
+        });
+
+        k.router.get("/proposals/add", ( req, res ) =>
+            k.readHierarchyFile( k.website, "views/proposalTemplate.md", ( err, files ) =>
+                k.jade.render( req, res, "addProposal", vals( req, { text: files[0].toString() } ) )
+            )
+        );
+
+
+        k.router.post( urlMatch, function( req, res, next ) {
+            postContribution( req, res, next, {
+                jadeFile: "addContribution",
+                url: getUrl( req )
             });
         });
 

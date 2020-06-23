@@ -1,0 +1,41 @@
+mixin addContributionForm( opts )
+    - opts = opts || {}
+    +messages(messages)
+
+    if type == "proposal"
+        p Final URL will be:
+            code= url
+
+    if preview
+        .contribution-wrapper
+            h2
+                +avatar( user, 30 )
+                | Preview: 
+                = subject
+            .markdown
+                != preview
+
+    if hideForm
+        p
+            a.btn.btn-default.pull-right(href=url) Back
+    else
+        form(method='post',role='form')
+            if opts.fixedType
+                +hidden-field("type", opts.fixedType)
+            else
+                +enum-field("type", "Type", {
+                    "example": "Example - Explain how this can be used",
+                    "testcase":"Testcase - Suggest new testcases",
+                    "requestClarification":"Request for clarification",
+                    "referenceImplementation":"Suggest reference implementation",
+                    "comment":"Comment - Augment the current definition"
+                },type)
+            +text-field("subject", "Subject", subject)
+            .form-group
+                label Text - 
+                    | You can use
+                    a(href="https://help.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax",target="_blank")  Markdown
+                textarea(name="text",rows="10").form-control= text
+            a.btn.btn-default.pull-right(href=url) Back
+            button.btn.btn-primary(type='submit',name='create',value='yes') Submit
+            button.btn.btn-default(type='submit',name='preview',value='yes') Preview

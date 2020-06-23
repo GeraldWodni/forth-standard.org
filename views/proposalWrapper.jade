@@ -1,0 +1,18 @@
+//- (c)2020 by Gerald Wodni
+
+extends layout
+
+block menu
+    +menu
+
+block title
+    = contributions[0].contributions.subject
+    |  - Proposal
+
+block content
+    .container
+        h1
+            | Proposal: 
+            = contributions[0].contributions.subject
+        p This page is dedicated to discussion this specific proposal
+        include contributions

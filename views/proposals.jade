@@ -26,17 +26,22 @@ block content
                     | See list of proposals discussed on forth-standard.org below:
             .col-md-6
                 h4
-                    | How to write your own proposal:
+                    | How to write your own proposal 
+                    b
+                        +fa("exclamation-triangle").
+                        |  New Proceedure
+                    | :
                 ol
-                    li Pick a word or wordset which best relates to your proposal
                     li
-                        | Click on
-                        i Contribute
-                        | , set type to
-                        i proposal
-                    li Use preview before submitting your proposal
-                    li Thanks for your proposal, buckle up and get ready to defend it
-
+                        | Start by reading 
+                        a(href="http://www.forth200x.org/rfd-guide.html", target="_blank")
+                            | How to write Forth extension RfDs
+                    li
+                        | Click this button and follow the instructions: 
+                        br
+                        a(href="/profile/proposals/add").btn.btn-default
+                            +fa("plus")
+                            |  Add Proposal
 
         h3 Proposals (most recent first)
         ul.fa-ul.contribution-latest
