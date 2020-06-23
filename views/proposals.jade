@@ -30,7 +30,6 @@ block content
                     b
                         +fa("exclamation-triangle").
                         |  New Proceedure
-                    | :
                 ol
                     li
                         | Start by reading 
@@ -42,6 +41,10 @@ block content
                         a(href="/profile/proposals/add").btn.btn-default
                             +fa("plus")
                             |  Add Proposal
+        .row
+            .col-md-12
+                img(src="/images/proposal-process.png", alt="proposal process").img-responsive
+
 
         h3 Proposals (most recent first)
         ul.fa-ul.contribution-latest
@@ -57,12 +60,11 @@ block content
                         h5.subject
                             | in 
                             = contribution.contributions.title
-                        div.state
-                            | State: 
-                            if contribution[""].answerCount
-                                | Discussion
-                            else
-                                | New
+                        if contribution[""].newStates
+                            - newStates = contribution[""].newStates.split(",")
+                            +renderState( newStates[ newStates.length - 1 ] )
+                        else
+                            +renderState("informal")
                         h5 Versions:
                         div.date
                             | V0: 
@@ -77,4 +79,17 @@ block content
                                         = index+1
                                         | : 
                                         = newCreateds[index]
+                        h5 State history:
+                        div.date
+                            | new: 
+                            = contribution.contributions.createdFormated
+                        if contribution[""].newStatesId && contribution[""].newStatesId.length
+                            - newStatesId      = contribution[""].newStatesId.split(",")
+                            - newStatesCreated = contribution[""].newStatesCreated.split(",")
+                            each index in _.range( newStates.length )
+                                div.date
+                                    a(href=link+"#reply-" + newStatesId[index])
+                                        = newStates[index]
+                                        | : 
+                                        = newStatesCreated[index]
 

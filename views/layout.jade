@@ -120,6 +120,30 @@ mixin latestContribution( item, dataTable )
         div.date
             = item[dataTable].createdFormated
 
+mixin renderState( state )
+    div.state&attributes(attributes)
+        if state == "informal"
+            +fa("file-text").fa-lg.text-red
+            |  Informal
+        else if state == "formal"
+            +fa("star").fa-lg.text-red
+            |  Formal
+        else if state == "accepted"
+            +fa("check-circle").fa-lg.text-red
+            |  Accepted
+        else if state == "voting"
+            +fa("poencil-square-o").fa-lg.text-red
+            |  CfV - Call for votes
+        else if state == "retracted"
+            +fa("ban").fa-lg.text-red
+            |  Retracted
+        else if state == "retired"
+            +fa("snowflake-o").fa-lg.text-red
+            |  Retired
+        else
+            b Statechange: 
+                = state
+
 html
     head
         title

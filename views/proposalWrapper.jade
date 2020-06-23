@@ -14,5 +14,11 @@ block content
         h1
             | Proposal: 
             = contributions[0].contributions.subject
-        p This page is dedicated to discussion this specific proposal
+        - var lastState = "informal"
+        each reply in contributions[0].replies || []
+            if reply.replies.newState !== null
+                - lastState = reply.replies.newState
+        +renderState( lastState ).big-state
+
+        p This page is dedicated to discussing this specific proposal
         include contributions

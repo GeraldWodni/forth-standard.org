@@ -46,6 +46,8 @@ if contributions
 
                                 .markdown
                                     != reply.replies.markdownText
+                                if reply.replies.newState !== null
+                                    +renderState( reply.replies.newState )
 
                 a(href="/profile/reply/"+contribution.contributions.id).btn.btn-default.reply
                     +fa("reply")
