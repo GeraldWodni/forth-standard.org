@@ -23,6 +23,10 @@ module.exports = {
             orderBy: "created"
         } );
 
+        var proposals = k.crud.sql( db, { table: "proposals", key: "contribution", foreignName: "contribution",
+            orderBy: "contribution"
+        } );
+
         /* keep all sql queries in this file for easy maintenance */
         var queries = {
 
@@ -166,6 +170,7 @@ module.exports = {
         return {
             users:          users,
             contributions:  contributions,
+            proposals:      proposals,
             replies:        replies,
             query:          _.partial( query, db ),    /* bind to pool */
             mapQuery:       _.partial( mapQuery, db ), /* bind to pool */
