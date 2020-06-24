@@ -1,18 +1,41 @@
 //- (c)2015 by Gerald Wodni
 
-mixin movedContribution( contribution )
-    +fa("share")
-    |  This contribution has been moved to the 
-    a( href=contribution.contributions.url + "#contribution-" + contribution.contributions.id )
-        | proposal section
-    | .
-
-mixin movedReply( contribution, reply )
-    +fa("share")
-    |  This reply has been moved to the 
-    a( href=contribution.contributions.url + "#reply-" + reply.replies.id )
-        | proposal section
-    | .
+- var lastVersion = "";
+mixin reply( contribution, reply )
+    - var replyId = `reply-${reply.replies.id}`;
+    div(class=reply.replies.newVersion?"new-version-wrapper":"reply-wrapper",id=replyId)
+        h3
+            +avatar( reply.replyUsers, 48 )
+            if contribution.contributions.moved
+                time.created(title="UTC")
+                    +fa("comments-o")
+                    |  
+                    = reply.replies.createdFormated
+            else if reply.replies.newVersion
+                span.type New Version
+                time.created(title="UTC")
+                    a(href=_baseUrlPath + "#" + replyId, title="link to comment")
+                        +fa("certificate")
+                    |  
+                    = reply.replies.createdFormated
+            else
+                time.created(title="UTC")
+                    a(href=_baseUrlPath + "#" + replyId, title="link to comment")
+                        +fa("comments-o")
+                    |  
+                    = reply.replies.createdFormated
+        .markdown
+            if contribution.contributions.moved
+                +fa("share")
+                |  This reply has been moved to the 
+                a( href=contribution.contributions.url + "#reply-" + reply.replies.id )
+                    | proposal section
+                | .
+            else if reply.replies.newVersion
+                != diffMarkdown( lastVersion, reply.replies.text )
+                - lastVersion = reply.replies.text;
+            else
+                != reply.replies.markdownText
 
 if contributions
     .contributions-wrapper
@@ -22,97 +45,31 @@ if contributions
                 |  Contribute
             | Contributions
         each contribution in contributions
-            - console.log( "CON:", contribution );
-            if contribution.contributions.moved
-                .contribution-wrapper(id="contribution-#{contribution.contributions.id}")
-                    h2
-                        +avatar( contribution.users, 48 )
-                        // TODO: make h2 a .header, use badge and colors?
-                        // TODO: add to user profile
-                        // TODO: add replies to user profile
-                        = contribution.contributions.subject
-                        span.type
-                            = contributionTypeName[ contribution.contributions.type ] || contribution.contributions.type
-                        span.created(title="UTC")
-                            = contribution.contributions.createdFormated
-                    .markdown
-                        +movedContribution( contribution )
-
-                    .replies-wrapper
-                        each reply in contribution.replies || []
-                            if reply.replies.newVersion
-                                .new-version-wrapper(id="reply-#{reply.replies.id}")
-                                    h3
-                                        +avatar( reply.replyUsers, 48 )
-                                        span.type New Version
-                                        time.created(title="UTC")
-                                            +fa("certificate")
-                                            |  
-                                            = reply.replies.createdFormated
-
-                                    .markdown
-                                        +movedReply( contribution, reply )
-                            else
-                                .reply-wrapper(id="reply-#{reply.replies.id}")
-                                    h3
-                                        +avatar( reply.replyUsers, 48 )
-                                        time.created(title="UTC")
-                                            +fa("comments-o")
-                                            |  
-                                            = reply.replies.createdFormated
-
-                                    .markdown
-                                        +movedReply( contribution, reply )
-
-                    a(href="/profile/reply/"+contribution.contributions.id).btn.btn-default.reply
-                        +fa("reply")
-                        |  Reply
-            else
-                .contribution-wrapper(id="contribution-#{contribution.contributions.id}")
-                    h2
-                        +avatar( contribution.users, 48 )
-                        // TODO: make h2 a .header, use badge and colors?
-                        // TODO: add to user profile
-                        // TODO: add replies to user profile
-                        = contribution.contributions.subject
-                        span.type
-                            = contributionTypeName[ contribution.contributions.type ] || contribution.contributions.type
-                        time.created(title="UTC")
-                            = contribution.contributions.createdFormated
-                    .markdown
+            .contribution-wrapper(id="contribution-#{contribution.contributions.id}")
+                h2
+                    +avatar( contribution.users, 48 )
+                    // TODO: make h2 a .header, use badge and colors?
+                    // TODO: add to user profile
+                    // TODO: add replies to user profile
+                    = contribution.contributions.subject
+                    span.type
+                        = contributionTypeName[ contribution.contributions.type ] || contribution.contributions.type
+                    span.created(title="UTC")
+                        = contribution.contributions.createdFormated
+                .markdown
+                    if contribution.contributions.moved
+                        +fa("share")
+                        |  This contribution has been moved to the 
+                        a( href=contribution.contributions.url + "#contribution-" + contribution.contributions.id )
+                            | proposal section
+                        | .
+                    else
                         != contribution.contributions.markdownText
 
-                    .replies-wrapper
-                        each reply in contribution.replies || []
-                            -var replyId = `reply-${reply.replies.id}`;
-                            if reply.replies.newVersion
-                                .new-version-wrapper(id=replyId)
-                                    h3
-                                        +avatar( reply.replyUsers, 48 )
-                                        span.type New Version
-                                        time.created(title="UTC")
-                                            a(href=_baseUrlPath + "#" + replyId, title="link to comment")
-                                                +fa("certificate")
-                                            |  
-                                            = reply.replies.createdFormated
+                .replies-wrapper
+                    each reply in contribution.replies || []
+                        +reply( contribution, reply )
 
-                                    .markdown
-                                        != reply.replies.markdownText
-                            else
-                                .reply-wrapper(id=replyId)
-                                    h3
-                                        +avatar( reply.replyUsers, 48 )
-                                        time.created(title="UTC")
-                                            a(href=_originalUrl + "#" + replyId, title="link to comment")
-                                                +fa("comments-o")
-                                            |  
-                                            = reply.replies.createdFormated
-
-                                    .markdown
-                                        != reply.replies.markdownText
-                                    if reply.replies.newState !== null
-                                        +renderState( reply.replies.newState )
-
-                    a(href="/profile/reply/"+contribution.contributions.id).btn.btn-default.reply
-                        +fa("reply")
-                        |  Reply
+                a(href="/profile/reply/"+contribution.contributions.id).btn.btn-default.reply
+                    +fa("reply")
+                    |  Reply

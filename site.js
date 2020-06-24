@@ -5,6 +5,7 @@ var fs      = require("fs");
 var path    = require("path");
 var _       = require("underscore");
 var marked  = require('marked');
+var diff    = require('diff');
 var md5     = require("md5");
 var moment  = require("moment");
 
@@ -42,6 +43,21 @@ module.exports = {
         });
 
         /* add common values for rendering */
+        function diffMarkdown( v1, v2 ) {
+            const d = diff.diffLines( v1, v2 );
+            var diffHTML = "";
+            d.forEach( d => {
+                if( d.added )
+                    diffHTML += `<ins>${marked(d.value)}</ins>`;
+                else if( d.removed )
+                    diffHTML += `<del>${marked(d.value)}</del>`;
+                else
+                    diffHTML += marked(d.value);
+            });
+
+            return diffHTML;
+        }
+
         function vals( req, values ) {
             if( !values )
                 values = {};
@@ -49,6 +65,7 @@ module.exports = {
             _.extend( values, {
                 loggedIn: "session" in req,
                 uniqueWordNames: uniqueWordNames,
+                diffMarkdown: diffMarkdown,
                 contributionTypeName: {
                     "example": "Example",
                     "testcase":"Suggested Testcase",

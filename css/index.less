@@ -534,6 +534,19 @@ footer {
 
     .markdown {
         padding: 0 10px 10px 10px;
+
+        ins {
+            &, & * {
+                color: @state-success-text !important;
+                background-color: @state-success-bg;
+            }
+        }
+        del {
+            &, & * {
+                color: @state-danger-text !important;
+                background-color: @state-danger-bg;
+            }
+        }
     }
 
     .state {

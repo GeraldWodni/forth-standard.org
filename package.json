@@ -10,7 +10,8 @@
   "dependencies": {
     "async": "^1.4.2",
     "colors": "^1.1.2",
-    "jquery": "^3.0.0",
+    "diff": "^4.0.2",
+    "jquery": "^3.5.1",
     "jsdom": "^7.0.0",
     "underscore": "^1.8.3"
   }
