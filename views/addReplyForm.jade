@@ -1,0 +1,27 @@
+mixin addReplyForm( opts )
+    - opts = opts || {}
+    +messages(messages)
+
+    if preview
+        .preview.reply-wrapper
+            h2 Preview
+            h3
+                +avatar( user, 30 )
+            .markdown
+                != preview
+
+    if hideForm
+        p
+            a.btn.btn-default.pull-right(href=url) Back
+    else
+        form(method='post',role='form')
+            //if isOriginalAuthor
+            //    +checkbox-field("newVersion", "Publish as new contribution text (will be shown on top instead of current content)", newVersion)
+            .form-group
+                label Text - 
+                    | You can use
+                    a(href="https://help.github.com/articles/markdown-basics/",target="_blank")  Markdown
+                textarea(name="text",rows="10").form-control= text
+            a.btn.btn-default.pull-right(href=url) Back
+            button.btn.btn-primary(type='submit',name='create',value='yes') Submit
+            button.btn.btn-default(type='submit',name='preview',value='yes') Preview

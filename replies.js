@@ -14,8 +14,7 @@ module.exports = {
         var kData = k.getData();
         var vals = k.setupOpts.vals;
 
-        var urlMatch = "/reply/:id";
-        function getContribution( callback ){
+        function getContribution( callback, opts ){
             return function( req, res, next ) {
                 k.requestman( req );
                 var id = req.requestman.id();
@@ -23,32 +22,34 @@ module.exports = {
                     if( err ) return next( err );
                     if( contribution === [] ) return k.setupOpts.httpStatus( req, res, 404 );
 
-                    callback( req, res, next, contribution );
+                    callback( req, res, next, contribution, opts );
                 });
             };
         }
 
-        k.router.post( urlMatch, getContribution( function( req, res, next, contribution ) {
+        function postReply( req, res, next, contribution, opts ) {
             kData.users.readWhere("name", [req.session.loggedInUsername], function( err, user ) {
                 if( err ) return next( err );
                 user = user[0];
+                const messages = [];
 
                 k.postman( req, res, function() {
 
                     var text    = req.postman.text("text");
                     var state   = user.state == "moderated" ? "new" : "visible";
-                    var newVersion = req.postman.exists("newVersion") ? 1 : 0;
 
-                    if( req.postman.exists("preview" ) ) {
-                        k.jade.render( req, res, "addReply", vals( req, {
+                    if( contribution.user != user.id && opts.newVersion )
+                        messages.push({ type: "danger", title: "Error", text: "Currently only the original author can submit a new version" });
+
+                    if( req.postman.exists("preview" ) || messages.length ) {
+                        k.jade.render( req, res, opts.jadeFile, vals( req, {
                             /* TODO: fix URL for back button */
                             //(url: getUrl( req ),
                             text: text,
                             contribution: contribution,
                             user: _.extend( { emailMd5: md5( user.email.toLowerCase() ) }, user ),
-                            isOriginalAuthor: contribution.user == user.id,
-                            newVersion: newVersion,
-                            preview: marked( text )
+                            preview: marked( text ),
+                            messages: messages
                         } ));
                     }
                     else if( req.postman.exists("create" ) ) {
@@ -57,12 +58,12 @@ module.exports = {
                             contribution: contribution.id,
                             state: state,
                             created: kData.sql.nowUtc(),
-                            newVersion: newVersion,
+                            newVersion: opts.newVersion ? 1 : 0,
                             text: text
                         }, function( err ) {
                             if( err ) return next( err );
 
-                            k.jade.render( req, res, "addReply", vals( req, {
+                            k.jade.render( req, res, opts.jadeFile, vals( req, {
                                 //url: getUrl( req ),
                                 hideForm: true,
                                 contribution: contribution,
@@ -74,13 +75,40 @@ module.exports = {
                         k.setupOpts.httpStatus( req, res, 422 );
                 });
             });
+        }
+
+        /* add new version */
+        k.router.post( "/reply-new-version/:id", getContribution( postReply, {
+            jadeFile: "addNewVersion",
+            newVersion: true
+        }) );
+
+        k.router.get( "/reply-new-version/:id", getContribution( function( req, res, next, contribution ) {
+            kData.users.readWhere("name", [req.session.loggedInUsername], function( err, users ) {
+                const messages = [];
+                if( contribution.user != users[0].id )
+                    messages.push({ type: "warning", title: "Warning", text: "Currently only the original author can submit a new version" });
+
+                db.query( "SELECT text FROM replies WHERE contribution=? AND newVersion ORDER BY created DESC LIMIT 1", [ contribution.id ], ( err, replies ) => {
+                    if( err ) return next( err );
+
+                    var text = contribution.text;
+                    if( replies.length == 1 )
+                        text = replies[0].text;
+
+                    k.jade.render( req, res, "addNewVersion", vals( req, { contribution: contribution, url: "xxx", messages: messages, text: text } ) );
+                });
+            });
         }));
 
-        /* add contribution */
-        k.router.get( urlMatch, getContribution( function( req, res, next, contribution ) {
-            kData.users.readWhere("name", [req.session.loggedInUsername], function( err, users ) {
-                k.jade.render( req, res, "addReply", vals( req, { contribution: contribution, url: "xxx", isOriginalAuthor: contribution.user == users[0].id } ));
-            });
+
+        /* add reply */
+        k.router.post( "/reply/:id", getContribution( postReply, {
+            jadeFile: "addReply"
+        }) );
+
+        k.router.get( "/reply/:id", getContribution( function( req, res, next, contribution ) {
+            k.jade.render( req, res, "addReply", vals( req, { contribution: contribution, url: "xxx" } ));
         }));
     }
 }

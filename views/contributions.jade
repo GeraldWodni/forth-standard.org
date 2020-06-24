@@ -74,3 +74,6 @@ if contributions
                 a(href="/profile/reply/"+contribution.contributions.id).btn.btn-default.reply
                     +fa("reply")
                     |  Reply
+                a(href="/profile/reply-new-version/"+contribution.contributions.id, title="Only the contribution's author can create a new version").btn.btn-default.reply
+                    +fa("certificate")
+                    |  New Version
