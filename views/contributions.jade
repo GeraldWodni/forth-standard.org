@@ -64,6 +64,7 @@ if contributions
                             | proposal section
                         | .
                     else
+                        - lastVersion = contribution.contributions.text
                         != contribution.contributions.markdownText
 
                 .replies-wrapper
