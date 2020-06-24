@@ -371,23 +371,26 @@ module.exports = {
         });
 
         k.router.get("/proposals", function( req, res, next ) {
-            db.query( { sql: "SELECT contributions.*, users.*,"
-                + " COUNT(answers.id) AS answerCount,"
-                + " GROUP_CONCAT( DISTINCT newVersions.id ORDER BY newVersions.id ) AS newVersionsId,"
-                + " GROUP_CONCAT( DISTINCT newVersions.created ORDER BY newVersions.id ) AS newVersionsCreated,"
-                + " GROUP_CONCAT( DISTINCT newStates.id ORDER BY newStates.id ) AS newStatesId,"
-                + " GROUP_CONCAT( DISTINCT newStates.newState ORDER BY newStates.id ) AS newStates,"
-                + " GROUP_CONCAT( DISTINCT newStates.created ORDER BY newStates.id ) AS newStatesCreated"
-                + " FROM contributions INNER JOIN users ON contributions.user=users.id"
-                + " LEFT JOIN replies AS answers"
-                + " ON answers.contribution=contributions.id AND NOT answers.newVersion"
-                + " LEFT JOIN replies AS newVersions"
-                + " ON newVersions.contribution=contributions.id AND newVersions.newVersion"
-                + " LEFT JOIN replies AS newStates"
-                + " ON newStates.contribution=contributions.id AND newStates.newState IS NOT NULL"
-                + " WHERE contributions.state='visible' AND `contributions`.`type`='proposal'"
-                + " GROUP BY contributions.id"
-                + " ORDER BY contributions.created DESC",
+            db.query( { sql: `
+                SELECT contributions.*, users.*,
+                COUNT(answers.id) AS answerCount,
+                contributionState(contributions.id) AS contributionState,
+                GROUP_CONCAT( DISTINCT newVersions.id ORDER BY newVersions.id ) AS newVersionsId,
+                GROUP_CONCAT( DISTINCT newVersions.created ORDER BY newVersions.id ) AS newVersionsCreated,
+                GROUP_CONCAT( DISTINCT newStates.id ORDER BY newStates.id ) AS newStatesId,
+                GROUP_CONCAT( DISTINCT newStates.newState ORDER BY newStates.id ) AS newStates,
+                GROUP_CONCAT( DISTINCT newStates.created ORDER BY newStates.id ) AS newStatesCreated
+                FROM contributions INNER JOIN users ON contributions.user=users.id
+                LEFT JOIN replies AS answers
+                ON answers.contribution=contributions.id AND NOT answers.newVersion
+                LEFT JOIN replies AS newVersions
+                ON newVersions.contribution=contributions.id AND newVersions.newVersion
+                LEFT JOIN replies AS newStates
+                ON newStates.contribution=contributions.id AND newStates.newState IS NOT NULL
+                WHERE contributions.state='visible' AND contributions.type='proposal'
+                GROUP BY contributions.id
+                ORDER BY contributionStateOrder( contributionState( contributions.id ) ) ASC,
+                    contributions.created DESC`,
                 nestTables: true }, [], function( err, contributions ) {
                 if( err ) return next( err );
                 contributions.forEach( c => console.log( "C:", c.id, c[""] ) );
