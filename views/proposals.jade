@@ -52,7 +52,13 @@ block content
                 li
                     +fa("li fa fa-comment-o")
                     - var link = contribution.contributions.url;
-                    a(href=link+"#contribution-" + contribution.contributions.id)
+                    //- find latest contribution link
+                    - var contributionLink = link+"#contribution-" + contribution.contributions.id;
+                    if contribution[""].newVersionsId && contribution[""].newVersionsId.length
+                        - newVersions = contribution[""].newVersionsId.split(",")
+                        - contributionLink = link + "#reply-" + newVersions[ newVersions.length - 1 ]
+
+                    a(href=contributionLink)
                         div.user(title=contribution.users.name)
                             +gravatar(contribution.users.emailMd5, contribution.users.name, 40)
                         h5.document
@@ -70,7 +76,6 @@ block content
                             | V0: 
                             = contribution.contributions.createdFormated
                         if contribution[""].newVersionsId && contribution[""].newVersionsId.length
-                            - newVersions = contribution[""].newVersionsId.split(",")
                             - newCreateds = contribution[""].newVersionsCreated.split(",")
                             each index in _.range( newVersions.length )
                                 div.date
