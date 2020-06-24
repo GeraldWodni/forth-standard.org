@@ -20,5 +20,12 @@ block content
                 - lastState = reply.replies.newState
         +renderState( lastState ).big-state
 
+        if contributions[0].contributions.formerUrl
+            p
+                +fa("share")
+                |  This proposal has been moved into this section. Its former address was: 
+                a(href=contributions[0].contributions.formerUrl)
+                    =contributions[0].contributions.formerUrl
+
         p This page is dedicated to discussing this specific proposal
         include contributions

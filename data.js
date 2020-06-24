@@ -48,12 +48,13 @@ module.exports = {
                 + " WHERE replies.user=? GROUP BY contributions.id"
             },
             /* get all contributions to a specific url */
-            urlContributions: { args: [ "url" ], nestTables: true, sql:
-                  " SELECT * FROM contributions"
+            urlContributions: { args: [ "url", "url", "url" ], nestTables: true, sql:
+                  " SELECT *, contributions.formerUrl=? AS `moved`"
+                + " FROM contributions"
                 + " INNER JOIN users ON users.id=contributions.user"
                 + " LEFT JOIN replies ON replies.contribution=contributions.id AND replies.state='visible'"
                 + " LEFT JOIN users AS replyUsers ON replyUsers.id=replies.user"
-                + " WHERE contributions.url=? AND contributions.state='visible'"
+                + " WHERE (contributions.url=? OR contributions.formerUrl=?) AND contributions.state='visible'"
                 + " ORDER BY contributions.id, replies.id"
             },
 

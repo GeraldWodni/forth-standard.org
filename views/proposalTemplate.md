@@ -1,31 +1,37 @@
-# Proposal
+__Hint: Please delete the blockquote explanations, they are just for your convenience while writing the proposal__
 
-This is the normative part, i.e., the meat of the RfD.
+## Author:
 
-Before you go to a CfV, this should be as well-specified as possible, but you can start out with some issues undecided (that you want to decide in the RfD stage); mention these issues in the Remarks section, maybe also in the proposal section. If you want to leave something open to the system implementor, make that explicit (possibly by making it an ambiguous condition).
+> The name of the author(s) of the proposal.
 
-For word definitions, you probably can get inspirations for the wording from similar word definitions in the ANS Forth document (e.g., for DEFER I looked at existing defining words, and for IS at TO).
-Informative parts
-The rest of the RfD is informative stuff, giving a rationale for the proposal, so that system implementors and programmers will see what it is good for and why they should adopt it (and vote for it). We have:
+## Change Log:
 
-## Problem
+> A list of changes to the last published edition on the proposal.
 
-This states what problem your RfD attacks. It usually comes before the proposal.
+## Problem:
 
-## Typical use
+> This states what problem the proposal addresses.
 
-Shows a typical use of the word/feature you propose; this should make the formal wording easier to understand.
-Remarks
-This gives the rationale for specific decisions you have taken in the proposal, or discusses specific issues that have not been decided yet.
-Reference implementation
-This makes it easier for system implementors to adopt your proposal. If you can provide an implementation in ANS Forth, great. If you can provide an implementation that requires system-specific stuff, ok (but you may have to explain the system-specific stuff). Otherwise, too bad.
+## Solution:
 
-## Test cases
+> A short informal description of the proposed solution to the problem identified by the proposal.
 
-This should test the feature/words you propose, in particular, it should test corner cases.
-Experience
-Where is the proposal already implemented? Where is it used?
+> This gives the rationale for specific decisions you have taken in the proposal (often in response to comments), or discusses specific issues that have not been decided yet.
 
-## Comments
+## Typical use: (Optional)
 
-Initially empty. Once you get feedback for the RfD, this is the place for comments that you consider interesting, but don't find a different place for in the RfD. 
+> Shows a typical use of the word or feature proposed; this should make the formal wording easier to understand.
+
+## Proposal:
+
+> This should enumerate the changes to the document.
+
+> For the wording of word definitions, use existing word definitions as a template. Where possible, include the rationale for the definition.
+
+## Reference implementation:
+
+> This makes it easier for system implementors to adopt the proposal. Where possible, the reference implementation should be provided in standard Forth. Where this is not possible because system specific knowledge is required or non-standard words are used, this should be documented.
+
+## Testing: (Optional)
+
+> This should test the words or features introduced by the proposal, in particular, it should test boundary conditions. Test cases should work with the test harness in Appendix F.

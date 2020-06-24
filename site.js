@@ -142,6 +142,10 @@ module.exports = {
                 var groupedContributions = [];
                 var lastContribution = { contributions: { id: 0 } };
                 items.forEach( function ( item ) {
+                    /* moved */
+                    if( item[""] && item[""].moved )
+                        item.contributions.moved = true;
+
                     /* new contribution */
                     if( item.contributions.id != lastContribution.contributions.id ) {
                         lastContribution = formatUserContent( "contributions", "users", {
