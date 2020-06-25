@@ -36,6 +36,8 @@ mixin reply( contribution, reply )
                 - lastVersion = reply.replies.text;
             else
                 != reply.replies.markdownText
+            if reply.replies.newState
+                +renderState( reply.replies.newState )
 
 if contributions
     .contributions-wrapper
