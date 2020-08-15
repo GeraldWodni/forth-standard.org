@@ -73,6 +73,16 @@ module.exports = {
                     "referenceImplementation":"Suggested reference implementation",
                     "proposal":"Proposal",
                     "comment":"Comment"
+                },
+                contributionStateText: {
+                    "informal":  "Informal",
+                    "formal":    "Formal",
+                    "accepted":  "Accepted",
+                    "voting":    "CfV - Call for votes",
+                    "retracted": "Retracted",
+                    "retired":   "Retired",
+                    "open":      "Open",
+                    "closed":    "Closed"
                 }
             });
 
@@ -417,7 +427,6 @@ module.exports = {
             });
         });
 
-
         /** atom feed **/
         k.router.get("/feeds/contributions", function( req, res ) {
             db.query( { sql: "SELECT contributions.*, users.*, feed.*, replies.text"
@@ -443,27 +452,45 @@ module.exports = {
 
 
         /** home **/
-        function renderContributions( req, res, next, limit, template ) {
+        function renderContributions( req, res, next, { limit, template, countOpenContributions, type, state } ) {
             limit = limit > 0 ? " LIMIT " + limit : "";
-            db.query( { sql: "SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id"
-                + " WHERE contributions.state='visible' ORDER BY contributions.created DESC" + limit + ";"
-                + " SELECT * FROM replies INNER JOIN contributions ON replies.contribution = contributions.id"
-                + " INNER JOIN users ON replies.user=users.id"
-                + " WHERE replies.state='visible' ORDER BY replies.created DESC" + limit,
+            const sqlType  = type  ? ` AND contributions.type='${type}'` : "";
+            const sqlState = state ? ` AND contributionState(contributions.id)='${state}'` : "";
+            db.query( { sql: `
+                SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id
+                WHERE contributions.state='visible'${sqlType}${sqlState} ORDER BY contributions.created DESC${limit};
+
+                SELECT * FROM replies INNER JOIN contributions ON replies.contribution = contributions.id
+                INNER JOIN users ON replies.user=users.id
+                WHERE replies.state='visible'${sqlType}${sqlState} ORDER BY replies.created DESC${limit};
+
+                SELECT COUNT(1) AS count, type
+                FROM contributions
+                WHERE 1=${countOpenContributions?1:0}
+                AND type<>'proposal'
+                AND contributionState(id)='open'
+                GROUP BY type`,
                 nestTables: true }, [], function( err, items ) {
                 if( err ) return next( err );
-                contributions   = formatUserContents( "contributions",  "users", items[0] );
-                replies         = formatUserContents( "replies",        "users", items[1] );
-                k.jade.render( req, res, template, vals( req, { contributions: contributions, replies: replies } ) );
+                const contributions     = formatUserContents( "contributions",  "users", items[0] );
+                const replies           = formatUserContents( "replies",        "users", items[1] );
+                const openContributions = items[2];
+                k.jade.render( req, res, template, vals( req, { contributions, replies, openContributions, type, state } ) );
             });
         }
 
+        k.router.get("/contributions/:type/:state", ( req, res, next ) => {
+            const type  = req.requestman.id("type");
+            const state = req.requestman.id("state");
+            renderContributions( req, res, next, { limit: 0, template: "listContributions", type, state } );
+        });
+
         k.router.get("/contributions", function( req, res, next ) {
-            renderContributions( req, res, next, 0, "listContributions" );
+            renderContributions( req, res, next, { limit: 0, template: "listContributions" } );
         });
 
         k.router.get("/", function( req, res, next ) {
-            renderContributions( req, res, next, 4, "home" );
+            renderContributions( req, res, next, { limit: 4, template: "home", countOpenContributions: true } );
         });
 
         /* digest daemon */

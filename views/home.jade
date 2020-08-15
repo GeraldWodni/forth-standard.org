@@ -116,6 +116,16 @@ block content
             .col-sm-12
                 .contributions-latest-more
                     a(href="/contributions") View more…
+        .row
+            .col-sm-12
+                h3 Open(active) contributions:
+                ul.contributions-open
+                    each openContribution in openContributions
+                        li
+                            a(href="/contributions/#{openContribution.contributions.type}/open")
+                                span.count
+                                    = openContribution[""].count
+                                = contributionTypeName[ openContribution.contributions.type ]
 
     +box.systems
         h1 Systems

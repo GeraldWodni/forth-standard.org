@@ -6,7 +6,11 @@ COALESCE(
     WHERE contribution=contributionId
     ORDER BY replies.created DESC
     LIMIT 1)
-, 'informal');
+,   (SELECT 'informal'
+    FROM contributions
+    WHERE id=contributionId
+    AND `type`='proposal')
+,'open');
 
 -- provide sorting for state
 CREATE OR REPLACE FUNCTION contributionStateOrder (state VARCHAR(255)) RETURNS INT RETURN

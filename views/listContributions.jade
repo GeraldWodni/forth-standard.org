@@ -7,9 +7,20 @@ block menu
 
 block content
     +box.standard
-        h1 Contributions
-        p
-            | These are all contributions and replies sorted latest first.
+        if type
+            h1
+                = contributionTypeName[ type ]
+            p These are all contributions and replies in the state 
+                code
+                    = contributionStateText[ state ]
+                | and the type 
+                code
+                    = contributionTypeName[ type ]
+                | .
+
+        else
+            h1 Contributions
+            p These are all contributions and replies sorted latest first.
 
         .row
             .col-sm-6
