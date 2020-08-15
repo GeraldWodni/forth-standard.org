@@ -13,10 +13,21 @@ block content
             p These are all contributions and replies in the state 
                 code
                     = contributionStateText[ state ]
-                | and the type 
+                |  and the type 
                 code
                     = contributionTypeName[ type ]
                 | .
+            p
+                if state == "open"
+                    a(href="/contributions/#{type}/closed")
+                        | See 
+                        code Closed
+                        |  contributions
+                else
+                    a(href="/contributions/#{type}/open")
+                        | See 
+                        code Open
+                        |  contributions
 
         else
             h1 Contributions
