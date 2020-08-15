@@ -22,12 +22,24 @@ module.exports = {
                     if( err ) return next( err );
                     if( contribution === [] ) return k.setupOpts.httpStatus( req, res, 404 );
 
-                    callback( req, res, next, contribution, opts );
+                    db.query( "SELECT contributionState(?) AS contributionState", contribution.id, ( err, contributionStates ) => {
+                        if( err ) return next( err );
+
+                        kData.users.readWhere("name", [req.session.loggedInUsername], function( err, users ) {
+                            if( err ) return next( err );
+
+                            const isOriginalAuthor  = contribution.user == users[0].id;
+                            const isCommitteeMember = users[0].committeeMember;
+                            const contributionState = contributionStates.length == 1 ? contributionStates[0].contributionState : "unknown";
+
+                            callback( req, res, next, { contribution, isOriginalAuthor, isCommitteeMember, contributionState }, opts );
+                        });
+                    });
                 });
             };
         }
 
-        function postReply( req, res, next, contribution, opts ) {
+        function postReply( req, res, next, { contribution, isOriginalAuthor, isCommitteeMember, contributionState }, opts ) {
             kData.users.readWhere("name", [req.session.loggedInUsername], function( err, user ) {
                 if( err ) return next( err );
                 user = user[0];
@@ -35,6 +47,7 @@ module.exports = {
 
                 k.postman( req, res, function() {
 
+                    var newState= req.postman.id("newState") || null;
                     var text    = req.postman.text("text");
                     var state   = user.state == "moderated" ? "new" : "visible";
 
@@ -49,6 +62,10 @@ module.exports = {
                             contribution: contribution,
                             user: _.extend( { emailMd5: md5( user.email.toLowerCase() ) }, user ),
                             preview: marked( text ),
+                            isOriginalAuthor,
+                            isCommitteeMember,
+                            contributionState,
+                            newState: newState,
                             messages: messages
                         } ));
                     }
@@ -59,6 +76,7 @@ module.exports = {
                             state: state,
                             created: kData.sql.nowUtc(),
                             newVersion: opts.newVersion ? 1 : 0,
+                            newState: newState,
                             text: text
                         }, function( err ) {
                             if( err ) return next( err );
@@ -83,7 +101,7 @@ module.exports = {
             newVersion: true
         }) );
 
-        k.router.get( "/reply-new-version/:id", getContribution( function( req, res, next, contribution ) {
+        k.router.get( "/reply-new-version/:id", getContribution( function( req, res, next, { contribution, isOriginalAuthor, isCommitteeMember, contributionState } ) {
             kData.users.readWhere("name", [req.session.loggedInUsername], function( err, users ) {
                 const messages = [];
                 if( contribution.user != users[0].id )
@@ -96,7 +114,7 @@ module.exports = {
                     if( replies.length == 1 )
                         text = replies[0].text;
 
-                    k.jade.render( req, res, "addNewVersion", vals( req, { contribution: contribution, url: "xxx", messages: messages, text: text } ) );
+                    k.jade.render( req, res, "addNewVersion", vals( req, { contribution, isOriginalAuthor, isCommitteeMember, contributionState, url: "xxx", messages: messages, text: text } ) );
                 });
             });
         }));
@@ -107,8 +125,9 @@ module.exports = {
             jadeFile: "addReply"
         }) );
 
-        k.router.get( "/reply/:id", getContribution( function( req, res, next, contribution ) {
-            k.jade.render( req, res, "addReply", vals( req, { contribution: contribution, url: "xxx" } ));
+        k.router.get( "/reply/:id", getContribution( function( req, res, next, values ) {
+            values.url = "xxx";
+            k.jade.render( req, res, "addReply", vals( req,values ));
         }));
     }
 }

@@ -120,29 +120,45 @@ mixin latestContribution( item, dataTable )
         div.date
             = item[dataTable].createdFormated
 
+- function stateText(state) { switch(state) { case "informal":    return "Informal"; case "formal":      return "Formal"; case "accepted":    return "Accepted"; case "voting":      return "CfV - Call for votes"; case "retracted":   return "Retracted"; case "retired":     return "Retired"; default:            return "Unknown State " + state; }}
+
 mixin renderState( state )
     div.state&attributes(attributes)
         if state == "informal"
             +fa("file-text").fa-lg.text-red
-            |  Informal
         else if state == "formal"
             +fa("star").fa-lg.text-red
-            |  Formal
         else if state == "accepted"
             +fa("check-circle").fa-lg.text-red
-            |  Accepted
         else if state == "voting"
-            +fa("poencil-square-o").fa-lg.text-red
-            |  CfV - Call for votes
+            +fa("pencil-square-o").fa-lg.text-red
         else if state == "retracted"
             +fa("ban").fa-lg.text-red
-            |  Retracted
         else if state == "retired"
             +fa("snowflake-o").fa-lg.text-red
-            |  Retired
         else
             b Statechange: 
-                = state
+        = stateText( state )
+
+mixin selectState(name)
+    if isOriginalAuthor || isCommitteeMember
+        .form-group
+            label Change Status
+            select(name=name, class="form-control")&attributes(attributes)
+                option(value="", selected=!newState)
+                    = `<unchanged (${stateText(contributionState)})>`
+                option(value="informal",    selected=newState=="informal",  disabled=contributionState=="informal")
+                    =stateText("informal")
+                option(value="formal",      selected=newState=="formal",    disabled=contributionState=="formal"  || !isCommitteeMember)
+                    =stateText("formal")
+                option(value="accepted",    selected=newState=="accepted",  disabled=contributionState=="accepted"|| !isCommitteeMember)
+                    =stateText("accepted")
+                option(value="voting",      selected=newState=="voting",    disabled=contributionState=="voting"  || !(isCommitteeMember || contributionState=="formal"))
+                    =stateText("voting")
+                option(value="retracted",   selected=newState=="retracted", disabled=contributionState=="retracted")
+                    =stateText("retracted")
+                option(value="retired",     selected=newState=="retired",   disabled=contributionState=="retired")
+                    =stateText("retired")
 
 html
     head
