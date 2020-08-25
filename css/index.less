@@ -395,6 +395,15 @@ footer {
         line-height: @avatarSize;
     }
 
+    .number {
+        float: left;
+        font-size: @avatarSize/2;
+        line-height: @avatarSize;
+        width: @avatarSize;
+        text-align: center;
+        color: #333;
+    }
+
     &.wordSet .name {
         font-size:20px;
     }
@@ -432,6 +441,25 @@ footer {
     }
     &.moderator {
         background-color: @mat-300;
+    }
+
+    &.online {
+        background-color: @LightGreen-200;
+        .number {
+            background-color: @LightGreen-400;
+        }
+    }
+    &.offline {
+        background-color: @Red-100;
+        .number {
+            background-color: @Red-300;
+        }
+    }
+    &.neutral {
+        background-color: @Grey-100;
+        .number {
+            background-color: @Grey-300;
+        }
     }
 }
 

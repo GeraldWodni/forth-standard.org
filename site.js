@@ -315,6 +315,10 @@ module.exports = {
             vals: vals,
             httpStatus: httpStatus
         } } );
+        k.useSiteModule( "/profile", "forth-standard.org", "committee.js", { setup: {
+            vals: vals,
+            httpStatus: httpStatus
+        } } );
 
 
         /** reviews **/

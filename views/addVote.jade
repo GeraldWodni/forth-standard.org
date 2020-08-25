@@ -1,0 +1,19 @@
+extends layout
+
+block menu
+    +menu
+
+block title
+    | Add Vote
+
+block content
+    .container
+        h3
+            | Contribute to 
+            = url
+        p
+            | Upon submission we will review it at our first chance. Do not worry, we merely want to avoid spam and insults. So please contribute 
+            +fa("smile-o")
+            |.
+
+        //-+addContributionForm()

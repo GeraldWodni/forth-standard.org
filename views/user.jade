@@ -13,6 +13,14 @@ block content
         .row
             .col-md-8
                 if manage
+                    if user.committeeMember
+                        h2 Committee
+                        |  
+                        a.btn.btn-default(href="/profile/committee")
+                            +fa("user-circle-o")
+                            |  Committee
+
+
                     if user.state=='moderator'
                         h2 Moderate
                         |  
