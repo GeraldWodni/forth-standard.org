@@ -19,6 +19,10 @@ module.exports = {
             }
         } );
 
+        const votes = k.crud.sql( db, { table: "votes", key: "id", foreignName: "subject",
+            orderBy: "created",
+        } );
+
         var replies = k.crud.sql( db, { table: "replies", key: "id", foreignName: "text",
             orderBy: "created"
         } );
@@ -127,6 +131,15 @@ module.exports = {
             connection.query( _.omit( query, "args" ), values, callback );
         }
 
+        function pQuery( connection, name, args ) {
+            return new Promise( (fulfill, reject) => {
+                query( connection, name, args, ( err, data ) => {
+                    if( err ) return reject( err );
+                    fulfill( data );
+                });
+            });
+        }
+
         function mapQuery( connection, name, args, mapFunction, callback ) {
             /* map all arguments */
             async.mapSeries( args, function( arg, done ) {
@@ -171,9 +184,11 @@ module.exports = {
         return {
             users:          users,
             contributions:  contributions,
+            votes,
             proposals:      proposals,
             replies:        replies,
             query:          _.partial( query, db ),    /* bind to pool */
+            pQuery:         _.partial( pQuery, db ),   /* bind to pool */
             mapQuery:       _.partial( mapQuery, db ), /* bind to pool */
             transaction:   {
                 begin:              beginTransaction,
