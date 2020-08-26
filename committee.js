@@ -95,6 +95,50 @@ module.exports = {
 
         k.router.get( "/committee/votes/cast/:id", ( req, res, next ) => renderCastVote( req, res, next, { id: req.requestman.id() } ) );
 
+        /* observe voting */
+        k.router.get( "/committee/votes/observe/:id", ( req, res, next ) => {
+            const id = req.requestman.id();
+            const autoRefresh = req.getman.exists("autoRefresh");
+            Promise.all([
+                req.kern.db.pQuery(`
+                    SELECT votes.id, votes.subject, votes.text
+                    FROM votes
+                    WHERE votes.id={id};
+                    SELECT users.name, MD5(LOWER(users.email)) AS emailMd5, castVotes.state
+                    FROM users
+                    LEFT JOIN castVotes
+                    ON castVotes.user=users.id
+                    AND castVotes.vote={id}
+                    WHERE users.committeeMember
+                `, {id}),
+                k.session.getActive( k.website )
+                .then( activeSessions => activeSessions.map( activeSession => activeSession.loggedInUsername ) )
+            ])
+            .then( ([ [votes, users], activeSessions ]) => k.jade.render( req, res, "observeVote", vals( req, {
+                vote: votes[0],
+                users,
+                activeSessions,
+                onlineCount: activeSessions.length,
+                offlineCount: users.length - activeSessions.length,
+                yesCount:       users.filter( castVote => castVote.state == "yes"       ).length,
+                noCount:        users.filter( castVote => castVote.state == "no"        ).length,
+                abstainCount:   users.filter( castVote => castVote.state == "abstain"   ).length,
+                anyCount:       users.filter( castVote => castVote.state != null        ).length,
+                autoRefresh,
+                loggedInUsername: req.session.loggedInUsername
+            } ) ) )
+            .catch( next );
+        });
+
+        /* close vote */
+        k.router.postman( "/committee/votes/close/:id", ( req, res, next ) => {
+            const id = req.requestman.id();
+            const closed = req.postman.exists("close");
+
+            req.kern.db.pQuery( "UPDATE votes SET ended=NOW(), endedBy={user} WHERE id={id}; SELECT id, subject FROM votes WHERE id={id}", { id, user: req.kern.loggedInUserId } )
+            .then( ([update, votes]) => k.jade.render( req, res, "closeVote", vals( req, { vote: votes[0] } ) ) )
+            .catch( next );
+        });
 
         /* main committee page */
         k.router.get( "/committee", ( req, res, next ) => {

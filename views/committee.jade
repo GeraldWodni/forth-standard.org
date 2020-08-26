@@ -2,6 +2,8 @@
 
 extends layout
 
+include committeeMixins
+
 block menu
     +menu
 
@@ -13,19 +15,7 @@ block content
         .row
             .col-sm-12
                 h1 Committee
-
-            .col-sm-6.col-md-4.col-lg-3
-                a.boxItem.user.neutral
-                    .number= users.length
-                    .name Total
-            .col-sm-6.col-md-4.col-lg-3
-                a.boxItem.user.online
-                    .number= onlineCount
-                    .name Online
-            .col-sm-6.col-md-4.col-lg-3
-                a.boxItem.user.offline
-                    .number= offlineCount
-                    .name Offline
+            +committeeOnlineCount
         .row
             each user in users
                 .col-sm-6.col-md-4.col-lg-3

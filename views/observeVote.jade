@@ -1,0 +1,108 @@
+extends layout
+
+include committeeMixins
+
+block menu
+    +menu
+
+block title
+    | Observe vote
+
+append meta
+    if autoRefresh
+        meta(http-equiv="refresh",content="8")
+
+block content
+    .container
+        h1
+            if autoRefresh
+                a(href="?").btn.btn-success.pull-right
+                    | Auto refresh: on
+            else
+                a(href="?autoRefresh").btn.btn-default.pull-right
+                    | Auto refresh: off
+            | Observe vote ##{vote.id}
+
+        | Members:
+        .row
+            .col-sm-6.col-md-4.col-lg-3
+                a.boxItem.user.neutral
+                    .number= users.length
+                    .name Total
+            .col-sm-6.col-md-4.col-lg-3
+                a.boxItem.user.online
+                    .number= onlineCount
+                    .name Online
+            .col-sm-6.col-md-4.col-lg-3
+                a.boxItem.user.offline
+                    .number= offlineCount
+                    .name Offline
+
+        table.table
+            thead
+                tr
+                    th  Member
+                    th  Yes: #{yesCount}
+                    th  No: #{noCount}
+                    th  Abstain: #{abstainCount}
+                    th  Voted: #{anyCount}
+                    th  Online: #{onlineCount}
+            each user in users
+                tr
+                    td.gravatarUser
+                        +gravatar(user.emailMd5, user.name, 48)
+                        |  
+                        = user.name
+                    if user.state == "yes"
+                        td.success.text-center
+                            +fa("check-square-o")
+                            |  Yes
+                        td=" "
+                        td=" "
+                    else if user.state == "no"
+                        td=" "
+                        td.danger.text-center
+                            +fa("check-square-o")
+                            |  No
+                        td=" "
+                    else if user.state == "abstain"
+                        td=" "
+                        td=" "
+                        td.warning.text-center
+                            +fa("check-square-o")
+                            |  Abstain
+                    else
+                        td=" "
+                        td=" "
+                        td=" "
+                    if user.state != null
+                        td.success.text-center
+                            +fa("check-square-o")
+                    else
+                        td=" "
+                    if activeSessions.indexOf( user.name ) >= 0
+                        td.success.text-center
+                            +fa("check-square-o")
+                    else
+                        td=" "
+
+
+
+
+        .contribution-wrapper
+            h2
+                = vote.subject
+            .markdown
+                != vote.text
+
+        p
+            a.btn.btn-default.pull-right(href="/profile/committee/votes/cast/#{vote.id}")
+                if users.filter( user => user.name == loggedInUsername && user.state != null ).length
+                    | Change vote
+                else
+                    | Cast vote
+            form(method="post", action="/profile/committee/votes/close/#{vote.id}")
+                button(type="submit",name="close").btn.btn-primary
+                    +fa( "close" )
+                    |  Close vote for everybody (final)
+

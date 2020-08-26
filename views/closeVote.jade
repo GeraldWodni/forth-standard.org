@@ -1,0 +1,15 @@
+extends layout
+
+include committeeMixins
+
+block menu
+    +menu
+
+block title
+    | Close vote
+
+block content
+    .container
+        h1
+            | Closed vote ##{vote.id}
+        h4= vote.subject
