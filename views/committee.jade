@@ -35,8 +35,53 @@ block content
 
         .row
             .col-sm-12
-                h1 Votes
-                a(href="/profile/committee/votes/add").btn.btn-default
-                    +fa("plus")
-                    |  Create Vote
+                h1
+                    a(href="/profile/committee/votes/add").btn.btn-default.pull-right
+                        +fa("plus")
+                        |  Create Vote
+                    | Votes
+        .row
+            .col-sm-12
+                ul.fa-ul.contribution-latest
+                    each vote in votes
+                        li.clearfix
+                            if vote.enders.name == null
+                                if vote[""].userHasCastVote
+                                    +fa("check-square-o").fa-li(title="open, you have voted")
+                                else
+                                    +fa("square-o").fa-li(title="open, you have not voted")
+                            else
+                                +fa("lock").fa-li(title="closed")
+                            .user
+                                +gravatar( vote[""].starterEmail, vote.starters.name, 48 )(title="Opened by")
+                                if vote.enders.name == null
+                                    span.text-gravatar(title="Not closed yet, 'Closed by' unknown ;)") ?
+                                else
+                                    +gravatar( vote[""].enderEmail, vote.enders.name, 48 )(title="Closed by")
+                            h4
+                                = vote.votes.subject
+                            p
+                                !=marked(vote.votes.text)
 
+                            .date
+                                span(title="Opened")
+                                    +fa("square-o").fa-fw
+                                    = _datetime( vote.votes.started, true )
+                            if vote.enders.name != null
+                                .date
+                                    span(title="Closed")
+                                        +fa("lock").fa-fw
+                                        = _datetime( vote.votes.ended, true )
+
+                            .pull-right
+                                if vote.enders.name == null
+                                    a(href="/profile/committee/votes/cast/#{vote.votes.id}").btn.btn-default
+                                        +fa("check-square-o")
+                                        if vote[""].userHasCastVote
+                                            |  Change vote
+                                        else
+                                            |  Cast vote
+                                    |  
+                                    a(href="/profile/committee/votes/observe/#{vote.votes.id}").btn.btn-default
+                                        +fa("eye")
+                                        |  Observe voting

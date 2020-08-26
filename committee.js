@@ -14,6 +14,18 @@ module.exports = {
         const kData = k.getData();
         const vals = k.setupOpts.vals;
 
+        k.router.all( "*", ( req, res, next ) => {
+            req.kern.db.pQuery("SELECT id FROM users WHERE name=?", [req.session.loggedInUsername])
+            .then( users => {
+                if( users.length != 1 )
+                    throw new Error("User not found");
+                req.kern.loggedInUserId = users[0].id;
+                next();
+            })
+            .catch( next );
+        });
+
+        /* add vote */
         function renderAddVote( req, res, next, values ) {
             req.kern.db.pQuery( `
                 SELECT id, type, subject, contributionState(id) AS contributionState
@@ -38,42 +50,75 @@ module.exports = {
             if( req.postman.exists("preview" ) || messages.length )
                 renderAddVote( req, res, next, { contribution, subject, text, preview: marked( text ), messages });
             else if( req.postman.exists("create") )
-                kData.users.readWhere("name", [req.session.loggedInUsername], function( err, user ) {
+                kData.votes.create({
+                    contribution,
+                    started: kData.sql.nowUtc(),
+                    startedBy: req.kern.loggedInUserId,
+                    subject: subject,
+                    text: text
+                }, function( err ) {
                     if( err ) return next( err );
-                    if( user.length != 1 ) return next( new Error( "User not found" ) );
-                    user = user[0];
 
-                    kData.votes.create({
+                    renderAddVote( req, res, next, {
                         contribution,
-                        started: kData.sql.nowUtc(),
-                        startedBy: user.id,
-                        subject: subject,
-                        text: text
-                    }, function( err ) {
-                        if( err ) return next( err );
-
-                        renderAddVote( req, res, next, {
-                            contribution,
-                            subject,
-                            text,
-                            messages: [{type: "success", title: "Success", text: "Thank you, your votes is now online"}],
-                            hideForm: true
-                        });
+                        subject,
+                        text,
+                        messages: [{type: "success", title: "Success", text: "Thank you, your votes is now online"}],
+                        hideForm: true
                     });
                 });
         });
 
         k.router.get( "/committee/votes/add", ( req, res, next ) => renderAddVote( req, res, next ) );
 
+        /* cast and manage vote */
+        function renderCastVote( req, res, next, values ) {
+            req.kern.db.pQuery( "SELECT subject, text FROM votes WHERE id=?", [values.id])
+            .then( votes => k.jade.render( req, res, "castVote", vals( req, Object.assign({ vote: votes[0] }, values) ) ) )
+            .catch( next );
+        }
+
+        k.router.postman( "/committee/votes/cast/:id", ( req, res, next ) => {
+            const id = req.requestman.id();
+            const state = req.postman.id("castVote");
+
+            req.kern.db.pQuery( "SELECT COUNT(1) AS count FROM votes WHERE id={id} AND ended IS NULL", {id} )
+            .then( votes => {
+                if( votes.length != 1 || votes[0].count != 1 )
+                    return renderCastVote( req, res, next, { id: req.requestman.id(), messages: [{type: "danger", title: "Error", text: "This vote is not open"}] } );
+
+                return req.kern.db.pQuery("REPLACE INTO castVotes( vote, user, modified, state ) VALUES ({id}, {user}, NOW(), {state})", { id, user: req.kern.loggedInUserId, state: state })
+                .then( () => renderCastVote( req, res, next, { id: req.requestman.id(), hideForm: true, messages: [{type: "success", title: "Success", text: `You casted ${state} on vote #${id}` }] } ) );
+            })
+            .catch( next );
+        });
+
+        k.router.get( "/committee/votes/cast/:id", ( req, res, next ) => renderCastVote( req, res, next, { id: req.requestman.id() } ) );
+
+
+        /* main committee page */
         k.router.get( "/committee", ( req, res, next ) => {
             Promise.all([
                 req.kern.db.pQuery( "SELECT name, MD5(LOWER(email)) AS emailMd5 FROM users WHERE committeeMember ORDER BY name ASC" ),
+                req.kern.db.pQuery( { nestTables: true, sql:`
+                    SELECT votes.id, votes.subject, votes.text, votes.started, votes.ended,
+                    starters.id, starters.name, MD5(LOWER(starters.email)) AS starterEmail,
+                    enders.id, enders.name, MD5(LOWER(enders.email)) AS enderEmail,
+                    castVotes.vote IS NOT NULL AS userHasCastVote
+                    FROM votes
+                    LEFT JOIN users AS starters
+                    ON starters.id = votes.startedBy
+                    LEFT JOIN users AS enders
+                    ON enders.id = votes.endedBy
+                    LEFT JOIN castVotes
+                    ON votes.id=castVotes.vote AND castVotes.user={user}
+                    ORDER BY votes.started DESC
+                `}, { user: req.kern.loggedInUserId } ),
                 k.session.getActive( k.website )
                 .then( activeSessions => activeSessions.map( activeSession => activeSession.loggedInUsername ) )
             ])
-            .then( ([ users, activeSessions ]) => k.jade.render( req, res, "committee", vals( req, {
-                users,
-                activeSessions,
+            .then( ([ users, votes, activeSessions ]) => k.jade.render( req, res, "committee", vals( req, {
+                users, activeSessions, votes,
                 onlineCount: activeSessions.length,
                 offlineCount: users.length - activeSessions.length
             } )) )

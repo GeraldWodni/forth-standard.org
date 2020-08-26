@@ -1,0 +1,29 @@
+extends layout
+
+block menu
+    +menu
+
+block title
+    | Add Vote
+
+block content
+    .container
+        h3
+            | Cast Vote
+
+        +messages(messages)
+
+        .contribution-wrapper
+            h2
+                = vote.subject
+            .markdown
+                != vote.text
+
+        if hideForm
+            p
+                a.btn.btn-default.pull-right(href="/profile/committee/votes/observe/#{id}") Observe Voting
+        else
+            form(method='post',role='form')
+                button.btn.btn-default(type='submit',name='castVote',value='yes') Yes
+                button.btn.btn-default(type='submit',name='castVote',value='no') No
+                button.btn.btn-default(type='submit',name='castVote',value='abstain') Abstain
