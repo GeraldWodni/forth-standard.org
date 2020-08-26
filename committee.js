@@ -120,7 +120,7 @@ module.exports = {
                 vote: votes[0],
                 users,
                 activeSessions,
-                onlineCount: activeSessions.length,
+                onlineCount: activeSessions.filter( activeSession => users.some( user => user.name == activeSession ) ).length,
                 offlineCount: users.length - activeSessions.length,
                 yesCount:       users.filter( castVote => castVote.state == "yes"       ).length,
                 noCount:        users.filter( castVote => castVote.state == "no"        ).length,
@@ -177,7 +177,7 @@ module.exports = {
             ])
             .then( ([ users, votes, activeSessions ]) => k.jade.render( req, res, "committeeHome", vals( req, {
                 users, activeSessions, votes,
-                onlineCount: activeSessions.length,
+                onlineCount: activeSessions.filter( activeSession => users.some( user => user.name == activeSession ) ).length,
                 offlineCount: users.length - activeSessions.length
             } )) )
             .catch( next );
