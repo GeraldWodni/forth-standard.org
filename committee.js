@@ -48,7 +48,7 @@ module.exports = {
                 messages.push({type:"danger", title:"Error", text: "Subject cannot be empty"});
 
             if( req.postman.exists("preview" ) || messages.length )
-                renderAddVote( req, res, next, { contribution, subject, text, preview: marked( text ), messages });
+                renderAddVote( req, res, next, { contribution, subject, text, preview: true, messages });
             else if( req.postman.exists("create") )
                 kData.votes.create({
                     contribution,
@@ -73,8 +73,8 @@ module.exports = {
 
         /* cast and manage vote */
         function renderCastVote( req, res, next, values ) {
-            req.kern.db.pQuery( "SELECT subject, text FROM votes WHERE id=?", [values.id])
-            .then( votes => k.jade.render( req, res, "castVote", vals( req, Object.assign({ vote: votes[0] }, values) ) ) )
+            req.kern.db.pQuery( "SELECT subject, text, ended IS NOT NULL AS closed FROM votes WHERE id=?", [values.id])
+            .then( votes => k.jade.render( req, res, "castVote", vals( req, Object.assign({ vote: votes[0], hideForm: votes[0].closed || values.hideForm }, values) ) ) )
             .catch( next );
         }
 
@@ -101,7 +101,7 @@ module.exports = {
             const autoRefresh = req.getman.exists("autoRefresh");
             Promise.all([
                 req.kern.db.pQuery(`
-                    SELECT votes.id, votes.subject, votes.text
+                    SELECT votes.id, votes.subject, votes.text, votes.ended IS NOT NULL AS closed
                     FROM votes
                     WHERE votes.id={id};
                     SELECT users.name, MD5(LOWER(users.email)) AS emailMd5, castVotes.state
@@ -135,8 +135,20 @@ module.exports = {
             const id = req.requestman.id();
             const closed = req.postman.exists("close");
 
-            req.kern.db.pQuery( "UPDATE votes SET ended=NOW(), endedBy={user} WHERE id={id}; SELECT id, subject FROM votes WHERE id={id}", { id, user: req.kern.loggedInUserId } )
-            .then( ([update, votes]) => k.jade.render( req, res, "closeVote", vals( req, { vote: votes[0] } ) ) )
+            req.kern.db.pQuery( "SELECT *, ended IS NOT NULL AS closed FROM votes WHERE {id}", {id} )
+            .then( votes => {
+                if( votes[0].closed )
+                    return k.jade.render( req, res, "closeVote", vals( req, { vote: votes[0], messages: [{type: "danger", title: "Error", text:"Vote already closed"}] } ) );
+
+                return req.kern.db.pQuery( "SELECT SUM(state='yes') AS yesCount, SUM(state='no') AS noCount, SUM(state='abstain') AS abstainCount FROM castVotes WHERE vote={id} GROUP BY vote", {id} )
+                .then( results => {
+                    const result = results[0]
+                    const resultText = `${result.yesCount}/${result.noCount}/${result.abstainCount} (Yes/No/Abstain)`;
+
+                    return req.kern.db.pQuery( "UPDATE votes SET ended=NOW(), endedBy={user}, result={resultText} WHERE id={id}; SELECT * FROM votes WHERE id={id}", { id, user: req.kern.loggedInUserId, resultText } )
+                    .then( ([update, votes]) => k.jade.render( req, res, "closeVote", vals( req, { vote: votes[0], messages: [{type: "success", title:"Success", text: "Vote closed"}] } ) ) )
+                });
+            })
             .catch( next );
         });
 
@@ -145,7 +157,7 @@ module.exports = {
             Promise.all([
                 req.kern.db.pQuery( "SELECT name, MD5(LOWER(email)) AS emailMd5 FROM users WHERE committeeMember ORDER BY name ASC" ),
                 req.kern.db.pQuery( { nestTables: true, sql:`
-                    SELECT votes.id, votes.subject, votes.text, votes.started, votes.ended,
+                    SELECT votes.id, votes.subject, votes.text, votes.started, votes.ended, votes.result,
                     starters.id, starters.name, MD5(LOWER(starters.email)) AS starterEmail,
                     enders.id, enders.name, MD5(LOWER(enders.email)) AS enderEmail,
                     castVotes.vote IS NOT NULL AS userHasCastVote
@@ -161,7 +173,7 @@ module.exports = {
                 k.session.getActive( k.website )
                 .then( activeSessions => activeSessions.map( activeSession => activeSession.loggedInUsername ) )
             ])
-            .then( ([ users, votes, activeSessions ]) => k.jade.render( req, res, "committee", vals( req, {
+            .then( ([ users, votes, activeSessions ]) => k.jade.render( req, res, "committeeHome", vals( req, {
                 users, activeSessions, votes,
                 onlineCount: activeSessions.length,
                 offlineCount: users.length - activeSessions.length

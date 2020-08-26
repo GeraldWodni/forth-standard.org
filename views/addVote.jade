@@ -1,12 +1,9 @@
-extends layout
-
-block menu
-    +menu
+extends committee
 
 block title
     | Add Vote
 
-block content
+block committeeContent
     .container
         h3
             | Create Vote
@@ -18,11 +15,7 @@ block content
         +messages(messages)
 
         if preview
-            .contribution-wrapper
-                h2
-                    = subject
-                .markdown
-                    != preview
+            +vote({subject, text})
 
         if hideForm
             p
@@ -38,6 +31,5 @@ block content
                         | You can use
                         a(href="https://help.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax",target="_blank")  Markdown
                     textarea(name="text",rows="10").form-control= text
-                a.btn.btn-default.pull-right(href=url) Back
                 button.btn.btn-primary(type='submit',name='create',value='yes') Submit
                 button.btn.btn-default(type='submit',name='preview',value='yes') Preview

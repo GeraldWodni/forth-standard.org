@@ -1,9 +1,4 @@
-extends layout
-
-include committeeMixins
-
-block menu
-    +menu
+extends committee
 
 block title
     | Observe vote
@@ -12,7 +7,7 @@ append meta
     if autoRefresh
         meta(http-equiv="refresh",content="8")
 
-block content
+block committeeContent
     .container
         h1
             if autoRefresh
@@ -87,22 +82,17 @@ block content
                         td=" "
 
 
+        +vote( vote )
 
-
-        .contribution-wrapper
-            h2
-                = vote.subject
-            .markdown
-                != vote.text
-
-        p
-            a.btn.btn-default.pull-right(href="/profile/committee/votes/cast/#{vote.id}")
-                if users.filter( user => user.name == loggedInUsername && user.state != null ).length
-                    | Change vote
-                else
-                    | Cast vote
-            form(method="post", action="/profile/committee/votes/close/#{vote.id}")
-                button(type="submit",name="close").btn.btn-primary
-                    +fa( "close" )
-                    |  Close vote for everybody (final)
+        if !vote.closed || true
+            p
+                a.btn.btn-default.pull-right(href="/profile/committee/votes/cast/#{vote.id}")
+                    if users.filter( user => user.name == loggedInUsername && user.state != null ).length
+                        | Change vote
+                    else
+                        | Cast vote
+                form(method="post", action="/profile/committee/votes/close/#{vote.id}")
+                    button(type="submit",name="close").btn.btn-primary
+                        +fa( "close" )
+                        |  Close vote for everybody (final)
 
