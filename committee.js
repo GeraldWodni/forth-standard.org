@@ -15,10 +15,12 @@ module.exports = {
         const vals = k.setupOpts.vals;
 
         k.router.all( "*", ( req, res, next ) => {
-            req.kern.db.pQuery("SELECT id FROM users WHERE name=?", [req.session.loggedInUsername])
+            req.kern.db.pQuery("SELECT id, committeeMember FROM users WHERE name=?", [req.session.loggedInUsername])
             .then( users => {
                 if( users.length != 1 )
                     throw new Error("User not found");
+                if( !users[0].committeeMember )
+                    return k.httpStatus( req, res, 403 );
                 req.kern.loggedInUserId = users[0].id;
                 next();
             })
