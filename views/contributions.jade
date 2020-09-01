@@ -32,7 +32,12 @@ mixin reply( contribution, reply )
                     | proposal section
                 | .
             else if reply.replies.newVersion
-                != diffMarkdown( lastVersion, reply.replies.text )
+                if allowDiff
+                    a(href="#{_baseUrlPath}?hideDiff##{replyId}", title="Show markdown without diff").btn.btn-default.btn-xs Hide differences
+                    != diffMarkdown( lastVersion, reply.replies.text )
+                else
+                    a(href="#{_baseUrlPath}?##{replyId}", title="Highlight differences").btn.btn-default.btn-xs Show differences
+                    != marked( reply.replies.text )
                 - lastVersion = reply.replies.text;
             else
                 != reply.replies.markdownText

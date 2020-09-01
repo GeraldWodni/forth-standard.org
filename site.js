@@ -66,6 +66,7 @@ module.exports = {
                 loggedIn: "session" in req,
                 uniqueWordNames: uniqueWordNames,
                 diffMarkdown: diffMarkdown,
+                allowDiff: !req.getman.exists("hideDiff"),
                 contributionTypeName: {
                     "example": "Example",
                     "testcase":"Suggested Testcase",
