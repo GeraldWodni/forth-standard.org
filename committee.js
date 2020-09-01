@@ -137,7 +137,7 @@ module.exports = {
             const id = req.requestman.id();
             const closed = req.postman.exists("close");
 
-            req.kern.db.pQuery( "SELECT *, ended IS NOT NULL AS closed FROM votes WHERE {id}", {id} )
+            req.kern.db.pQuery( "SELECT *, ended IS NOT NULL AS closed FROM votes WHERE id={id}", {id} )
             .then( votes => {
                 if( votes[0].closed )
                     return k.jade.render( req, res, "closeVote", vals( req, { vote: votes[0], messages: [{type: "danger", title: "Error", text:"Vote already closed"}] } ) );

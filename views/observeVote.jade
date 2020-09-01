@@ -84,7 +84,7 @@ block committeeContent
 
         +vote( vote )
 
-        if !vote.closed || true
+        if !vote.closed
             p
                 a.btn.btn-default.pull-right(href="/profile/committee/votes/cast/#{vote.id}")
                     if users.filter( user => user.name == loggedInUsername && user.state != null ).length
