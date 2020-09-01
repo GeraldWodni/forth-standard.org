@@ -97,6 +97,7 @@ module.exports = {
         var kData = k.getData();
         var db = k.getDb();
 
+        k.prefixServeStatic("/files");
         k.router.get("/favicon.ico", k.serveStaticFile( "images/favicon.ico" ) );
 
         k.router.get("/standard/words", function( req, res ) {
