@@ -51,7 +51,7 @@ module.exports = {
                     var text    = req.postman.text("text");
                     var state   = user.state == "moderated" ? "new" : "visible";
 
-                    if( contribution.user != user.id && opts.newVersion )
+                    if( contribution.user != user.id && !user.committeeMember && opts.newVersion )
                         messages.push({ type: "danger", title: "Error", text: "Currently only the original author can submit a new version" });
 
                     if( req.postman.exists("preview" ) || messages.length ) {
