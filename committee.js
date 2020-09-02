@@ -175,10 +175,15 @@ module.exports = {
                 k.session.getActive( k.website )
                 .then( activeSessions => activeSessions.map( activeSession => activeSession.loggedInUsername ) )
             ])
+            .then( ([ users, votes, activeSessions ]) => {
+                console.log(votes);
+                return [ users, votes, activeSessions ];
+            })
             .then( ([ users, votes, activeSessions ]) => k.jade.render( req, res, "committeeHome", vals( req, {
                 users, activeSessions, votes,
                 onlineCount: activeSessions.filter( activeSession => users.some( user => user.name == activeSession ) ).length,
-                offlineCount: users.length - activeSessions.length
+                offlineCount: users.length - activeSessions.length,
+                openVoteCounts: votes.filter( vote => vote.votes.ended == null && ! vote[''].userHasCastVote ).length
             } )) )
             .catch( next );
         });
