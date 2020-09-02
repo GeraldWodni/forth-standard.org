@@ -24,7 +24,17 @@ block committeeContent
                     a(href="/profile/committee/votes/add").btn.btn-default.pull-right
                         +fa("plus")
                         |  Create Vote
-                    | Votes Open:#{openVoteCounts}
+                    | Votes
+
+        if openVoteCounts
+            .row
+                .col-sm-12
+                        .alert.alert-warning
+                            +fa("exclamation-triangle")
+                            |  
+                            b Open votes:
+                            |  you have not voted on #{openVoteCounts} instances.
+                            |  Please make use of your voting right and vote now!
         .row
             .col-sm-12
                 ul.fa-ul.contribution-latest
