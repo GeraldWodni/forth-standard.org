@@ -116,12 +116,18 @@ module.exports = {
                 k.session.getActive( k.website )
                 .then( activeSessions => activeSessions.map( activeSession => activeSession.loggedInUsername ) )
             ])
-            .then( ([ [votes, users], activeSessions ]) => k.jade.render( req, res, "observeVote", vals( req, {
+            .then( ([ [votes, users], activeSessions ]) => {
+                const onlineCount = activeSessions
+                    .filter( activeSession => users.some( user => user.name == activeSession ) )
+                    .filter( (item, pos, a) => a.indexOf(item) == pos ).length;
+                return [ users, votes, activeSessions, onlineCount ];
+            })
+            .then( ([users, votes, activeSessions, onlineCount]) => k.jade.render( req, res, "observeVote", vals( req, {
                 vote: votes[0],
                 users,
                 activeSessions,
-                onlineCount: activeSessions.filter( activeSession => users.some( user => user.name == activeSession ) ).length,
-                offlineCount: users.length - activeSessions.length,
+                onlineCount,
+                offlineCount: users.length - onlineCount,
                 yesCount:       users.filter( castVote => castVote.state == "yes"       ).length,
                 noCount:        users.filter( castVote => castVote.state == "no"        ).length,
                 abstainCount:   users.filter( castVote => castVote.state == "abstain"   ).length,
@@ -176,13 +182,15 @@ module.exports = {
                 .then( activeSessions => activeSessions.map( activeSession => activeSession.loggedInUsername ) )
             ])
             .then( ([ users, votes, activeSessions ]) => {
-                console.log(votes);
-                return [ users, votes, activeSessions ];
+                const onlineCount = activeSessions
+                    .filter( activeSession => users.some( user => user.name == activeSession ) )
+                    .filter( (item, pos, a) => a.indexOf(item) == pos ).length;
+                return [ users, votes, activeSessions, onlineCount ];
             })
-            .then( ([ users, votes, activeSessions ]) => k.jade.render( req, res, "committeeHome", vals( req, {
+            .then( ([ users, votes, activeSessions, onlineCount ]) => k.jade.render( req, res, "committeeHome", vals( req, {
                 users, activeSessions, votes,
-                onlineCount: activeSessions.filter( activeSession => users.some( user => user.name == activeSession ) ).length,
-                offlineCount: users.length - activeSessions.length,
+                onlineCount,
+                offlineCount: users.length - onlineCount,
                 openVoteCounts: votes.filter( vote => vote.votes.ended == null && ! vote[''].userHasCastVote ).length
             } )) )
             .catch( next );
