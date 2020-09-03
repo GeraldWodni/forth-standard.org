@@ -54,6 +54,9 @@ block committeeContent
                                 else
                                     +gravatar( vote[""].enderEmail, vote.enders.name, 48 )(title="Closed by")
                             h4
+                                | #
+                                = vote.votes.id
+                                |  
                                 = vote.votes.subject
                             p
                                 !=marked(vote.votes.text)
