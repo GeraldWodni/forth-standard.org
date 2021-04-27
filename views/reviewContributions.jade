@@ -29,6 +29,10 @@ block content
                 .actions
                     form(method="post")
                         +hidden-field("id", contribution.contributions.id)
+                        button(type="submit",name="acceptAndUnmoderate").btn.btn-success
+                            +fa("arrow-up")
+                            |  Accept & Unmoderate
+                        |  
                         button(type="submit",name="accept").btn.btn-success
                             +fa("check-square")
                             |  Accept

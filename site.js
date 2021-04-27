@@ -343,6 +343,7 @@ module.exports = {
                 checkIsModerator( req, res, next, function() {
                     k.postman( req, res, function() {
                         var id = req.postman.id();
+                        var acceptAndUnmoderate = req.postman.exists( "acceptAndUnmoderate" );
                         var accept = req.postman.exists( "accept" );
                         var remove = req.postman.exists( "delete" );
 
