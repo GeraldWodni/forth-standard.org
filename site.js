@@ -344,7 +344,7 @@ module.exports = {
                     k.postman( req, res, function() {
                         var id = req.postman.id();
                         var acceptAndUnmoderate = req.postman.exists( "acceptAndUnmoderate" );
-                        var accept = req.postman.exists( "accept" );
+                        var accept = req.postman.exists( "accept" ) || acceptAndUnmoderate;
                         var remove = req.postman.exists( "delete" );
 
                         var newState = accept ? "visible" : remove ? "deleted" : false;
@@ -355,7 +355,18 @@ module.exports = {
                             if( err ) return next( err );
                             req.method = "GET";
                             req.messages = [{ type: "success", title: "Success", text: opts.successText }];
-                            next();
+
+                            if( !acceptAndUnmoderate )
+                                return next();
+
+                            kData.users.update( req.postman.uint("user"), { state: "unmoderated" }, function( err ) {
+                                if( err )
+                                    req.messages.push({ type: "danger", text: err });
+                                else
+                                    req.messages.push({ type: "success", title: "success", text: "User state changed" });
+
+                                next();
+                            });
                         });
                     });
                 });

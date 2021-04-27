@@ -28,7 +28,8 @@ block content
 
                 .actions
                     form(method="post")
-                        +hidden-field("id", contribution.contributions.id)
+                        +hidden-field("id",   contribution.contributions.id)
+                        +hidden-field("user", contribution.users.id)
                         button(type="submit",name="acceptAndUnmoderate").btn.btn-success
                             +fa("arrow-up")
                             |  Accept & Unmoderate
