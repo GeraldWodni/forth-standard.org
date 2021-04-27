@@ -73,7 +73,7 @@ module.exports = {
                 + " SELECT users.name, replies.id, replies.created, contributions.url, contributions.type, contributions.subject, replies.text"
                 + " FROM replies"
                 + " INNER JOIN contributions ON contributions.id=replies.contribution"
-                + " INNER JOIN users ON users.id=contributions.user"
+                + " INNER JOIN users ON users.id=replies.user"
                 + " WHERE replies.dailyDigest=0 AND replies.state='visible'"
             },
             pendingContributionsReplies: { sql:
