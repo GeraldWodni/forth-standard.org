@@ -1,7 +1,6 @@
 .*.swp
 node_modules
 config.json
-users.json
 
 # ignore user data
 private
