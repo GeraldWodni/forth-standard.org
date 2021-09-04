@@ -8,6 +8,7 @@ var marked  = require('marked');
 var diff    = require('diff');
 var md5     = require("md5");
 var moment  = require("moment");
+const crawlSystems = require("./crawlSystems");
 
 module.exports = {
     setup: function( k ) {
@@ -264,6 +265,16 @@ module.exports = {
 
         k.router.get("/contact", function( req, res ) {
             k.jade.render( req, res, "contact", vals( req ) );
+        });
+
+        /* crawl systems on github and update local file */
+        k.router.get(`/crawl-github/${process.env.CRAWL_GITHUB_SECRET}`, ( req, res, next ) => {
+            const filename = req.kern.lookupFile("systems.json");
+            crawlSystems( { filename }, err => {
+                if( err )
+                    return res.json( { error: err.toString() } );
+                res.json( { success: true } );
+            });
         });
 
         /* user management */
