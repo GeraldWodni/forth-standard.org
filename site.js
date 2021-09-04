@@ -273,7 +273,10 @@ module.exports = {
             crawlSystems( { filename }, err => {
                 if( err )
                     return res.json( { error: err.toString() } );
-                res.json( { success: true } );
+                k.readHierarchyFile( "forth-standard.org", "systems.json", function( err, content ) {
+                    systems = JSON.parse( content );
+                    res.json( { success: true } );
+                });
             });
         });
 
