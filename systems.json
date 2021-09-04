@@ -36,7 +36,7 @@
         "name": "STM8EF",
         "link": "https://github.com/TG9541/stm8ef",
         "lang": "Assembly",
-        "cpu": "STM8S",
+        "cpu": "STM8",
         "description": "eForth with extensions for $0.20 µCs"
     },
     {
@@ -176,7 +176,31 @@
         "description": "Mecrisp Quintus Forth for RISC-V RV32IM and PIC32MX (MIPS M4K)"
     },
     {
-        "stars": 49,
+        "stars": 27,
+        "name": "ciforth",
+        "link": "https://github.com/albertvanderhorst/ciforth",
+        "lang": "Assembly",
+        "cpu": "x86, x64",
+        "description": "Compiler factory for 16/32/64 bit msdos/Linux/Windows/OSX/standalone"
+    },
+    {
+        "stars": 3,
+        "name": "lina",
+        "link": "https://github.com/albertvanderhorst/ciforth",
+        "lang": "Assembly",
+        "cpu": "x86",
+        "description": "ciforth version for 32 bit Linux"
+    },
+    {
+        "stars": null,
+        "name": "nop",
+        "link": "https://github.com/iru-/nopforth",
+        "lang": "Assembly",
+        "cpu": "x86-64, arm64",
+        "description": "Forth dialect for macOS, Linux, *BSD and Windows"
+    },
+    {
+        "stars": 262,
         "name": "lbForth",
         "link": "https://github.com/larsbrinkhoff/lbForth",
         "lang": "Forth",
@@ -184,15 +208,15 @@
         "description": "Self-hosting metacompiled Forth, bootstrapping from a few lines of C"
     },
     {
-        "stars": 8,
-        "name": "PicForth",
-        "link": "https://github.com/samueltardieu/picforth",
+        "stars": 32,
+        "name": "CamelForth",
+        "link": "https://github.com/nealcrook/multicomp6809/tree/master/camelforth",
         "lang": "Forth",
-        "cpu": "PIC16",
-        "description": "Forth cross-compiler for PIC16Fxxx"
+        "cpu": "6809",
+        "description": ""
     },
     {
-        "stars": 8,
+        "stars": 35,
         "name": "myforth-arduino",
         "link": "https://github.com/CharleyShattuck/myforth-arduino",
         "lang": "Forth",
@@ -200,15 +224,15 @@
         "description": "Simple, non-standard, tethered Forth for the Arduino"
     },
     {
-        "stars": 7,
-        "name": "m3forth",
-        "link": "https://github.com/oco2000/m3forth",
+        "stars": 28,
+        "name": "SP-Forth",
+        "link": "https://github.com/rufig/spf",
         "lang": "Forth",
-        "cpu": "ARM",
-        "description": "Cross-compiler for Cortex-M3"
+        "cpu": "x86",
+        "description": "Forth-94, 32bit, native code, peephole optimization, Windows and Linux hosts, <a href=\"http://spf.sourceforge.net/docs/intro.en.html#task\" rel=\"nofollow\">multitasking</a> out of the box. The sources are also <a href=\"https://github.com/rufig/spf4-utf8\">available in utf-8</a>."
     },
     {
-        "stars": 6,
+        "stars": 25,
         "name": "cmFORTH",
         "link": "https://github.com/ForthHub/cmFORTH",
         "lang": "Forth",
@@ -216,7 +240,7 @@
         "description": ""
     },
     {
-        "stars": 5,
+        "stars": 18,
         "name": "FIG-Forth",
         "link": "https://github.com/ForthHub/FIG-Forth",
         "lang": "Forth",
@@ -224,7 +248,7 @@
         "description": ""
     },
     {
-        "stars": 2,
+        "stars": 15,
         "name": "sbc09 Forth",
         "link": "https://github.com/6809/sbc09",
         "lang": "Forth",
@@ -232,12 +256,36 @@
         "description": ""
     },
     {
-        "stars": 2,
-        "name": "CamelForth",
-        "link": "https://github.com/nealcrook/multicomp6809/tree/master/camelforth",
+        "stars": 13,
+        "name": "PicForth",
+        "link": "https://github.com/samueltardieu/picforth",
         "lang": "Forth",
-        "cpu": "6809",
-        "description": ""
+        "cpu": "PIC16",
+        "description": "Forth cross-compiler for PIC16Fxxx"
+    },
+    {
+        "stars": 12,
+        "name": "m3forth",
+        "link": "https://github.com/oco2000/m3forth",
+        "lang": "Forth",
+        "cpu": "ARM",
+        "description": "Cross-compiler for Cortex-M3"
+    },
+    {
+        "stars": 8,
+        "name": "solo-forth",
+        "link": "https://github.com/programandala-net/solo-forth",
+        "lang": "Forth",
+        "cpu": "Z80",
+        "description": "Standard-Forth for ZX Spectrum 128 upwards"
+    },
+    {
+        "stars": 28,
+        "name": "VolksForth",
+        "link": "https://github.com/forth-ev/VolksForth",
+        "lang": "Forth",
+        "cpu": "6502,68000,CP/M",
+        "description": "16-bit"
     },
     {
         "stars": 61,
@@ -296,7 +344,23 @@
         "description": "A simple Forth-like language with a web-based REPL"
     },
     {
-        "stars": 165,
+        "stars": 8,
+        "name": "webForth",
+        "link": "https://github.com/mitra42/webforth",
+        "lang": "Javascript",
+        "cpu": "eForth",
+        "description": "Forth implemented in Forth and JS, runs in browser or Node"
+    },
+    {
+        "stars": 4,
+        "name": "#MOBLuSE_FORTH",
+        "link": "https://github.com/mobluse/mobluse_forth.sb2",
+        "lang": "Scratch 2",
+        "cpu": "",
+        "description": "Runs in modern browser, Tosh, Scratch 2, or Scratch 3"
+    },
+    {
+        "stars": 369,
         "name": "pForth",
         "link": "https://github.com/philburk/pforth",
         "lang": "C",
@@ -304,15 +368,23 @@
         "description": "Portable Forth"
     },
     {
-        "stars": 49,
-        "name": "Gforth",
+        "stars": 95,
+        "name": "gForth",
         "link": "https://github.com/forthy42/gforth",
         "lang": "C",
         "cpu": "",
         "description": "Gforth mirror"
     },
     {
-        "stars": 30,
+        "stars": 59,
+        "name": "PlanckForth",
+        "link": "https://github.com/nineties/planckforth",
+        "lang": "C",
+        "cpu": "",
+        "description": "Bootstrapping an Interpreter from Handwritten 1KB Binary (minimal loadstage 1 with one-letter words followed by a stage 2 bootstrap-include)"
+    },
+    {
+        "stars": 58,
         "name": "reforth",
         "link": "https://github.com/seanpringle/reforth",
         "lang": "C",
@@ -320,7 +392,7 @@
         "description": "Rethinking Forth"
     },
     {
-        "stars": 25,
+        "stars": 48,
         "name": "rtForth",
         "link": "https://github.com/chengchangwu/rtforth",
         "lang": "Rust",
@@ -328,7 +400,7 @@
         "description": "Forth implemented in Rust for realtime application"
     },
     {
-        "stars": 23,
+        "stars": 31,
         "name": "staapl",
         "link": "https://github.com/zwizwa/staapl",
         "lang": "Racket",
@@ -336,7 +408,15 @@
         "description": "Racket-based Forth / Macro Assembler on steroids for PIC18F"
     },
     {
-        "stars": 7,
+        "stars": 16,
+        "name": "webForth",
+        "link": "https://github.com/mitra42/webforth",
+        "lang": "C",
+        "cpu": "eForth",
+        "description": "Forth implemented in Forth and C runs currently in Arduino or ESP8266"
+    },
+    {
+        "stars": 13,
         "name": "uForth",
         "link": "https://github.com/tcoram/uforth",
         "lang": "C",
@@ -344,7 +424,7 @@
         "description": "Very portable (embeddable) switch threaded Forth"
     },
     {
-        "stars": 4,
+        "stars": 12,
         "name": "Creole Forth",
         "link": "https://github.com/tiluser/Creole-Forth",
         "lang": "Pascal",
@@ -352,11 +432,19 @@
         "description": "Scripting language in the form of a Delphi/Lazarus component"
     },
     {
-        "stars": 1,
+        "stars": 9,
         "name": "dclang",
         "link": "https://github.com/akjmicro/dclang",
         "lang": "C",
         "cpu": "",
         "description": "Forth-inspired RPN language"
+    },
+    {
+        "stars": 1,
+        "name": "BoardForth",
+        "link": "https://github.com/CCurl/BoardForth",
+        "lang": "C",
+        "cpu": "Varied",
+        "description": "Forth implemented in C and Forth, runs on the PC and development boards"
     }
 ]
