@@ -3,15 +3,9 @@
 
 require("colors");
 var fs = require("fs");
-var path = require("path");
 var jsdom = require("jsdom");
 var jquery = require("jquery");
-var http = require("http");
 var https = require("https");
-var async = require("async");
-var util = require("util");
-var mkdirp = require("mkdirp");
-var _ = require("underscore");
 
 function parseGithubHtml( html, callback ) {
     jsdom.env( html.toString(), function( err, window ) {
@@ -54,21 +48,24 @@ function httpsGet( url, callback ) {
 }
 
 /* get github wiki content and parse into json */
-function crawlGithub( callback ) {
+function crawlGithub( opts, callback ) {
     httpsGet( "https://github.com/ForthHub/wiki/wiki/Forth-Systems", function( err, res, body ) {
         if( err ) return callback( err );
 
         parseGithubHtml( body, function( err, systems ) {
             if( err ) return callback( err );
             
-            fs.writeFile( "systems.json", JSON.stringify( systems, 0, 4 ), callback );
+            fs.writeFile( opts.filename, JSON.stringify( systems, 0, 4 ), callback );
         });
     });
 }
 
-crawlGithub( function( err, success ) {
-    if( err )
-        console.log( "crawlGithub".bold.red, err );
-    else
-        console.log( "crawlGithub".bold.green, success );
-});
+module.exports = crawlGithub;
+
+if( require.main === module )
+    crawlGithub( { filename: "systems.json" }, function( err, success ) {
+        if( err )
+            console.log( "crawlGithub".bold.red, err );
+        else
+            console.log( "crawlGithub".bold.green, success );
+    });
