@@ -203,6 +203,8 @@ module.exports = {
 
                 var wordSetName  = req.requestman.id( "wordSet" );
                 var wordBasename = req.requestman.id( "wordBasename" );
+                if( wordSetName != req.requestman.raw("wordSet") || wordBasename != req.requestman.raw("wordBasename") )
+                    return res.redirect(`/standard/${wordSetName}/${wordBasename}`);
 
                 if( wordSetName in standard.wordSets && wordBasename in standard.wordSets[ wordSetName ].words )
                     k.jade.render( req, res, "word", vals( req, {
@@ -230,6 +232,8 @@ module.exports = {
         k.router.get("/standard/:document", function( req, res, next ) {
             k.requestman( req );
             var document = req.requestman.id( "document" );
+            if( document != req.requestman.raw( "document" ) )
+                return res.redirect(`/standard/${document}`);
 
             if( document in standard.documents )
                 urlContributions( req.path, next, function( contributions ) {
