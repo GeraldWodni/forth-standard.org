@@ -178,8 +178,9 @@ mixin maintenance
     +box.maintenance
         h1
             +fa("exclamation-triangle")
-            |  Maintenance
-        p Please expect outages for the next few hours.
+            |  Maintenance Lock
+        //- p Please expect intermittent outages for the next few hours.
+        p Please come back later.
         p 
             b Why?
             br
@@ -210,7 +211,7 @@ html
 
             div.main-content
                 +maintenance
-                block content
+                //- block content
 
         footer
             div.container-fluid
