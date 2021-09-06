@@ -515,12 +515,23 @@ module.exports = {
             });
         }
 
+        k.router.get("/contributions/markdown/:type/:state", ( req, res, next ) => {
+            const type  = req.requestman.id("type");
+            const state = req.requestman.id("state");
+            res.header("Content-Type", "text/plain");
+            renderContributions( req, res, next, { limit: 0, template: "listContributionsMarkdown", type, state } );
+        });
+
         k.router.get("/contributions/:type/:state", ( req, res, next ) => {
             const type  = req.requestman.id("type");
             const state = req.requestman.id("state");
             renderContributions( req, res, next, { limit: 0, template: "listContributions", type, state } );
         });
 
+        k.router.get("/contributions/markdown", function( req, res, next ) {
+            res.header("Content-Type", "text/plain");
+            renderContributions( req, res, next, { limit: 0, template: "listContributionsMarkdown" } );
+        });
         k.router.get("/contributions", function( req, res, next ) {
             renderContributions( req, res, next, { limit: 0, template: "listContributions" } );
         });

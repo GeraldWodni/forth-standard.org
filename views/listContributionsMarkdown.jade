@@ -1,0 +1,12 @@
+//- (c)2016 by Gerald Wodni
+
+if type
+    | # #{contributionTypeName[ type ]}
+else
+    | # Contributions
+
+each contribution in contributions
+    - var link = contribution.contributions.url;
+    - link += "#contribution-" + contribution.contributions.id
+    | #{"\n\n"}## #{contribution.contributions.subject} ([#{contribution.contributions.title} ##{contribution.contributions.id}](#{link}))
+    | #{contribution.contributions.createdFormated} - #{contribution.users.name}

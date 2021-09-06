@@ -16,7 +16,10 @@ block content
                 |  and the type 
                 code
                     = contributionTypeName[ type ]
-                | .
+                |  (
+                a(href="/contributions/markdown/#{type}/#{state}")
+                    | Markdown version
+                | ).
             p
                 if state == "open"
                     a(href="/contributions/#{type}/closed")
@@ -31,7 +34,10 @@ block content
 
         else
             h1 Contributions
-            p These are all contributions and replies sorted latest first.
+            p These are all contributions and replies sorted latest first (
+                a(href="/contributions/markdown")
+                    | Markdown version
+                | ).
 
         .row
             .col-sm-6
