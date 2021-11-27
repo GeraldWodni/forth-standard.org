@@ -200,6 +200,14 @@
         "description": "Forth dialect for macOS, Linux, *BSD and Windows"
     },
     {
+        "stars": null,
+        "name": "ForthModelT",
+        "link": "https://github.com/VasylTsv/ForthModelT",
+        "lang": "Assembly",
+        "cpu": "PseudoCPU",
+        "description": "Forth system targeting a fictional CPU with VM for Windows."
+    },
+    {
         "stars": 262,
         "name": "lbForth",
         "link": "https://github.com/larsbrinkhoff/lbForth",
@@ -238,6 +246,14 @@
         "lang": "Forth",
         "cpu": "NC4016",
         "description": ""
+    },
+    {
+        "stars": 20,
+        "name": "Able Forth",
+        "link": "https://github.com/ablevm/able-forth",
+        "lang": "Forth",
+        "cpu": "Custom VM",
+        "description": "A Forth-like programming language that targets the AbleVM."
     },
     {
         "stars": 18,
