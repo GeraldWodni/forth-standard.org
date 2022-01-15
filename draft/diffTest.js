@@ -2,7 +2,7 @@
 
 const fs     = require("fs");
 const diff   = require("diff");
-const marked = require("marked");
+const { marked } = require("marked");
 require("colors");
 
 const v0 = fs.readFileSync("v0.txt").toString();

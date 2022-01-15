@@ -4,7 +4,7 @@
 var fs      = require("fs");
 var path    = require("path");
 var _       = require("underscore");
-var marked  = require('marked');
+const { marked } = require('marked');
 var diff    = require('diff');
 var md5     = require("md5");
 var moment  = require("moment");

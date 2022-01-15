@@ -4,7 +4,7 @@
 
 const _       = require('underscore');
 const md5     = require('md5');
-const marked  = require('marked');
+const { marked } = require('marked');
 const moment  = require('moment');
 
 module.exports = {

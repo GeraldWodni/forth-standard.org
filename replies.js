@@ -3,7 +3,7 @@
 "use strict";
 
 var _       = require('underscore');
-var marked  = require('marked');
+const { marked } = require('marked');
 var md5     = require('md5');
 var moment  = require('moment');
 
