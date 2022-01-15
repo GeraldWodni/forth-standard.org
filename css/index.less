@@ -194,13 +194,15 @@ html {
     scroll-padding-top: 6em;
     overflow-y: auto;
 }
-div#body > a[name] {
-    display: block; width: 100%; /* to apply decoration */
-    :target {
+div#body {
+    > a[name] {
+        display: block; /* to apply a decoration even if the element is empty */
+    }
+    > a[name]:target {
         scroll-margin-top: 5ex; /* the space for above title */
     }
 }
-:target {
+:target:not(div):not(section) {
     border-bottom: 0.2em gray dotted;
 }
 
