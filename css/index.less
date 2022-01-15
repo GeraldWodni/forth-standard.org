@@ -189,8 +189,19 @@ footer {
     }
 }
 
-:target::before {
-    height: @navbar-height;
+html {
+    /* avoid overlapping with fixed header when scrolling to a local fragment */ 
+    scroll-padding-top: 6em;
+    overflow-y: auto;
+}
+div#body > a[name] {
+    display: block; width: 100%; /* to apply decoration */
+    :target {
+        scroll-margin-top: 5ex; /* the space for above title */
+    }
+}
+:target {
+    border-bottom: 0.2em gray dotted;
 }
 
 /* sidenav + toggle button */
