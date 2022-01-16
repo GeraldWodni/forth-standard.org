@@ -195,12 +195,12 @@ html {
     overflow-y: auto;
 }
 div#body > a[name] {
-    display: block; width: 100%; /* to apply decoration */
-    :target {
+    display: block; /* to apply decoration */
+    &:target {
         scroll-margin-top: 5ex; /* the space for above title */
     }
 }
-:target {
+:target:not(div):not(section) {
     border-bottom: 0.2em gray dotted;
 }
 
