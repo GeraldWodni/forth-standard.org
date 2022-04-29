@@ -8,7 +8,7 @@
     "crawlSystems": "node crawlSystems.js"
   },
   "dependencies": {
-    "async": "^1.4.2",
+    "async": "^2.6.4",
     "colors": "^1.1.2",
     "diff": "^4.0.2",
     "jquery": "^3.5.1",
