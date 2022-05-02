@@ -384,6 +384,14 @@
         "description": "Runs in modern browser, Tosh, Scratch 2, or Scratch 3"
     },
     {
+        "stars": 16,
+        "name": "yoda",
+        "link": "https://github.com/Bushmills/yoda/",
+        "lang": "Bash",
+        "cpu": "",
+        "description": "An experimental implementation that is close to Forth-2012 (see <a href=\"https://github.com/Bushmills/yoda/blob/main/missing\">missing</a>). It produces subroutine-threaded code of the underlying machine (i.e. Bash)."
+    },
+    {
         "stars": 369,
         "name": "pForth",
         "link": "https://github.com/philburk/pforth",
