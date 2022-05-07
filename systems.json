@@ -312,6 +312,14 @@
         "description": "16-bit"
     },
     {
+        "stars": 200,
+        "name": "WAForth",
+        "link": "https://github.com/remko/waforth",
+        "lang": "WebAssembly",
+        "cpu": "",
+        "description": "Bootstrapping dynamic Forth Interpreter/Compiler for WebAssembly"
+    },
+    {
         "stars": 61,
         "name": "Easy Forth",
         "link": "https://github.com/skilldrick/easyforth",
