@@ -408,6 +408,14 @@
         "description": "Portable Forth"
     },
     {
+        "stars": 265,
+        "name": "zForth",
+        "link": "https://github.com/zevv/zForth",
+        "lang": "C",
+        "cpu": "Most",
+        "description": "zForth: tiny, embeddable, flexible, compact Forth scripting language for embedded systems"
+    },
+    {
         "stars": 95,
         "name": "gForth",
         "link": "https://github.com/forthy42/gforth",
