@@ -489,10 +489,10 @@
     },
     {
         "stars": 1,
-        "name": "BoardForth",
-        "link": "https://github.com/CCurl/BoardForth",
+        "name": "cccForth",
+        "link": "https://github.com/CCurl/cccForth",
         "lang": "C",
         "cpu": "Varied",
-        "description": "Forth implemented in C and Forth, runs on the PC and development boards"
+        "description": "A minimal Forth implemented in C, runs on the PC and development boards"
     }
 ]
