@@ -12,7 +12,12 @@ block title
 
 block content
     +box-word
-        h1= word.name
+        h1
+            span.number= word.number
+            |  
+            span.name= word.name
+            |  
+            span.list= word.list
         each section in word.sections
             if section.name !== " "
                 h2= section.name
