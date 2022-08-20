@@ -178,13 +178,14 @@ mixin maintenance
     +box.maintenance
         h1
             +fa("exclamation-triangle")
-            |  Maintenance Lock
+            |  Maintenance of chat (mattermost)
+        p We are migrating and updating mattermost, chat.forth-standard.org will be down for a few hours.
         //- p Please expect intermittent outages for the next few hours.
-        p Please come back later.
-        p 
-            b Why?
-            br
-            | We are separating all user information from the website-repo in order to get the github mirror synced up.
+        //- p Please come back later.
+        //- p 
+        //-     b Why?
+        //-     br
+        //-     | We are separating all user information from the website-repo in order to get the github mirror synced up.
 
 html
     head
@@ -210,7 +211,7 @@ html
                     block menu
 
             div.main-content
-                //+maintenance
+                +maintenance
                 block content
 
         footer
