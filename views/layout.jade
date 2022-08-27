@@ -177,11 +177,15 @@ mixin selectState(name)
 mixin maintenance
     +box.maintenance
         h1
-            +fa("exclamation-triangle")
-            |  Maintenance: scheduled migration at 20:00 UTC
+            //-+fa("exclamation-triangle")
+            +fa("check")
+            |  Migration complete 
+        p Please 
+            a(href="https://github.com/GeraldWodni/forth-standard.org/issues", target="_blank") let us know
+            | , if you have any issues on the new server
         //- p We are migrating and updating mattermost, chat.forth-standard.org will be down for a few hours.
-        p Migrating to new cluster
-        p Please expect outages for the next few hours.
+        //- p Migrating to new cluster
+        //- p Please expect outages for the next few hours.
         //- p Please come back later.
         //- p 
         //-     b Why?
