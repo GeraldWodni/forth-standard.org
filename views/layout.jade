@@ -178,9 +178,10 @@ mixin maintenance
     +box.maintenance
         h1
             +fa("exclamation-triangle")
-            |  Maintenance of chat (mattermost)
-        p We are migrating and updating mattermost, chat.forth-standard.org will be down for a few hours.
-        //- p Please expect intermittent outages for the next few hours.
+            |  Maintenance: scheduled migration at 20:00 UTC
+        //- p We are migrating and updating mattermost, chat.forth-standard.org will be down for a few hours.
+        p Migrating to new cluster
+        p Please expect outages for the next few hours.
         //- p Please come back later.
         //- p 
         //-     b Why?
@@ -211,7 +212,7 @@ html
                     block menu
 
             div.main-content
-                //+maintenance
+                +maintenance
                 block content
 
         footer
