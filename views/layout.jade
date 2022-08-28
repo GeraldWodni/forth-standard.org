@@ -143,6 +143,13 @@ mixin renderState( state )
         |  
         = contributionStateText[ state ]
 
+mixin textOption(selected, value, text=null)
+    option(value=text, selected=selected==value)
+        if text == null
+            = value
+        else
+            = text
+
 mixin selectState(name)
     if contribution.type=="proposal"
         if isOriginalAuthor || isCommitteeMember
