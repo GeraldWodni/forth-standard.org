@@ -232,6 +232,14 @@
         "description": ""
     },
     {
+        "stars": 33,
+        "name": "Camel99 Forth ITC",
+        "link": "https://github.com/bfox9900/CAMEL99-ITC",
+        "lang": "Forth",
+        "cpu": "CamelForth",
+        "description": "Cross-compiled in Forth ASM &amp; Forth for TMS9900/TI-99"
+    },
+    {
         "stars": 35,
         "name": "myforth-arduino",
         "link": "https://github.com/CharleyShattuck/myforth-arduino",
