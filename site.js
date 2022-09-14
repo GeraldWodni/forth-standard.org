@@ -453,13 +453,21 @@ module.exports = {
                 WHERE contributions.state='visible' AND contributions.type='proposal'
                 GROUP BY contributions.id
                 ORDER BY contributionStateOrder( contributionState( contributions.id ) ) ASC,
-                    contributions.created DESC`,
-                nestTables: true }, [], function( err, contributions ) {
+                    contributions.created DESC;
+                SELECT
+	            COUNT(contributions.id) AS count,
+	            contributionState( contributions.id ) AS state
+                FROM contributions
+                WHERE  contributions.type='proposal'
+                GROUP BY contributionState( contributions.id )
+                `, nestTables: true }, [], function( err, data ) {
                 if( err ) return next( err );
+                let contributions = data[0];
+                let proposalCounts = data[1];
                 contributions.forEach( c => console.log( "C:", c.id, c[""] ) );
                 //console.log( "CONTR:", contributions );
                 contributions   = formatUserContents( "contributions",  "users", contributions );
-                k.jade.render( req, res, "proposals", vals( req, { contributions: contributions } ) );
+                k.jade.render( req, res, "proposals", vals( req, { contributions, proposalCounts } ) );
             });
         });
 

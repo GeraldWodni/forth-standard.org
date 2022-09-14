@@ -99,19 +99,13 @@ block content
                                         = newStatesCreated[index]
 
         h3 Markdown lists
-        ul
-            li
-                a(target="_blank", href="/contributions/markdown/proposal/informal") Informal
-            li
-                a(target="_blank", href="/contributions/markdown/proposal/formal") Formal
-            li
-                a(target="_blank", href="/contributions/markdown/proposal/voting") Voting
-            li
-                a(target="_blank", href="/contributions/markdown/proposal/retracted") Retracted
-            li
-                a(target="_blank", href="/contributions/markdown/proposal/retired") Retired
-            li
-                a(target="_blank", href="/contributions/markdown/proposal/accepted") Accepted
-            li
-                a(target="_blank", href="/contributions/markdown/proposal/closed") Closed
+        ul.contributions-open
+            each proposalCount in proposalCounts
+                li
+                    a(href="/contributions/markdown/proposal/#{proposalCount[''].state}", target="_blank")
+                        span.count
+                            = proposalCount[""].count
+                        //= proposalCount[''].state
+                        +renderState( proposalCount[''].state )
+                        //= contributionTypeName[ openContribution.contributions.type ]
 
