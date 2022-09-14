@@ -54,7 +54,7 @@ block committeeContent
                                 else
                                     +gravatar( vote[""].enderEmail, vote.enders.name, 48 )(title="Closed by")
                             h4
-                                if vote.contributions.subject != null
+                                if vote.contributions.url != null
                                     a(href=vote.contributions.url, target="_blank")
                                         | #
                                         = vote.votes.id
