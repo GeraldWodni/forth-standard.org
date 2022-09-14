@@ -204,9 +204,18 @@ div#body > a[name] {
         scroll-margin-top: 5ex; /* the space for above title */
     }
 }
-:target:not(div):not(section) {
-    border-bottom: 0.2em gray dotted;
+:target {
+    &:not(div):not(section) { /* default */
+        border-bottom: 0.2em dotted @Grey-600;
+    }
+    &:is(div.reply-wrapper) > h3 {
+        border-bottom: 0.2em dotted @Grey-600;
+    }
+    &:is(div.contribution-wrapper) > h2 {
+        border-bottom: 0.2em dotted @mat-900;
+    }
 }
+
 
 /* sidenav + toggle button */
 .toggle {
