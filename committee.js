@@ -168,7 +168,8 @@ module.exports = {
                     SELECT votes.id, votes.subject, votes.text, votes.started, votes.ended, votes.result,
                     starters.id, starters.name, MD5(LOWER(starters.email)) AS starterEmail,
                     enders.id, enders.name, MD5(LOWER(enders.email)) AS enderEmail,
-                    castVotes.vote IS NOT NULL AS userHasCastVote
+                    castVotes.vote IS NOT NULL AS userHasCastVote,
+                    contributions.url
                     FROM votes
                     LEFT JOIN users AS starters
                     ON starters.id = votes.startedBy
@@ -176,6 +177,8 @@ module.exports = {
                     ON enders.id = votes.endedBy
                     LEFT JOIN castVotes
                     ON votes.id=castVotes.vote AND castVotes.user={user}
+                    LEFT JOIN contributions
+                    ON votes.contribution=contributions.id
                     ORDER BY votes.started DESC
                 `}, { user: req.kern.loggedInUserId } ),
                 k.session.getActive( k.website )
