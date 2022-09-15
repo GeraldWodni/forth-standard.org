@@ -23,7 +23,7 @@ block committeeContent
         else
             form(method='post',role='form')
 
-                +foreign-grouped-field("contribution", "Contribution", contributions, "", { groupBy: "type", composeName: item => `[${item.contributionState}] ${item.subject}`  })
+                +foreign-grouped-field("contribution", "Contribution", contributions, contribution, { groupBy: "type", composeName: item => `[${item.contributionState}] ${item.subject}`  })
 
                 +text-field("subject", "Subject", subject)
                 .form-group
