@@ -485,8 +485,11 @@ module.exports = {
                 + "     ORDER BY GREATEST( contributions.created, IFNULL( MAX(replies.created), '0000' ) ) DESC LIMIT 10"
                 + " ) AS `feed`"
                 + " INNER JOIN contributions ON feed.contributionId=contributions.id"
-                + " INNER JOIN users ON contributions.user=users.id"
-                + " LEFT JOIN replies ON feed.replyId=replies.id",
+                + ` LEFT JOIN replies ON feed.replyId=replies.id
+                    INNER JOIN users
+                    ON replies.id IS NULL AND contributions.user=users.id
+                       OR replies.user=users.id
+                    ORDER BY COALESCE( replies.created, contributions.created ) DESC`,
                 nestTables: true }, [], function( err, items ) {
                 contributions   = formatUserContents( "contributions",  "users", items );
                 res.header( "Content-Type", "application/atom+xml" );
