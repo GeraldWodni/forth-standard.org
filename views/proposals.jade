@@ -62,6 +62,9 @@ block content
                         div.user(title=contribution.users.name)
                             +gravatar(contribution.users.emailMd5, contribution.users.name, 40)
                         h5.document
+                            | [
+                            = contribution.contributions.id
+                            | ] 
                             = contribution.contributions.subject
                         h5.subject
                             | in 
