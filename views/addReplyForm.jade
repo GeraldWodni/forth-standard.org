@@ -3,11 +3,11 @@ mixin addVoteForm
     .form-group
         label Cast programmers's vote
         select(name="programmerVote").form-control
-            +textOption( newProgrammerVote, "", "<no vote>" )
-            +textOption( newProgrammerVote, "I have used (parts of) this proposal in my programs." )
-            +textOption( newProgrammerVote, "I would use (parts of) this proposal in my programs if the systems I am interested in implemented it." )
-            +textOption( newProgrammerVote, "I would use (parts of) this proposal in my programs if this proposal was in the Forth standard." )
-            +textOption( newProgrammerVote, "I would not use (parts of) this proposal in my programs." )
+            +textOption( programmerVote, "", "<no vote>" )
+            +textOption( programmerVote, "I have used (parts of) this proposal in my programs." )
+            +textOption( programmerVote, "I would use (parts of) this proposal in my programs if the systems I am interested in implemented it." )
+            +textOption( programmerVote, "I would use (parts of) this proposal in my programs if this proposal was in the Forth standard." )
+            +textOption( programmerVote, "I would not use (parts of) this proposal in my programs." )
 
 
     hr
@@ -16,42 +16,45 @@ mixin addVoteForm
 
     .form-group
         label System name
-        input(type="text", name="newSystemName", list="forth-systems").form-control
+        input(type="text", name="systemName", list="forth-systems", value=systemName).form-control
         datalist(id="forth-systems")
-            +textOption( newSystemVote, "", "<no vote>" )
-            +textOption( newSystemVote, "CForth" )
-            +textOption( newSystemVote, "Forth 7 cross compilers" )
-            +textOption( newSystemVote, "Gforth" )
-            +textOption( newSystemVote, "IronForth" )
-            +textOption( newSystemVote, "JavaForth" )
-            +textOption( newSystemVote, "MPE Forth cross compilers (all targets)" )
-            +textOption( newSystemVote, "MinForth" )
-            +textOption( newSystemVote, "Open Firmware" )
-            +textOption( newSystemVote, "SwiftForth" )
-            +textOption( newSystemVote, "SwiftX" )
-            +textOption( newSystemVote, "TurboForth" )
-            +textOption( newSystemVote, "VFX Forth" )
-            +textOption( newSystemVote, "amForth" )
-            +textOption( newSystemVote, "bigForth" )
-            +textOption( newSystemVote, "iForth" )
+            option(value="")
+            option(value="CForth" )
+            option(value="Forth 7 cross compilers" )
+            option(value="Gforth" )
+            option(value="IronForth" )
+            option(value="JavaForth" )
+            option(value="MPE Forth cross compilers (all targets)" )
+            option(value="MinForth" )
+            option(value="Open Firmware" )
+            option(value="SwiftForth" )
+            option(value="SwiftX" )
+            option(value="TurboForth" )
+            option(value="VFX Forth" )
+            option(value="amForth" )
+            option(value="bigForth" )
+            option(value="iForth" )
 
     .form-group
         label System conformity
-        select(name="systemVote").form-control
-            +textOption( newProgrammerVote, "", "<no vote>" )
-            +textOption( newProgrammerVote, "", "Forth 2012" )
-            +textOption( newProgrammerVote, "", "Forth 1994" )
+            = systemConformity
+        select(name="systemConformity").form-control
+            +textOption( systemConformity, "", "<no vote>" )
+            +textOption( systemConformity, "none / other" )
+            +textOption( systemConformity, "Forth 2012" )
+            +textOption( systemConformity, "Forth 1994" )
 
     .form-group
         label System vote
+            = systemVote
         select(name="systemVote").form-control
-            +textOption( newProgrammerVote, "", "<no vote>" )
-            +textOption( newSystemVote, "already implements the proposal in full since release [ ]." )
-            +textOption( newSystemVote, "implements the proposal in full in a development version." )
-            +textOption( newSystemVote, "will implement the proposal in full in release [ ]." )
-            +textOption( newSystemVote, "will implement the proposal in full in some future release." )
-            +textOption( newSystemVote, "There are no plans to implement the proposal in full in [ ]." )
-            +textOption( newSystemVote, "will never implement the proposal in full." )
+            +textOption( systemVote, "", "<no vote>" )
+            +textOption( systemVote, "already implements the proposal in full since release [ ]." )
+            +textOption( systemVote, "implements the proposal in full in a development version." )
+            +textOption( systemVote, "will implement the proposal in full in release [ ]." )
+            +textOption( systemVote, "will implement the proposal in full in some future release." )
+            +textOption( systemVote, "There are no plans to implement the proposal in full in [ ]." )
+            +textOption( systemVote, "will never implement the proposal in full." )
 
 
 mixin addReplyForm( opts )
@@ -64,6 +67,18 @@ mixin addReplyForm( opts )
             h3
                 +avatar( user, 30 )
             .markdown
+                if programmerVote
+                    b Programmer Vote: 
+                    = programmerVote
+                    br
+                if systemVote
+                    b System Vote [
+                        = systemName
+                        |  / 
+                        = systemConformity
+                        | ]: 
+                    = systemVote
+                    br
                 != preview
 
     if hideForm
@@ -74,7 +89,7 @@ mixin addReplyForm( opts )
             //if isOriginalAuthor
             //    +checkbox-field("newVersion", "Publish as new contribution text (will be shown on top instead of current content)", newVersion)
             +selectState("newState")
-            if false
+            if contributionState == "voting"
                 .well
                     p
                         | This proposal in the 

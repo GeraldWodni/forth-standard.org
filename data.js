@@ -22,6 +22,12 @@ module.exports = {
         const votes = k.crud.sql( db, { table: "votes", key: "id", foreignName: "subject",
             orderBy: "created",
         } );
+        const castProgrammerVotes = k.crud.sql( db, { table: "castProgrammerVotes", key: "reply", foreignName: "answer",
+            orderBy: "reply",
+        } );
+        const castSystemVotes = k.crud.sql( db, { table: "castSystemVotes", key: "reply", foreignName: "answer",
+            orderBy: "reply",
+        } );
 
         var replies = k.crud.sql( db, { table: "replies", key: "id", foreignName: "text",
             orderBy: "created"
@@ -58,6 +64,8 @@ module.exports = {
                 + " INNER JOIN users ON users.id=contributions.user"
                 + " LEFT JOIN replies ON replies.contribution=contributions.id AND replies.state='visible'"
                 + " LEFT JOIN users AS replyUsers ON replyUsers.id=replies.user"
+                + " LEFT JOIN castProgrammerVotes ON replies.id=castProgrammerVotes.reply"
+                + " LEFT JOIN castSystemVotes ON replies.id=castSystemVotes.reply"
                 + " WHERE (contributions.url=? OR contributions.formerUrl=?) AND contributions.state='visible'"
                 + " ORDER BY contributions.id, replies.id"
             },
@@ -185,6 +193,8 @@ module.exports = {
             users:          users,
             contributions:  contributions,
             votes,
+            castProgrammerVotes,
+            castSystemVotes,
             proposals:      proposals,
             replies:        replies,
             query:          _.partial( query, db ),    /* bind to pool */

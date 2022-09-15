@@ -191,7 +191,9 @@ module.exports = {
                     if( item.replies.id && item.replyUsers.id )
                         lastContribution.replies.push( formatUserContent( "replies", "replyUsers", {
                             replies: item.replies,
-                            replyUsers: item.replyUsers
+                            replyUsers: item.replyUsers,
+                            castProgrammerVotes: item.castProgrammerVotes,
+                            castSystemVotes: item.castSystemVotes,
                         }));
                 });
 

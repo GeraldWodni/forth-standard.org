@@ -1,6 +1,7 @@
 //- (c)2015 by Gerald Wodni
 
 - var lastVersion = "";
+- var lastNewState = null;
 mixin reply( contribution, reply )
     - var replyId = `reply-${reply.replies.id}`;
     div(class=reply.replies.newVersion?"new-version-wrapper":"reply-wrapper",id=replyId)
@@ -43,6 +44,12 @@ mixin reply( contribution, reply )
                 != reply.replies.markdownText
             if reply.replies.newState
                 +renderState( reply.replies.newState )
+                - lastNewState = reply.replies.newState
+            - console.log( contribution );
+            if reply.castProgrammerVotes && reply.castProgrammerVotes.answer
+                +renderProgrammerVote( reply.castProgrammerVotes )
+            if reply.castSystemVotes && reply.castSystemVotes.answer
+                +renderSystemVote( reply.castSystemVotes )
 
 if contributions
     .contributions-wrapper
@@ -80,7 +87,10 @@ if contributions
 
                 a(href="/profile/reply/"+contribution.contributions.id).btn.btn-default.reply
                     +fa("reply")
-                    |  Reply
+                    if lastNewState == "voting"
+                        |  Vote / Reply
+                    else
+                        |  Reply
                 a(href="/profile/reply-new-version/"+contribution.contributions.id, title="Only the contribution's author can create a new version").btn.btn-default.reply
                     +fa("certificate")
                     |  New Version

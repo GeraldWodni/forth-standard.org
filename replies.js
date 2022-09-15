@@ -51,6 +51,11 @@ module.exports = {
                     var text    = req.postman.text("text");
                     var state   = user.state == "moderated" ? "new" : "visible";
 
+                    const programmerVote   = req.postman.text("programmerVote");
+                    const systemName       = req.postman.singleLine("systemName");
+                    const systemConformity = req.postman.singleLine("systemConformity");
+                    const systemVote       = req.postman.text("systemVote");
+
                     if( contribution.user != user.id && !user.committeeMember && opts.newVersion )
                         messages.push({ type: "danger", title: "Error", text: "Currently only the original author can submit a new version" });
 
@@ -66,10 +71,15 @@ module.exports = {
                             isCommitteeMember,
                             contributionState,
                             newState: newState,
+                            programmerVote,
+                            systemName,
+                            systemConformity,
+                            systemVote,
                             messages: messages
                         } ));
                     }
                     else if( req.postman.exists("create" ) ) {
+
                         kData.replies.create({
                             user: user.id,
                             contribution: contribution.id,
@@ -78,8 +88,32 @@ module.exports = {
                             newVersion: opts.newVersion ? 1 : 0,
                             newState: newState,
                             text: text
-                        }, function( err ) {
+                        }, async function( err, result ) {
                             if( err ) return next( err );
+
+                            try {
+                                if( req.postman.exists( "programmerVote" ) )
+                                    await new Promise( (fulfill, reject) => kData.castProgrammerVotes.create({
+                                        reply: result.insertId,
+                                        answer: programmerVote,
+                                    }, err => {
+                                        if( err ) return reject(err);
+                                        fulfill();
+                                    }));
+
+                                if( req.postman.exists( "systemVote" ) )
+                                    await new Promise( (fulfill, reject) => kData.castSystemVotes.create({
+                                        reply: result.insertId,
+                                        name: systemName,
+                                        conformity: systemConformity,
+                                        answer: systemVote,
+                                    }, err => {
+                                        if( err ) return reject(err);
+                                        fulfill();
+                                    }));
+                            } catch( err ) {
+                                return next( err );
+                            }
 
                             k.jade.render( req, res, opts.jadeFile, vals( req, {
                                 //url: getUrl( req ),

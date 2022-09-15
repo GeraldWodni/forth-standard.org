@@ -143,6 +143,25 @@ mixin renderState( state )
         |  
         = contributionStateText[ state ]
 
+mixin renderProgrammerVote( vote )
+    div.programmerVote&attributes(attributes)
+        b
+          +fa("pencil-square-o")
+          |  Programmer vote: 
+        = vote.answer
+
+mixin renderSystemVote( vote )
+    div.systemVote&attributes(attributes)
+        b
+          +fa("pencil-square-o")
+          |  System vote: 
+        b
+            = vote.name
+            |  / 
+            = vote.conformity
+        |  
+        = vote.answer
+
 mixin textOption(selected, value, text=null)
     option(value=text, selected=selected==value)
         if text == null
