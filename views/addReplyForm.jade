@@ -1,20 +1,21 @@
 mixin addVoteForm
+
     .form-group
-        label Cast programmer's vote
-        select(name="systemVote").form-control
+        label Cast programmers's vote
+        select(name="programmerVote").form-control
             +textOption( newProgrammerVote, "", "<no vote>" )
-            +textOption( newSystemVote, "conforms to ANS Forth." )
-            +textOption( newSystemVote, "already implements the proposal in full since release [ ]." )
-            +textOption( newSystemVote, "implements the proposal in full in a development version." )
-            +textOption( newSystemVote, "will implement the proposal in full in release [ ]." )
-            +textOption( newSystemVote, "will implement the proposal in full in some future release." )
-            +textOption( newSystemVote, "There are no plans to implement the proposal in full in [ ]." )
-            +textOption( newSystemVote, "will never implement the proposal in full." )
+            +textOption( newProgrammerVote, "I have used (parts of) this proposal in my programs." )
+            +textOption( newProgrammerVote, "I would use (parts of) this proposal in my programs if the systems I am interested in implemented it." )
+            +textOption( newProgrammerVote, "I would use (parts of) this proposal in my programs if this proposal was in the Forth standard." )
+            +textOption( newProgrammerVote, "I would not use (parts of) this proposal in my programs." )
+
 
     hr
 
+    h4 Cast system's vote
+
     .form-group
-        label Cast system's vote
+        label System name
         input(type="text", name="newSystemName", list="forth-systems").form-control
         datalist(id="forth-systems")
             +textOption( newSystemVote, "", "<no vote>" )
@@ -35,13 +36,22 @@ mixin addVoteForm
             +textOption( newSystemVote, "iForth" )
 
     .form-group
-        label Cast programmer's vote
-        select(name="programmerVote").form-control
+        label System conformity
+        select(name="systemVote").form-control
             +textOption( newProgrammerVote, "", "<no vote>" )
-            +textOption( newProgrammerVote, "I have used (parts of) this proposal in my programs." )
-            +textOption( newProgrammerVote, "I would use (parts of) this proposal in my programs if the systems I am interested in implemented it." )
-            +textOption( newProgrammerVote, "I would use (parts of) this proposal in my programs if this proposal was in the Forth standard." )
-            +textOption( newProgrammerVote, "I would not use (parts of) this proposal in my programs." )
+            +textOption( newProgrammerVote, "", "Forth 2012" )
+            +textOption( newProgrammerVote, "", "Forth 1994" )
+
+    .form-group
+        label System vote
+        select(name="systemVote").form-control
+            +textOption( newProgrammerVote, "", "<no vote>" )
+            +textOption( newSystemVote, "already implements the proposal in full since release [ ]." )
+            +textOption( newSystemVote, "implements the proposal in full in a development version." )
+            +textOption( newSystemVote, "will implement the proposal in full in release [ ]." )
+            +textOption( newSystemVote, "will implement the proposal in full in some future release." )
+            +textOption( newSystemVote, "There are no plans to implement the proposal in full in [ ]." )
+            +textOption( newSystemVote, "will never implement the proposal in full." )
 
 
 mixin addReplyForm( opts )
