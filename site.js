@@ -5,7 +5,7 @@ var fs      = require("fs");
 var path    = require("path");
 var _       = require("underscore");
 const { marked } = require('marked');
-var diff    = require('diff');
+const { markdownDiff } = require("markdown-diff");
 var md5     = require("md5");
 var moment  = require("moment");
 const crawlSystems = require("./crawlSystems");
@@ -45,15 +45,38 @@ module.exports = {
 
         /* add common values for rendering */
         function diffMarkdown( v1, v2 ) {
-            const d = diff.diffLines( v1, v2 );
-            var diffHTML = "";
-            d.forEach( d => {
-                if( d.added )
-                    diffHTML += `<ins>${marked(d.value)}</ins>`;
-                else if( d.removed )
-                    diffHTML += `<del>${marked(d.value)}</del>`;
-                else
-                    diffHTML += marked(d.value);
+            let diffHTML = marked( markdownDiff( v1, v2 ) );
+            console.log( diffHTML );
+            return diffHTML;
+
+            /* add <ins> and <del> to code blocks */
+            diffHTML = diffHTML.replace( /<code>([\s\S]+?)<\/code>/gm, (match, code) => {
+                const lines = code.split("\n");
+
+                /* not a multi-line code block, ignore */
+                if( lines.length < 2 )
+                    return `<code>${code}</code>`;
+
+                /* check if all lines have diff prefix or are empty */
+                for( const line of lines )
+                    if( /^[-+ ] /.exec(line) == null && line != "" ) {
+                        console.log( "NO match:", line );
+                        return `<code>${code}</code>`;
+                    }
+
+                /* add ins or diff based on prefix */
+                const diffLines = [];
+                for( const line of lines )
+                    if( line.length < 2 )
+                        diffLines.push( line );
+                    else if( line[0] == "+" )
+                        diffLines.push( `<ins>${line.substring(2)}</ins>` );
+                    else if( line[0] == "-" )
+                        diffLines.push( `<del>${line.substring(2)}</del>` );
+                    else
+                        diffLines.push( line.substring(2) );
+
+                return `<code>${diffLines.join("\n")}</code>`;
             });
 
             return diffHTML;
