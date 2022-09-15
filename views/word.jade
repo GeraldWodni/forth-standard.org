@@ -16,7 +16,10 @@ block content
             span.number= word.number
             |  
             span.name= word.name
-            |  
+            if word.english != " "
+                |  
+                span.english= word.english
+            | 
             span.list= word.list
         each section in word.sections
             if section.name !== " "
