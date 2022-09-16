@@ -5,10 +5,13 @@ BEGIN
 
 WITH programmerVotes AS (
 	SELECT
+		users.name AS userName,
 		replies.user,
 		castProgrammerVotes.*,
 		ROW_NUMBER() OVER (PARTITION BY replies.user ORDER BY replies.id DESC) AS `rowNumber`
 	FROM replies
+    INNER JOIN users
+    ON users.id=replies.user
 	LEFT JOIN castProgrammerVotes
 	ON castProgrammerVotes.reply=replies.id
 	WHERE replies.contribution=contributionId
@@ -21,10 +24,13 @@ ORDER BY answer, reply;
 
 WITH systemVotes AS (
 	SELECT
+		users.name AS userName,
 		replies.user,
 		castSystemVotes.*,
 		ROW_NUMBER() OVER (PARTITION BY replies.user ORDER BY replies.id DESC) AS `rowNumber`
 	FROM replies
+    INNER JOIN users
+    ON users.id=replies.user
 	LEFT JOIN castSystemVotes
 	ON castSystemVotes.reply=replies.id
 	WHERE replies.contribution=contributionId
