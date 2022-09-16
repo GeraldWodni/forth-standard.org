@@ -27,7 +27,7 @@ WITH systemVotes AS (
 		users.name AS userName,
 		replies.user,
 		castSystemVotes.*,
-		ROW_NUMBER() OVER (PARTITION BY replies.user ORDER BY replies.id DESC) AS `rowNumber`
+		ROW_NUMBER() OVER (PARTITION BY replies.user, castSystemVotes.name ORDER BY replies.id DESC) AS `rowNumber`
 	FROM replies
     INNER JOIN users
     ON users.id=replies.user
