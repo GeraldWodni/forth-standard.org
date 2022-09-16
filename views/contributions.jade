@@ -94,3 +94,47 @@ if contributions
                 a(href="/profile/reply-new-version/"+contribution.contributions.id, title="Only the contribution's author can create a new version").btn.btn-default.reply
                     +fa("certificate")
                     |  New Version
+
+            if programmerVotes || systemVotes
+                .votingResults
+                    h3 Vote Standings
+                    h3 Programmers
+                    table.table.programmerVotes
+                        thead
+                            tr
+                                th Vote
+                                th User
+                        tbody
+                            - lastAnswer = ""
+                            each programmerVote in programmerVotes
+                                tr
+                                    if lastAnswer == programmerVote.answer
+                                        td.repeatedAnswer
+                                            = programmerVote.answer
+                                    else
+                                        - lastAnswer = programmerVote.answer
+                                        td
+                                            = programmerVote.answer
+                                    td= programmerVote.userName
+                    h3 Systems
+                    table.table.systemVotes
+                        thead
+                            tr
+                                th Vote
+                                th System
+                                th Conformity
+                                th User
+                        tbody
+                            - lastAnswer = ""
+                            each systemVote in systemVotes
+                                tr
+                                    if lastAnswer == systemVote.answer
+                                        td.repeatedAnswer
+                                            = systemVote.answer
+                                    else
+                                        - lastAnswer = systemVote.answer
+                                        td
+                                            = systemVote.answer
+                                    td= systemVote.name
+                                    td= systemVote.conformity
+                                    td= systemVote.userName

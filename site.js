@@ -426,13 +426,22 @@ module.exports = {
 
         /** proposals **/
         k.router.get("/proposals/*", function( req, res, next ) {
-            urlContributions( req.path, next, function( contributions ) {
+            urlContributions( req.path, next, async function( contributions ) {
                 if( contributions.length == 0 )
                     return httpStatus( req, res, 404 );
 
+                let programmerVotes = null, systemVotes = null;
+                try {
+                    [ programmerVotes, systemVotes ] = await req.kern.db.pQuery("CALL votingResults(?)", [contributions[0].contributions.id]);
+                } catch( err ) {
+                    return next(err);
+                }
+
                 k.jade.render( req, res, "proposalWrapper", vals( req, {
                     urlPath: req.path,
-                    contributions: contributions
+                    contributions: contributions,
+                    programmerVotes,
+                    systemVotes,
                 }));
             });
         });
