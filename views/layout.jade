@@ -163,7 +163,7 @@ mixin renderSystemVote( vote )
         = vote.answer
 
 mixin textOption(selected, value, text=null)
-    option(value=text, selected=selected==value)
+    option(value=value, selected=selected==value)
         if text == null
             = value
         else
