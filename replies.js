@@ -92,7 +92,7 @@ module.exports = {
                             if( err ) return next( err );
 
                             try {
-                                if( req.postman.exists( "programmerVote" ) )
+                                if( programmerVote != "" )
                                     await new Promise( (fulfill, reject) => kData.castProgrammerVotes.create({
                                         reply: result.insertId,
                                         answer: programmerVote,
@@ -101,7 +101,7 @@ module.exports = {
                                         fulfill();
                                     }));
 
-                                if( req.postman.exists( "systemVote" ) )
+                                if( systemVote != "" )
                                     await new Promise( (fulfill, reject) => kData.castSystemVotes.create({
                                         reply: result.insertId,
                                         name: systemName,
