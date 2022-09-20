@@ -95,7 +95,7 @@ if contributions
                     +fa("certificate")
                     |  New Version
 
-            if programmerVotes || systemVotes
+            if ( programmerVotes || systemVotes ) && ( programmerVotes.length || systemVotes.length )
                 .votingResults#vote-standings
                     h3 Vote Standings
                     h3 Programmers
