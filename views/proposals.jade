@@ -69,11 +69,7 @@ block content
                         h5.subject
                             | in 
                             = contribution.contributions.title
-                        if contribution[""].newStates
-                            - newStates = contribution[""].newStates.split(",")
-                            +renderState( newStates[ newStates.length - 1 ] )
-                        else
-                            +renderState("informal")
+                        +renderState( contribution[""].contributionState )
                         h5 Versions:
                         div.date
                             | V0: 
@@ -92,6 +88,7 @@ block content
                             | new: 
                             = contribution.contributions.createdFormated
                         if contribution[""].newStatesId && contribution[""].newStatesId.length
+                            - newStates = contribution[""].newStates.split(",")
                             - newStatesId      = contribution[""].newStatesId.split(",")
                             - newStatesCreated = contribution[""].newStatesCreated.split(",")
                             each index in _.range( newStates.length )
