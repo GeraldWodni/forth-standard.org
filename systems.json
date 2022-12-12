@@ -216,6 +216,14 @@
         "description": "A complete platform (HW and SW) supporting a 79-STANDARD subset, FORTH-83 and ANS extensions"
     },
     {
+        "stars": null,
+        "name": "UF",
+        "link": "http://www.call-with-current-continuation.org/uf/uf.html",
+        "lang": "Assembly",
+        "cpu": "UXN",
+        "description": "Forth system for the UXN virtual machine"
+    },
+    {
         "stars": 262,
         "name": "lbForth",
         "link": "https://github.com/larsbrinkhoff/lbForth",
