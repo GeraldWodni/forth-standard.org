@@ -213,7 +213,7 @@
         "link": "https://github.com/frenchie68/Z79Forth",
         "lang": "Assembly",
         "cpu": "HD6309E",
-        "description": "A complete platform (HW and SW) supporting a 79-STANDARD subset, FORTH-83 and ANS extensions"
+        "description": "A complete platform (HW and SW) supporting a 79-STANDARD subset, FORTH-83 and ANS extensions. An alternate EEPROM image provides full support for the ANS94 Core word set."
     },
     {
         "stars": null,
