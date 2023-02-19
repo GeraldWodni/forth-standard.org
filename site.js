@@ -118,23 +118,43 @@ module.exports = {
             return matches;
         }
 
+        function redirectPage( req, res, target ) {
+            res.statusCode = 302;
+            res.header("Location", target);
+            res.header("Content-Type", "text/html");
+            res.send( `You are being redirected to <a href="${target}">${target}</a>` );
+        }
+
+        k.router.get("/jump-to/:id", async (req, res, next ) => {
+            try {
+                const id = req.requestman.id();
+                const rows = await req.kern.db.pQuery(`SELECT url FROM contributions WHERE id={id}`, { id });
+                const link = `${rows[0].url}#contribution-${id}`;
+                redirectPage( req, res, `${req.protocol}://${req.kern.website}${link}` );
+            } catch( err ) {
+                next( err );
+            }
+        });
+
         /* TODO: rest API for AJAX search */
         k.router.get("/search/*", function( req, res ) {
             var search = decodeURI(req.path).substr(8).toLowerCase();
             res.json( searchWords( search ) );
         });
 
-        k.router.post("/search", function( req, res ) {
-            k.postman( req, res, function() {
-                var search = req.postman.raw("search").toLowerCase();
-                var matches = searchWords( search );
-                if( matches.length == 1 && matches[0].length == 1 ) {
-                    let word = matches[0][0];
-                    res.statusCode = 302;
-                    res.header("Location", `${req.protocol}://${req.kern.website}/standard/${word.list}/${word.basename}`);
-                }
-                k.jade.render( req, res, "search", vals( req, { matches: matches } ) );
-            });
+        k.router.postman("/search", function( req, res ) {
+            var search = req.postman.raw("search").toLowerCase();
+            const contributionMatch = /^\s*\[([0-9]+)\]\s*/g.exec( search );
+            if( contributionMatch )
+                return redirectPage( req, res, `${req.protocol}://${req.kern.website}/jump-to/${contributionMatch[1]}` );
+
+            var matches = searchWords( search );
+            if( matches.length == 1 && matches[0].length == 1 ) {
+                let word = matches[0][0];
+                res.statusCode = 302;
+                res.header("Location", `${req.protocol}://${req.kern.website}/standard/${word.list}/${word.basename}`);
+            }
+            k.jade.render( req, res, "search", vals( req, { matches: matches } ) );
         });
 
         k.router.get("/search", function( req, res ) {
