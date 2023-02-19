@@ -203,8 +203,7 @@ module.exports = {
                             users: item.users,
                             replies: []
                         });
-                        if( lastContribution.contributions.type == "proposal" )
-                            lastContribution.contributions.subject = `[${lastContribution.contributions.id}] ${lastContribution.contributions.subject}`;
+                        lastContribution.contributions.subject = `[${lastContribution.contributions.id}] ${lastContribution.contributions.subject}`;
                         groupedContributions.push( lastContribution );
                     }
 
@@ -554,8 +553,7 @@ module.exports = {
                 if( err ) return next( err );
                 const contributions     = formatUserContents( "contributions",  "users", items[0] );
                 for( const { contributions: c } of contributions )
-                    if( c.type == "proposal" )
-                        c.subject = `[${c.id}] ${c.subject}`;
+                    c.subject = `[${c.id}] ${c.subject}`;
                 const replies           = formatUserContents( "replies",        "users", items[1] );
                 const openContributions = items[2];
                 k.jade.render( req, res, template, vals( req, { contributions, replies, openContributions, type, state } ) );
