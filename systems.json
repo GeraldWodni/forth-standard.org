@@ -510,5 +510,13 @@
         "lang": "C",
         "cpu": "Varied",
         "description": "A minimal Forth implemented in C, runs on the PC and development boards"
+    },
+    {
+        "stars": 1,
+        "name": "eForth",
+        "link": "https://github.com/fdamador/eForth",
+        "lang": "go",
+        "cpu": "Varied",
+        "description": "A minimal Forth implemented in go, runs on the PC and development boards"
     }
 ]
