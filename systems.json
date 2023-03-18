@@ -505,8 +505,8 @@
     },
     {
         "stars": 1,
-        "name": "cccForth",
-        "link": "https://github.com/CCurl/cccForth",
+        "name": "c4",
+        "link": "https://github.com/CCurl/c4",
         "lang": "C",
         "cpu": "Varied",
         "description": "A minimal Forth implemented in C, runs on the PC and development boards"
