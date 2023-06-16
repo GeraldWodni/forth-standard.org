@@ -344,12 +344,44 @@
         "description": "Small ebook for learning Forth"
     },
     {
-        "stars": 4,
+        "stars": 42,
+        "name": "jeforth.3we",
+        "link": "https://github.com/hcchengithub/jeforth.3we",
+        "lang": "JavaScript",
+        "cpu": "",
+        "description": "jeforth 3 words engine based on <a href=\"https://github.com/hcchengithub/project-k\">project-k</a>\n"
+    },
+    {
+        "stars": 30,
+        "name": "TclForth",
+        "link": "https://github.com/wolfwejgaard/tclforth",
+        "lang": "Tcl/Tk",
+        "cpu": "",
+        "description": "Multi-OS Forth using Tcl as its native language"
+    },
+    {
+        "stars": 20,
         "name": "project-k",
         "link": "https://github.com/hcchengithub/project-k",
         "lang": "JavaScript",
         "cpu": "",
         "description": "Forth kernel in JavaScript"
+    },
+    {
+        "stars": 16,
+        "name": "yoda",
+        "link": "https://github.com/Bushmills/yoda/",
+        "lang": "Bash",
+        "cpu": "",
+        "description": "An experimental implementation that is close to Forth-2012 (see <a href=\"https://github.com/Bushmills/yoda/blob/main/missing\">missing</a>). It produces subroutine-threaded code of the underlying machine (i.e. Bash)."
+    },
+    {
+        "stars": 15,
+        "name": "jsforth",
+        "link": "https://github.com/eatonphil/jsforth",
+        "lang": "Javascript",
+        "cpu": "",
+        "description": "A simple Forth-like language with a web-based REPL"
     },
     {
         "stars": 3,
@@ -368,30 +400,6 @@
         "description": "A very simple Forth-like language implemented in Python"
     },
     {
-        "stars": 2,
-        "name": "jeforth.3we",
-        "link": "https://github.com/hcchengithub/jeforth.3we",
-        "lang": "JavaScript",
-        "cpu": "",
-        "description": "jeforth 3 words engine"
-    },
-    {
-        "stars": 30,
-        "name": "TclForth",
-        "link": "https://github.com/wolfwejgaard/tclforth",
-        "lang": "Tcl/Tk",
-        "cpu": "",
-        "description": "Multi-OS Forth using Tcl as its native language"
-    },
-    {
-        "stars": 15,
-        "name": "jsforth",
-        "link": "https://github.com/eatonphil/jsforth",
-        "lang": "Javascript",
-        "cpu": "",
-        "description": "A simple Forth-like language with a web-based REPL"
-    },
-    {
         "stars": 8,
         "name": "webForth",
         "link": "https://github.com/mitra42/webforth",
@@ -408,12 +416,12 @@
         "description": "Runs in modern browser, Tosh, Scratch 2, or Scratch 3"
     },
     {
-        "stars": 16,
-        "name": "yoda",
-        "link": "https://github.com/Bushmills/yoda/",
-        "lang": "Bash",
-        "cpu": "",
-        "description": "An experimental implementation that is close to Forth-2012 (see <a href=\"https://github.com/Bushmills/yoda/blob/main/missing\">missing</a>). It produces subroutine-threaded code of the underlying machine (i.e. Bash)."
+        "stars": 0,
+        "name": "ChatFORTH",
+        "link": "https://github.com/hcchengithub/ChatFORTH",
+        "lang": "JavaScript",
+        "cpu": "<a href=\"https://github.com/hcchengithub/jeforth.3we\">jeforth.3we</a>",
+        "description": "FORTH that chats with OpenAI ChatGPT"
     },
     {
         "stars": 369,
