@@ -361,7 +361,6 @@ div#body > a[name] {
 
 .box.systems {
     //.mat( "DeepPurple", "100" );
-    background-color: @mat-900;
     //background: @mat;
 
     background-image: url("/images/board.png");
@@ -380,6 +379,15 @@ div#body > a[name] {
         margin-top: 20px;
         color: #777;
     }
+}
+
+@keyframes news {
+    0%   { background-color: @mat-900; }
+    100% { background-color: #FFF;     }
+}
+
+.box.news {
+    animation: 5s ease-out 0s 1 news;
 }
 
 .box.maintenance {
