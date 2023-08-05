@@ -224,6 +224,14 @@
         "description": "Forth system for the UXN virtual machine"
     },
     {
+        "stars": 48,
+        "name": "FiveForths",
+        "link": "https://github.com/aw/fiveforths",
+        "lang": "Assembly",
+        "cpu": "RISC-V",
+        "description": "Tiny Forth written in hand-coded RISC-V assembly, initially designed to run on 32-bit microcontrollers"
+    },
+    {
         "stars": 262,
         "name": "lbForth",
         "link": "https://github.com/larsbrinkhoff/lbForth",
