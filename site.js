@@ -78,6 +78,7 @@ module.exports = {
                 },
                 contributionStateText: {
                     "informal":  "Informal",
+                    "considered":"Considered",
                     "formal":    "Formal",
                     "accepted":  "Accepted",
                     "voting":    "CfV - Call for votes",
@@ -125,6 +126,22 @@ module.exports = {
             res.send( `You are being redirected to <a href="${target}">${target}</a>` );
         }
 
+        k.router.get("/jump-to/reply/:id", async (req, res, next ) => {
+            try {
+                const id = req.requestman.uint("id");
+                const rows = await req.kern.db.pQuery(`
+                    SELECT contributions.url
+                    FROM contributions
+                    INNER JOIN replies
+                    ON replies.contribution=contributions.id
+                    WHERE replies.id={id}`, { id });
+                const link = `${rows[0].url}#reply-${id}`;
+                redirectPage( req, res, `${req.protocol}://${req.kern.website}${link}` );
+            } catch( err ) {
+                console.log( "ERR:", err );
+                next( err );
+            }
+        });
         k.router.get("/jump-to/:id", async (req, res, next ) => {
             try {
                 const id = req.requestman.id();
@@ -143,6 +160,15 @@ module.exports = {
         });
 
         k.router.postman("/search", function( req, res ) {
+            if( req.postman.exists("contribution") ) {
+                const contribution = req.postman.uint("contribution")
+                return redirectPage( req, res, `${req.protocol}://${req.kern.website}/jump-to/${contribution}` );
+            }
+            if( req.postman.exists("reply") ) {
+                const reply = req.postman.uint("reply")
+                return redirectPage( req, res, `${req.protocol}://${req.kern.website}/jump-to/reply/${reply}` );
+            }
+
             var search = req.postman.raw("search").toLowerCase();
             const contributionMatch = /^\s*\[([0-9]+)\]\s*/g.exec( search );
             if( contributionMatch )

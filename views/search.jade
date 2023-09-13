@@ -38,8 +38,23 @@ block content
                                 a(href="/standard/#{word.list}")
                                     span.badge
                                         = word.list
-            
-            
+        else
+          hr
+          p Every contribution and reply has a unique number. Here is a quick way of accessing them:
 
+          h4 Jump to contribution #
+          form(method="post").form-inline
+              .form-group
+                  input(type="text",name="contribution").form-control
+              |  
+              button(type="submit").btn.btn-default
+                  +fa("arrow-right")
 
-            
+          h4 Jump to reply #
+          form(method="post").form-inline
+              .form-group
+                  input(type="text",name="reply").form-control
+              |  
+              button(type="submit").btn.btn-default
+                  +fa("arrow-right")
+

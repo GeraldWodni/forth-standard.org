@@ -124,6 +124,8 @@ mixin renderState( state )
     div.state&attributes(attributes)
         if state == "informal"
             +fa("file-text").fa-lg.text-red
+        else if state == "considered"
+            +fa("wrench").fa-lg.text-red
         else if state == "formal"
             +fa("star").fa-lg.text-red
         else if state == "accepted"
@@ -179,6 +181,8 @@ mixin selectState(name)
                         = `<unchanged (${contributionStateText[contributionState]})>`
                     option(value="informal",    selected=newState=="informal",  disabled=contributionState=="informal")
                         =contributionStateText["informal"]
+                    option(value="considered",  selected=newState=="considered",disabled=contributionState=="considered")
+                        =contributionStateText["considered"]
                     option(value="formal",      selected=newState=="formal",    disabled=contributionState=="formal"  || !isCommitteeMember)
                         =contributionStateText["formal"]
                     option(value="accepted",    selected=newState=="accepted",  disabled=contributionState=="accepted"|| !isCommitteeMember)
