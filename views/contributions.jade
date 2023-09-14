@@ -2,6 +2,11 @@
 
 - var lastVersion = "";
 - var lastNewState = null;
+mixin bracketReplyId(reply)
+    | [r
+    = reply.replies.id
+    | ]
+
 mixin reply( contribution, reply )
     - var replyId = `reply-${reply.replies.id}`;
     div(class=reply.replies.newVersion?"new-version-wrapper":"reply-wrapper",id=replyId)
@@ -17,12 +22,14 @@ mixin reply( contribution, reply )
                 time.created(title="UTC")
                     a(href=_baseUrlPath + "#" + replyId, title="link to comment")
                         +fa("certificate")
+                        +bracketReplyId(reply)
                     |  
                     = reply.replies.createdFormated
             else
                 time.created(title="UTC")
                     a(href=_baseUrlPath + "#" + replyId, title="link to comment")
                         +fa("comments-o")
+                        +bracketReplyId(reply)
                     |  
                     = reply.replies.createdFormated
         .markdown
