@@ -18,7 +18,8 @@ mixin reply( contribution, reply )
                     |  
                     = reply.replies.createdFormated
             else if reply.replies.newVersion
-                span.type New Version
+                span.type New Version: 
+                    = contribution.contributions.subject
                 time.created(title="UTC")
                     a(href=_baseUrlPath + "#" + replyId, title="link to comment")
                         +fa("certificate")
