@@ -16,9 +16,10 @@ COALESCE(
 -- provide sorting for state
 CREATE OR REPLACE FUNCTION contributionStateOrder (state VARCHAR(255)) RETURNS INT RETURN
 CASE
-	WHEN state='voting' THEN 0
+    WHEN state='voting' THEN 0
     WHEN state='formal' THEN 10
     WHEN state='informal' THEN 20
+    WHEN state='considered' THEN 30
     WHEN state='accepted' THEN 40
     WHEN state='rejected' THEN 50
     WHEN state='retiered' THEN 60

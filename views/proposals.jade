@@ -47,6 +47,20 @@ block content
 
 
         h3 Proposals (most recent first)
+        p Filter by type:
+        ul.contributions-filter
+            li(class=useState?null:"active")
+                a(href="/proposals")
+                    span.count
+                        = totalProposalCount
+                    | All
+            each proposalCount in proposalCounts
+                li(class=state==proposalCount[''].state?"active":null)
+                    a(href="/proposals?state=#{proposalCount[''].state}")
+                        span.count
+                            = proposalCount[""].count
+                        +renderState( proposalCount[''].state )
+            
         ul.fa-ul.contribution-latest
             each contribution in contributions
                 li

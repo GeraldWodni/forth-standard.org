@@ -492,6 +492,10 @@ module.exports = {
         });
 
         k.router.get("/proposals", function( req, res, next ) {
+            const useState = req.getman.exists("state");
+            let state = null;
+            if( useState )
+                state = req.getman.id("state");
             db.query( { sql: `
                 SELECT contributions.*, users.*,
                 COUNT(answers.id) AS answerCount,
@@ -509,6 +513,7 @@ module.exports = {
                 LEFT JOIN replies AS newStates
                 ON newStates.contribution=contributions.id AND newStates.newState IS NOT NULL
                 WHERE contributions.state='visible' AND contributions.type='proposal'
+                AND ( NOT {useState} OR contributionState(contributions.id)={state} )
                 GROUP BY contributions.id
                 ORDER BY contributionStateOrder( contributionState( contributions.id ) ) ASC,
                     contributions.created DESC;
@@ -518,14 +523,24 @@ module.exports = {
                 FROM contributions
                 WHERE  contributions.type='proposal'
                 GROUP BY contributionState( contributions.id )
-                `, nestTables: true }, [], function( err, data ) {
+                ORDER BY contributionStateOrder( contributionState( contributions.id ) )
+                `, nestTables: true }, {
+                    useState,
+                    state,
+                }, function( err, data ) {
                 if( err ) return next( err );
                 let contributions = data[0];
                 let proposalCounts = data[1];
-                contributions.forEach( c => console.log( "C:", c.id, c[""] ) );
-                //console.log( "CONTR:", contributions );
+                let totalProposalCount = data[1].reduce( (s, r) => { return s + r[""].count }, 0 );
+                    console.log( data[1] );
                 contributions   = formatUserContents( "contributions",  "users", contributions );
-                k.jade.render( req, res, "proposals", vals( req, { contributions, proposalCounts } ) );
+                k.jade.render( req, res, "proposals", vals( req, {
+                    contributions,
+                    proposalCounts,
+                    totalProposalCount,
+                    useState,
+                    state,
+                } ) );
             });
         });
 

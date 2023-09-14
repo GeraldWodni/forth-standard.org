@@ -759,6 +759,29 @@ div#body > a[name] {
         display: inline-block;
     }
 }
+.contributions-filter {
+    list-style: none;
+    padding-left: 0;
+
+    li {
+        display: inline-block;
+        &.active a {
+            color: #333;
+        }
+    }
+
+    .count {
+        font-weight: bold;
+        display: inline-block;
+        min-width: 3rem;
+        text-align: right;
+        margin-right: 1rem;
+    }
+
+    .state {
+        display: inline-block;
+    }
+}
 
 .feed-icon {
     display: block;
