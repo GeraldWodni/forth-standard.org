@@ -3,17 +3,17 @@
 
 require("colors");
 var fs = require("fs");
-var jsdom = require("jsdom");
+const { JSDOM } = require("jsdom");
 var jquery = require("jquery");
 var https = require("https");
 
 function parseGithubHtml( html, callback ) {
-    jsdom.env( html.toString(), function( err, window ) {
-        if( err ) return callback( err );
+    try {
+        const { window } = new JSDOM(html.toString());
 
         /* parse document */
-        var $ = jquery(window);
-        var systems = [];
+        const $ = jquery(window);
+        const systems = [];
 
         $("#wiki-body .markdown-body table tbody tr").each( function( index, tr )  {
             var $tr = $(tr);
@@ -29,7 +29,9 @@ function parseGithubHtml( html, callback ) {
         });
 
         callback( null, systems );
-    });
+    } catch( err ) {
+        callback( err );
+    }
 }
 
 /* perform http-GET request and consume stream */
