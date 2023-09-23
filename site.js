@@ -5,6 +5,8 @@ var fs      = require("fs");
 var path    = require("path");
 var _       = require("underscore");
 const { marked } = require('marked');
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require("jsdom");
 var diff    = require('diff');
 var md5     = require("md5");
 var moment  = require("moment");
@@ -49,14 +51,25 @@ module.exports = {
             var diffHTML = "";
             d.forEach( d => {
                 if( d.added )
-                    diffHTML += `<ins>${marked(d.value)}</ins>`;
+                    diffHTML += `<ins>${saneMarked(d.value)}</ins>`;
                 else if( d.removed )
-                    diffHTML += `<del>${marked(d.value)}</del>`;
+                    diffHTML += `<del>${saneMarked(d.value)}</del>`;
                 else
-                    diffHTML += marked(d.value);
+                    diffHTML += saneMarked(d.value);
             });
 
             return diffHTML;
+        }
+
+        function cleanHTML( html ) {
+            const DOMPurify = createDOMPurify( new JSDOM('').window );
+            return DOMPurify.sanitize( html, {
+                FORBID_TAGS: ['style' ]
+            });
+        }
+
+        function saneMarked( text ) {
+            return cleanHTML( marked( text ) );
         }
 
         function vals( req, values ) {
@@ -67,6 +80,7 @@ module.exports = {
                 loggedIn: "session" in req,
                 uniqueWordNames: uniqueWordNames,
                 diffMarkdown: diffMarkdown,
+                saneMarked,
                 allowDiff: !req.getman.exists("hideDiff"),
                 contributionTypeName: {
                     "example": "Example",
@@ -202,7 +216,7 @@ module.exports = {
         }
 
         function formatUserContent( dataTable, userTable, item ) {
-            item[dataTable].markdownText = marked( item[dataTable].text );
+            item[dataTable].markdownText = saneMarked( item[dataTable].text );
             item[dataTable].createdFormated = moment( item[dataTable].created ).format( kData.sql.dateTimeFormat );
             item[userTable].emailMd5 = md5( item[userTable].email.toLowerCase() );
             if( item.contributions && item.contributions.url )
@@ -378,10 +392,12 @@ module.exports = {
         /* user management */
         k.useSiteModule( "/profile", "forth-standard.org", "contributions.js", { setup: {
             vals: vals,
+            saneMarked,
             httpStatus: httpStatus
         } } );
         k.useSiteModule( "/profile", "forth-standard.org", "replies.js", { setup: {
             vals: vals,
+            saneMarked,
             httpStatus: httpStatus
         } } );
         k.useSiteModule( "/profile", "forth-standard.org", "committee.js", { setup: {

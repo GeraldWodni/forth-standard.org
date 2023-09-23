@@ -23,7 +23,7 @@ mixin vote(vote)
                 span.badge.pull-right Closed
             = vote.subject
         .markdown
-            != marked(vote.text)
+            != saneMarked(vote.text)
 
 block menu
     +menu

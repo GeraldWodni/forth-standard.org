@@ -46,7 +46,7 @@ mixin reply( contribution, reply )
                     != diffMarkdown( lastVersion, reply.replies.text )
                 else
                     a(href="#{_baseUrlPath}?##{replyId}", title="Highlight differences").btn.btn-default.btn-xs Show differences
-                    != marked( reply.replies.text )
+                    != saneMarked( reply.replies.text )
                 - lastVersion = reply.replies.text;
             else
                 != reply.replies.markdownText

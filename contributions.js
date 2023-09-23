@@ -3,7 +3,6 @@
 "use strict";
 
 var _       = require('underscore');
-const { marked } = require('marked');
 var md5     = require('md5');
 var moment  = require('moment');
 
@@ -13,6 +12,7 @@ module.exports = {
         var db = k.getDb();
         var kData = k.getData();
         var vals = k.setupOpts.vals;
+        const saneMarked = k.setupOpts.saneMarked;
         var urlMatch = "/contribute/*";
         function getUrl( req ) { return req.path.substr( "/contribute".length ); }
 
@@ -43,7 +43,7 @@ module.exports = {
                             subject: subject,
                             text: text,
                             user: _.extend( { emailMd5: md5( user.email.toLowerCase() ) }, user ),
-                            preview: marked( text ),
+                            preview: saneMarked( text ),
                             messages: messages
                         } ));
                     }
