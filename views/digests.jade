@@ -1,0 +1,29 @@
+//- (c)2023 by Gerald Wodni
+
+extends layout
+
+block menu
+    +menu
+
+block title
+    | Contact
+
+block content
+
+    +box
+        h1 Daily digests
+
+        ul
+            each digest in digests
+                li
+                    | #
+                    = digest.id
+                    |  
+                    = digest.date
+                    |  
+                    a(href="/digests/#{digest.id}")
+                        | HTML
+                    |  
+                    a(href="/digests/text/#{digest.id}")
+                        | Text
+                

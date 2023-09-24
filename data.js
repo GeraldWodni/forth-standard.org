@@ -84,6 +84,18 @@ module.exports = {
                 + " INNER JOIN users ON users.id=replies.user"
                 + " WHERE replies.dailyDigest=0 AND replies.state='visible'"
             },
+            dailyDigestItemsOfId: { args: [ "id", "id" ], sql:
+                  " SELECT users.name, contributions.id, contributions.created, contributions.url, contributions.type, contributions.subject, contributions.text"
+                + " FROM contributions"
+                + " INNER JOIN users ON users.id=contributions.user"
+                + " WHERE contributions.dailyDigest=? AND contributions.state='visible';"
+
+                + " SELECT users.name, replies.id, replies.created, contributions.url, contributions.type, contributions.subject, replies.text"
+                + " FROM replies"
+                + " INNER JOIN contributions ON contributions.id=replies.contribution"
+                + " INNER JOIN users ON users.id=replies.user"
+                + " WHERE replies.dailyDigest=? AND replies.state='visible'"
+            },
             pendingContributionsReplies: { sql:
                   " SELECT COUNT(1) AS `count` FROM contributions WHERE state='new';"
                 + " SELECT COUNT(1) AS `count` FROM replies WHERE state='new';"

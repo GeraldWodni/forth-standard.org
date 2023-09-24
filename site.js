@@ -69,6 +69,7 @@ module.exports = {
         }
 
         function saneMarked( text ) {
+            text = text.replace( /</g, '&lt;' ).replace( />/, '&gt;' );
             return cleanHTML( marked( text ) );
         }
 
@@ -643,7 +644,10 @@ module.exports = {
         });
 
         /* digest daemon */
-        k.useSiteModule( null, "forth-standard.org", "digest.js" );
+        k.useSiteModule( "/digests", "forth-standard.org", "digest.js", { setup: {
+            saneMarked,
+            vals,
+        } } );
 
         /* catch all */
         k.router.all("*", function( req, res ) {

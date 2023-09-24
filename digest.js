@@ -12,6 +12,8 @@ module.exports = {
 
         var kData = k.getData();
         var kDb = k.getDb();
+        const vals = k.setupOpts.vals;
+        const saneMarked = k.setupOpts.saneMarked;
         var config = k.getWebsiteConfig( "dailyDigests", {} );
 
         if( config.disabled )
@@ -22,81 +24,192 @@ module.exports = {
             return moment( date ).format( format || config.dateTimeFormat );
         }
 
-        function createDigest( next ) {
-            /* get all undigested contributions and replies and the new item counts */
-            kData.query( "dailyDigestItems", function( err, data ) {
-                if( err ) return next( err );
+        function createDigest() {
+            return new Promise( (fulfill, reject) => {
+                /* get all undigested contributions and replies and the new item counts */
+                kData.query( "dailyDigestItems", function( err, data ) {
+                    if( err ) return  err;
 
-                /* prepare text */
-                var text = "";
-                var contributions    = data[0];
-                var replies          = data[1];
+                    /* prepare text */
+                    const contributions    = data[0];
+                    const replies          = data[1];
 
-                /* contributions */
-                if( contributions.length > 0 ) {
-                    text += "\n\n\n,---------------.";
-                    text += "\n| Contributions |";
-                    text += "\n`---------------´";
-                }
+                    const text = renderDigestText( contributions, replies );
 
-                contributions.forEach( function( contribution ) {
-                    text += "\n\n\n| ";
-                    text += formatDate( contribution.created ) + "  " + contribution.name + "  wrote:\n| " + contribution.type + " - " + contribution.subject;
-                    text += "\n`------------------------------------------\n";
-                    text += contribution.text;
-                    text += "\n,------------------------------------------";
-                    text += "\n| see: https://forth-standard.org" + contribution.url;
-                });
+                    /* create new digest */
+                    if( contributions.length > 0 || replies.counts > 0 ) {
+                        kData.transaction.begin( function( err, conn ) {
+                            if( err ) return reject( err );
 
-                /* replies */
-                if( replies.length > 0 ) {
-                    text += "\n\n\n,---------.";
-                    text += "\n| Replies |";
-                    text += "\n`---------´";
-                }
+                            kData.transaction.query( conn, "insertDailyDigest", { text: text }, function( err, result ) {
+                                if( err ) return kData.transaction.rollback( conn, () => reject( err ) );
 
-                replies.forEach( function( reply ) {
-                    text += "\n\n\n| ";
-                    text += formatDate( reply.created ) + "  " + reply.name + "  replies:\n| " + reply.type + " - " + reply.subject;
-                    text += "\n`------------------------------------------\n";
-                    text += reply.text;
-                    text += "\n,------------------------------------------";
-                    text += "\n| see: https://forth-standard.org" + reply.url;
-                });
-
-                /* create new digest */
-                if( contributions.length > 0 || replies.counts > 0 ) {
-                    kData.transaction.begin( function( err, conn ) {
-                        if( err ) return next( err );
-
-                        kData.transaction.query( conn, "insertDailyDigest", { text: text }, function( err, result ) {
-                            if( err ) return kData.transaction.rollback( conn, _.partial( next, err ) );
-
-                            /* update contribution's dailyDigest */
-                            kData.transaction.mapQuery( conn, "updateContributionDailyDigest", contributions, function( args, done ) {
-                                done( null, { id: args.id, dailyDigest: result.insertId });
-
-                            }, function( err ) {
-                                if( err ) return kData.transaction.rollback( conn, _.partial( next, err ) );
-
-                                /* update reply's dailyDigest */
-                                kData.transaction.mapQuery( conn, "updateReplyDailyDigest", replies, function( args, done ) {
+                                /* update contribution's dailyDigest */
+                                kData.transaction.mapQuery( conn, "updateContributionDailyDigest", contributions, function( args, done ) {
                                     done( null, { id: args.id, dailyDigest: result.insertId });
-                                }, function( err ) {
-                                    if( err ) return kData.transaction.rollback( conn, _.partial( next, err ) );
 
-                                    kData.transaction.commitOrRollback( conn, function( err ) {
-                                        next( err, "created" );
+                                }, function( err ) {
+                                    if( err ) return kData.transaction.rollback( conn, () => reject( err ) );
+
+                                    /* update reply's dailyDigest */
+                                    kData.transaction.mapQuery( conn, "updateReplyDailyDigest", replies, function( args, done ) {
+                                        done( null, { id: args.id, dailyDigest: result.insertId });
+                                    }, function( err ) {
+                                        if( err ) return kData.transaction.rollback( conn, () => reject( err ) );
+
+                                        kData.transaction.commitOrRollback( conn, function( err ) {
+                                            if( err )
+                                                return reject( err );
+
+                                            fulfill( "created" );
+                                        });
                                     });
                                 });
                             });
                         });
-                    });
-                }
-                else
-                    next( null, "skipped" );
+                    }
+                    else
+                        fulfill( "skipped" );
+                });
             });
         }
+
+        async function getDigestData( id ) {
+            return new Promise( ( fulfill, reject ) => {
+                kData.query( "dailyDigestItemsOfId", { id }, function (err, data) {
+                    if( err )
+                        return reject( err );
+                    fulfill( {
+                        contributions: data[0],
+                        replies: data[1],
+                    });
+                });
+            });
+        }
+        function renderDigestText( contributions, replies ) {
+            let text = "";
+
+            /* contributions */
+            if( contributions.length > 0 ) {
+                text += "\n\n\n,---------------.";
+                text += "\n| Contributions |";
+                text += "\n`---------------´";
+            }
+
+            contributions.forEach( function( contribution ) {
+                text += "\n\n\n,------------------------------------------";
+                text += "\n| ";
+                text += formatDate( contribution.created ) + "  " + contribution.name + "  wrote:\n| " + contribution.type + " - " + contribution.subject;
+                text += `\n| see: https://forth-standard.org${contribution.url}#contribution-${contribution.id}`;
+                text += "\n`------------------------------------------\n";
+                text += contribution.text;
+            });
+
+            /* replies */
+            if( replies.length > 0 ) {
+                text += "\n\n\n,---------.";
+                text += "\n| Replies |";
+                text += "\n`---------´";
+            }
+
+            replies.forEach( function( reply ) {
+                text += "\n\n\n,------------------------------------------";
+                text += "\n| ";
+                text += formatDate( reply.created ) + "  " + reply.name + "  replies:\n| " + reply.type + " - " + reply.subject;
+                text += `\n| see: https://forth-standard.org${reply.url}#reply-${reply.id}`;
+                text += "\n`------------------------------------------\n";
+                text += reply.text;
+            });
+
+            return text;
+        }
+        function renderDigestHTML( contributions, replies ) {
+            let text = "";
+
+            /* contributions */
+            if( contributions.length > 0 ) {
+                text += "<h1>Contributions</h1>";
+            }
+
+            let separator = "";
+            contributions.forEach( function( contribution ) {
+                text += separator;
+                text += '<div style="color:#333;background-color:#E0E0E0;padding:5px;border-radius:3px">';
+                text += `<a href="https://forth-standard.org${contribution.url}#contribution-${contribution.id}">[${contribution.id}]</a> `;
+                text += formatDate( contribution.created ) + "  " + contribution.name + "  wrote:<br/>";
+                text += '<h2 style="margin: 0;font-size:1rem;">'
+                text += contribution.type + " - " + contribution.subject + '</h2>';
+                text += "</div>\n";
+                text += "<div>\n";
+                text += saneMarked( contribution.text );
+                text += "</div>\n";
+
+                separator = "<hr/>\n";
+            });
+
+            /* replies */
+            if( replies.length > 0 ) {
+                text += "<h1>Replies</h1>";
+            }
+
+            separator = "";
+            replies.forEach( function( reply ) {
+                text += separator;
+                text += '<div style="color:#333;background-color:#E0E0E0;padding:5px;border-radius:3px">';
+                text += `<a href="https://forth-standard.org${reply.url}#reply-${reply.id}">[r${reply.id}]</a> `;
+                text += formatDate( reply.created ) + "  " + reply.name + "  replies:<br/>";
+                text += '<h2 style="margin: 0;font-size:1rem;">'
+                text += reply.type + " - " + reply.subject + '</h2>';
+                text += "</div>\n";
+                text += "<div>\n";
+                text += saneMarked( reply.text );
+                text += "</div>\n";
+
+                separator = "<hr/>\n";
+            });
+
+            return text;
+        }
+
+        /* web interface */
+        k.router.get("/text/:id", async (req, res, next) => {
+            try {
+                const id = req.requestman.id();
+                const { contributions, replies } = await getDigestData( id );
+                res.header( "Content-Type", "text/plain" );
+                res.end( renderDigestText( contributions, replies ) );
+            } catch( err ) {
+                next( err );
+            }
+        });
+        k.router.get("/html/:id", async (req, res, next) => {
+            try {
+                const id = req.requestman.id();
+                const { contributions, replies } = await getDigestData( id );
+                res.header( "Content-Type", "text/html" );
+                res.end( renderDigestHTML( contributions, replies ) );
+            } catch( err ) {
+                next( err );
+            }
+        });
+        k.router.get("/:id", async (req, res, next) => {
+            try {
+                const id = req.requestman.id();
+                const { contributions, replies } = await getDigestData( id );
+                const digestHTML = renderDigestHTML( contributions, replies );
+                k.jade.render( req, res, "digest", vals( req, { id, digestHTML } ) );
+            } catch( err ) {
+                next( err );
+            }
+        });
+        k.router.get("/", async (req, res, next) => {
+            try {
+                const digests = await req.kern.db.pQuery(`SELECT id, CONCAT(DATE(created), '') AS date FROM dailyDigests ORDER BY id DESC`);
+                k.jade.render( req, res, "digests", vals( req, { digests } ) );
+            } catch( err ) {
+                next( err );
+            }
+        });
 
         /* first fire */
         var nextTime = moment.utc();
@@ -110,15 +223,15 @@ module.exports = {
         }
 
         /* perform tick and setup next tick */
-        function tick() {
-            createDigest( function( err, success ) {
-                if( err )
-                    console.log( "createDigest".bold.red, err );
-                else {
-                    console.log( "createDigest".bold.green, success );
-                    startSendDigests();
-                }
-            });
+        async function tick() {
+            try {
+                const message = await createDigest();
+                console.log( "createDigest".bold.green, message );
+                startSendDigests();
+            } catch( err ) {
+                console.log( "createDigest".bold.red, err );
+            }
+
             nextTime.add( 1, "days" );
             arm( nextTime, tick );
         }
