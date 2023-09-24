@@ -91,7 +91,7 @@ module.exports = {
 
             /* contributions */
             if( contributions.length > 0 ) {
-                text += "\n\n\n,---------------.";
+                text += "\n,---------------.";
                 text += "\n| Contributions |";
                 text += "\n`---------------´";
             }
@@ -195,9 +195,10 @@ module.exports = {
         k.router.get("/:id", async (req, res, next) => {
             try {
                 const id = req.requestman.id();
+                const date = (await req.kern.db.pQuery(`SELECT CONCAT(DATE(created),'') AS date FROM dailyDigests WHERE id={id}`, {id}) )[0].date;
                 const { contributions, replies } = await getDigestData( id );
                 const digestHTML = renderDigestHTML( contributions, replies );
-                k.jade.render( req, res, "digest", vals( req, { id, digestHTML } ) );
+                k.jade.render( req, res, "digest", vals( req, { id, date, digestHTML } ) );
             } catch( err ) {
                 next( err );
             }

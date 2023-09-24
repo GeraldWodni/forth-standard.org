@@ -6,12 +6,12 @@ block menu
     +menu
 
 block title
-    | Contact
+    | Digest ##{id} #{date}
 
 block content
 
     +box
-        h1 Digest ##{id}
+        h1 Digest ##{id} #{date}
 
     +box
         != digestHTML
