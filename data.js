@@ -104,7 +104,7 @@ module.exports = {
                 + " AND DATE_ADD( lastModerationReminder, INTERVAL 23 HOUR ) < NOW()"
             },
             unsentDailyDigests: { sql:
-                  " SELECT users.id AS userId, users.email, dailyDigests.id, dailyDigests.created, dailyDigests.text"
+                  " SELECT users.id AS userId, users.email, dailyDigests.id, dailyDigests.created, dailyDigests.text, dailyDigests.html"
                 + " FROM users"
                 + " INNER JOIN dailyDigests"
                 + " ON dailyDigests.id = (SELECT MAX(id) FROM dailyDigests)"
@@ -126,8 +126,8 @@ module.exports = {
             updateReplyDailyDigest: { args: [ "dailyDigest", "id" ], sql:
                 "UPDATE replies SET dailyDigest=? WHERE id=?"
             },
-            insertDailyDigest: { args: [ "text" ], sql:
-                "INSERT INTO dailyDigests (created, text) VALUES(NOW(), ?)"
+            insertDailyDigest: { args: [ "text", "html" ], sql:
+                "INSERT INTO dailyDigests (created, text, html) VALUES(NOW(), ?, ?)"
             }
         }
 

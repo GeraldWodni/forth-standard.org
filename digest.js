@@ -35,13 +35,14 @@ module.exports = {
                     const replies          = data[1];
 
                     const text = renderDigestText( contributions, replies );
+                    const html = renderDigestHTML( contributions, replies );
 
                     /* create new digest */
                     if( contributions.length > 0 || replies.counts > 0 ) {
                         kData.transaction.begin( function( err, conn ) {
                             if( err ) return reject( err );
 
-                            kData.transaction.query( conn, "insertDailyDigest", { text: text }, function( err, result ) {
+                            kData.transaction.query( conn, "insertDailyDigest", { text, html }, function( err, result ) {
                                 if( err ) return kData.transaction.rollback( conn, () => reject( err ) );
 
                                 /* update contribution's dailyDigest */
@@ -186,8 +187,13 @@ module.exports = {
             try {
                 const id = req.requestman.id();
                 const { contributions, replies } = await getDigestData( id );
+                const html = renderDigestHTML( contributions, replies );
+                await req.kern.db.pQuery( "UPDATE  dailyDigests SET html={html} WHERE id={id}", {
+                    id,
+                    html,
+                });
                 res.header( "Content-Type", "text/html" );
-                res.end( renderDigestHTML( contributions, replies ) );
+                res.end( html );
             } catch( err ) {
                 next( err );
             }
@@ -257,14 +263,17 @@ module.exports = {
             }
         }));
 
-        function sendEmail( email, subject, text, callback ) {
+        function sendEmail( email, subject, text, html, callback ) {
             /* send email */
-            emailTransport.sendMail({
+            const opts = {
                 from: config.smtp.email,
                 to: email,
                 subject: subject,
                 text: text
-            }, callback );
+            };
+            if( html != null )
+                opts.html = html;
+            emailTransport.sendMail( opts );
         }
 
         function sendDigest( row, callback ) {
@@ -273,10 +282,12 @@ module.exports = {
                 .replace( /{created}/g, formatDate( row.created, config.dateFormat ) );
             var text = config.text
                 .replace( /{text}/g, row.text );
+            const html = config.html
+                .replace( /{html}/g, row.html );
 
             /* send email */
             console.log( "Sending dailyDigest", subject, " to", row.email );
-            sendEmail( row.email, subject, text, function( err ){
+            sendEmail( row.email, subject, text, html, function( err ){
                 if( err ) return callback( err );
                 kData.query( "updateUserLastDailyDigest", { lastDailyDigest: row.id, userId: row.userId }, callback );
             });
@@ -315,7 +326,7 @@ module.exports = {
 
                         /* send email */
                         console.log( "Sending moderationReminder", subject, " to", row.email );
-                        sendEmail( row.email, subject, text, function( err ){
+                        sendEmail( row.email, subject, text, null, function( err ){
                             if( err ) return done( err );
                             kData.query( "updateUserLastModerationReminder", { userId: row.id }, function( err ) {
                                 if( err ) return done( err );
