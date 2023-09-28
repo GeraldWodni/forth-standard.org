@@ -64,12 +64,13 @@ module.exports = {
         function cleanHTML( html ) {
             const DOMPurify = createDOMPurify( new JSDOM('').window );
             return DOMPurify.sanitize( html, {
-                FORBID_TAGS: ['style' ]
+                FORBID_TAGS: ['style']
             });
         }
 
         function saneMarked( text ) {
-            text = text.replace( /</g, '&lt;' ).replace( />/, '&gt;' );
+            text = text.replace( /<br\/?>/g, '  \n' );
+            text = text.replace( /<([A-Za-z]+[-a-zA-Z0-9 ]*)>/g, '< $1 >' );
             return cleanHTML( marked( text ) );
         }
 
