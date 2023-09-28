@@ -273,7 +273,7 @@ module.exports = {
             };
             if( html != null )
                 opts.html = html;
-            emailTransport.sendMail( opts );
+            emailTransport.sendMail( opts, callback );
         }
 
         function sendDigest( row, callback ) {
