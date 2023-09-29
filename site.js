@@ -70,7 +70,7 @@ module.exports = {
 
         function saneMarked( text ) {
             text = text.replace( /<br\/?>/g, '  \n' );
-            text = text.replace( /<([A-Za-z]+[-a-zA-Z0-9 ]*)>/g, '< $1 >' );
+            text = text.replace( /<([^/\s][^>/]+?)>(?!.*?<\/\1>)/g, '&lt;$1&gt;' );
             return cleanHTML( marked( text ) );
         }
 
