@@ -69,9 +69,20 @@ module.exports = {
         }
 
         function saneMarked( text ) {
+            const allowedTags = ['ins', 'del'];
+            const allowedGroup = '(' + allowedTags.join('|') + ')';
+            const prefix = "9"+(Math.random() * 1000).toString();
+
+            /* replace common tags by markdown equivalents */
             text = text.replace( /<br\/?>/g, '  \n' );
-            text = text.replace( /<([A-Za-z]+[-a-zA-Z0-9 ]*)>/g, '< $1 >' );
-            return cleanHTML( marked( text ) );
+            /* prefix and escape allowed tags */
+            text = text.replace( new RegExp(`<(\/?)${allowedGroup}>`, 'g'), `\\<${prefix}$1$2\\>` );
+            /* escape all remainig tags */
+            text = text.replace( /<([A-Za-z]+[-a-zA-Z0-9 ]*)>/g, '\\<$1\\>' );
+            text = marked( text );
+            /* unprefix allowed tags */
+            text = text.replace( new RegExp(`&lt;${prefix}(\/?)${allowedGroup}&gt;`, 'g'), '<$1$2>' );
+            return cleanHTML( text );
         }
 
         function vals( req, values ) {
