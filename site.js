@@ -69,7 +69,7 @@ module.exports = {
         }
 
         function saneMarked( text ) {
-            const allowedTags = ['ins', 'del'];
+            const allowedTags = ['ins', 'del', 'u', 'i'];
             const allowedGroup = '(' + allowedTags.join('|') + ')';
             const prefix = "9"+(Math.random() * 1000).toString();
 
