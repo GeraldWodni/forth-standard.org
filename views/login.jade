@@ -32,6 +32,11 @@ block content
                     div.form-group
                         label(for='password')= __("Password")
                         input.form-control(id='password',type='password',name='password',placeholder='Passwort')
+                    +checkbox-field("rememberMe", __("Remember Me"))
+                    div(style="color:#CCC")
+                        | (debug:
+                        = process.env.KERN_PERSISTANT_LOGIN_DAYS
+                        |  days)
                     button.btn.btn-primary(type='submit',name='login',value='yes') Login
 
             if register
