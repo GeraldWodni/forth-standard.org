@@ -203,6 +203,9 @@ mixin selectState(name)
                     =contributionStateText["open"]
                 option(value="closed",      selected=newState=="closed",    disabled=contributionState=="closed"  || !isCommitteeMember && !isOriginalAuthor)
                     =contributionStateText["closed"]
+                if contribution.type=="testcase"
+                    option(value="accepted",    selected=newState=="accepted",  disabled=contributionState=="accepted" || !isCommitteeMember)
+                        =contributionStateText["accepted"]
 
 mixin maintenance
     +box.maintenance
