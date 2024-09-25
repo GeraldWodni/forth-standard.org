@@ -448,6 +448,14 @@
         "description": "zForth: tiny, embeddable, flexible, compact Forth scripting language for embedded systems"
     },
     {
+        "stars": 153,
+        "name": "C Forth",
+        "link": "https://github.com/MitchBradley/cforth",
+        "lang": "C / PlatformIO",
+        "cpu": "Most",
+        "description": "Mitch Bradley's C Forth, based on One Laptop Per Child Open FirmWare"
+    },
+    {
         "stars": 95,
         "name": "gForth",
         "link": "https://github.com/forthy42/gforth",
@@ -520,9 +528,9 @@
         "description": "Forth-inspired RPN language"
     },
     {
-        "stars": 1,
-        "name": "c4",
-        "link": "https://github.com/CCurl/c4",
+        "stars": 16,
+        "name": "c3",
+        "link": "https://github.com/CCurl/c3",
         "lang": "C",
         "cpu": "Varied",
         "description": "A minimal Forth implemented in C, runs on the PC and development boards"
@@ -533,6 +541,22 @@
         "link": "https://github.com/fdamador/eForth",
         "lang": "go",
         "cpu": "Varied",
-        "description": "A minimal Forth implemented in go, runs on the PC and development boards"
+        "description": "eForth implemented in go, for comparison purposes"
+    },
+    {
+        "stars": 3,
+        "name": "toolboxforth",
+        "link": "https://github.com/tcoram/toolboxforth",
+        "lang": "C",
+        "cpu": "uForth/various",
+        "description": "Highly portable, modifiable,opinionated Forth(ish) language for PC and MCUs"
+    },
+    {
+        "stars": 29,
+        "name": "CL-Forth",
+        "link": "https://github.com/gmpalter/cl-forth",
+        "lang": "Lisp",
+        "cpu": "Any 64-bit",
+        "description": "Common Lisp implementation of the Forth 2012 Standard"
     }
 ]
