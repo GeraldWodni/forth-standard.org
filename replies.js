@@ -22,8 +22,19 @@ module.exports = {
                     if( err ) return next( err );
                     if( contribution === [] ) return k.setupOpts.httpStatus( req, res, 404 );
 
-                    db.query( "SELECT contributionState(?) AS contributionState", contribution.id, ( err, contributionStates ) => {
+                    db.query( `
+                        SELECT contributionState({id}) AS contributionState;
+                        SELECT text FROM programmerAnswers WHERE contribution={id} ORDER BY number;
+                        SELECT text FROM systemAnswers WHERE contribution={id} ORDER BY number
+                        `, { id: contribution.id },
+                    ( err, data ) => {
                         if( err ) return next( err );
+
+                        let [ contributionStates, programmerAnswers, systemAnswers ] = data;
+                        programmerAnswers = programmerAnswers.map( row => row.text );
+                        systemAnswers = systemAnswers.map( row => row.text );
+
+                        console.log( "PA/SA", programmerAnswers, systemAnswers );
 
                         kData.users.readWhere("name", [req.session.loggedInUsername], function( err, users ) {
                             if( err ) return next( err );
@@ -32,7 +43,14 @@ module.exports = {
                             const isCommitteeMember = users[0].committeeMember;
                             const contributionState = contributionStates.length == 1 ? contributionStates[0].contributionState : "unknown";
 
-                            callback( req, res, next, { contribution, isOriginalAuthor, isCommitteeMember, contributionState }, opts );
+                            callback( req, res, next, {
+                                contribution,
+                                isOriginalAuthor,
+                                isCommitteeMember,
+                                contributionState,
+                                programmerAnswers,
+                                systemAnswers,
+                             }, opts );
                         });
                     });
                 });

@@ -4,10 +4,8 @@ mixin addVoteForm
         label Cast programmers's vote
         select(name="programmerVote").form-control
             +textOption( programmerVote, "", "<no vote>" )
-            +textOption( programmerVote, "I have used (parts of) this proposal in my programs." )
-            +textOption( programmerVote, "I would use (parts of) this proposal in my programs if the systems I am interested in implemented it." )
-            +textOption( programmerVote, "I would use (parts of) this proposal in my programs if this proposal was in the Forth standard." )
-            +textOption( programmerVote, "I would not use (parts of) this proposal in my programs." )
+            each programmerAnswer in programmerAnswers || []
+                +textOption( programmerVote, programmerAnswer )
 
 
     hr
@@ -49,12 +47,8 @@ mixin addVoteForm
             = systemVote
         select(name="systemVote").form-control
             +textOption( systemVote, "", "<no vote>" )
-            +textOption( systemVote, "already implements the proposal in full since release [ ]." )
-            +textOption( systemVote, "implements the proposal in full in a development version." )
-            +textOption( systemVote, "will implement the proposal in full in release [ ]." )
-            +textOption( systemVote, "will implement the proposal in full in some future release." )
-            +textOption( systemVote, "There are no plans to implement the proposal in full in [ ]." )
-            +textOption( systemVote, "will never implement the proposal in full." )
+            each systemAnswer in systemAnswers || []
+                +textOption( systemVote, systemAnswer )
 
 
 mixin addReplyForm( opts )
