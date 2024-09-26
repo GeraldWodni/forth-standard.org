@@ -73,6 +73,12 @@ if contributions
                     // TODO: make h2 a .header, use badge and colors?
                     // TODO: add to user profile
                     // TODO: add replies to user profile
+                    a(href=_baseUrlPath + "#contribution-" + contribution.contributions.id, title="link to contribution")
+                        +fa("comment-o")
+                        | [
+                        = contribution.contributions.id
+                        | ]
+                    |  
                     = contribution.contributions.subject
                     span.type
                         = contributionTypeName[ contribution.contributions.type ] || contribution.contributions.type

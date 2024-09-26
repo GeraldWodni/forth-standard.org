@@ -256,7 +256,7 @@ module.exports = {
                             users: item.users,
                             replies: []
                         });
-                        lastContribution.contributions.subject = `[${lastContribution.contributions.id}] ${lastContribution.contributions.subject}`;
+                        //lastContribution.contributions.subject = `[${lastContribution.contributions.id}] ${lastContribution.contributions.subject}`;
                         groupedContributions.push( lastContribution );
                     }
 
