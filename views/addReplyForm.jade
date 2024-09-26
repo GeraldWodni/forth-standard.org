@@ -91,6 +91,14 @@ mixin addReplyForm( opts )
                         |  - state.
                         | You can vote on this proposal for a system or programmer below.
                     +addVoteForm
+            else
+                .form-group.voting-answers.hidden
+                    label Programmer Answers, please provide one answer per line:
+                    textarea(name="programmerAnswers",rows="4").form-control= programmerAnswers
+                .form-group.voting-answers.hidden
+                    label System Answers, please provide one answer per line:
+                    textarea(name="systemAnswers",rows="6").form-control= systemAnswers
+                +hidden-field("createAnswers", "0")
 
             .form-group
                 label Text - 

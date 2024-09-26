@@ -29,6 +29,13 @@ module.exports = {
             orderBy: "reply",
         } );
 
+        const programmerAnswers = k.crud.sql( db, { table: "programmerAnswers", key: ["contribution", "number"], foreignName: "text",
+            orderBy: "number",
+        } );
+        const systemAnswers = k.crud.sql( db, { table: "systemAnswers", key: ["contribution", "number"], foreignName: "text",
+            orderBy: "number",
+        } );
+
         var replies = k.crud.sql( db, { table: "replies", key: "id", foreignName: "text",
             orderBy: "created"
         } );
@@ -201,12 +208,32 @@ module.exports = {
             });
         }
 
+        const defaultProgrammerAnswers = [
+            "I have used (parts of) this proposal in my programs.",
+            "I would use (parts of) this proposal in my programs if the systems I am interested in implemented it.",
+            "I would use (parts of) this proposal in my programs if this proposal was in the Forth standard.",
+            "I would not use (parts of) this proposal in my programs.",
+        ].join("\n");
+
+        const defaultSystemAnswers = [
+            "already implements the proposal in full since release [ ].",
+            "implements the proposal in full in a development version.",
+            "will implement the proposal in full in release [ ].",
+            "will implement the proposal in full in some future release.",
+            "There are no plans to implement the proposal in full in [ ].",
+            "will never implement the proposal in full.",
+        ].join("\n");
+
         return {
             users:          users,
             contributions:  contributions,
             votes,
             castProgrammerVotes,
             castSystemVotes,
+            programmerAnswers,
+            systemAnswers,
+            defaultProgrammerAnswers,
+            defaultSystemAnswers,
             proposals:      proposals,
             replies:        replies,
             query:          _.partial( query, db ),    /* bind to pool */

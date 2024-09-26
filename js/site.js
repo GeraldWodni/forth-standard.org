@@ -49,4 +49,11 @@ $(function(){
         handleResize();
     });
     handleResize();
+
+    /* toggle programmer & system answers */
+    $("select[name='newState']").on("change", evt => {
+        $(".form-group.voting-answers").toggleClass("hidden", evt.target.value != "voting");
+        $("input[name='createAnswers'").val( evt.target.value == "voting" ? 1 : 0 );
+        console.log( "CHANGE:", evt.target.value );
+    }).trigger("change");
 });

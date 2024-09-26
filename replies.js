@@ -34,8 +34,6 @@ module.exports = {
                         programmerAnswers = programmerAnswers.map( row => row.text );
                         systemAnswers = systemAnswers.map( row => row.text );
 
-                        console.log( "PA/SA", programmerAnswers, systemAnswers );
-
                         kData.users.readWhere("name", [req.session.loggedInUsername], function( err, users ) {
                             if( err ) return next( err );
 
@@ -48,8 +46,8 @@ module.exports = {
                                 isOriginalAuthor,
                                 isCommitteeMember,
                                 contributionState,
-                                programmerAnswers,
-                                systemAnswers,
+                                programmerAnswers: programmerAnswers.length ? programmerAnswers : kData.defaultProgrammerAnswers,
+                                systemAnswers: systemAnswers.length ? systemAnswers : kData.defaultSystemAnswers,
                              }, opts );
                         });
                     });
@@ -74,6 +72,9 @@ module.exports = {
                     const systemConformity = req.postman.singleLine("systemConformity");
                     const systemVote       = req.postman.text("systemVote");
 
+                    const programmerAnswers = req.postman.text("programmerAnswers");
+                    const systemAnswers = req.postman.text("systemAnswers");
+
                     if( contribution.user != user.id && !user.committeeMember && opts.newVersion )
                         messages.push({ type: "danger", title: "Error", text: "Currently only the original author can submit a new version" });
 
@@ -93,6 +94,8 @@ module.exports = {
                             systemName,
                             systemConformity,
                             systemVote,
+                            programmerAnswers,
+                            systemAnswers,
                             messages: messages
                         } ));
                     }
@@ -108,6 +111,34 @@ module.exports = {
                             text: text
                         }, async function( err, result ) {
                             if( err ) return next( err );
+
+                            if( req.postman.exists("createAnswers") && req.postman.uint("createAnswers") == 1 ) {
+                                let programmerAnswers = req.postman.text("programmerAnswers").trim().split("\n");
+                                let number = 0;
+                                for( let line of programmerAnswers )
+                                    if( line.trim() != "" )
+                                        await new Promise( (fulfill, reject) => kData.programmerAnswers.create({
+                                            contribution: contribution.id,
+                                            number: number++,
+                                            text: line.trim(),
+                                        }, err => {
+                                            if( err ) return reject(err);
+                                            fulfill();
+                                        }));
+
+                                let systemAnswers = req.postman.text("systemAnswers").trim().split("\n");
+                                number = 0;
+                                for( let line of systemAnswers )
+                                    if( line.trim() != "" )
+                                        await new Promise( (fulfill, reject) => kData.systemAnswers.create({
+                                            contribution: contribution.id,
+                                            number: number++,
+                                            text: line.trim(),
+                                        }, err => {
+                                            if( err ) return reject(err);
+                                            fulfill();
+                                        }));
+                            }
 
                             try {
                                 if( programmerVote != "" )
