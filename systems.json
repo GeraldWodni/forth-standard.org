@@ -8,6 +8,14 @@
         "description": "<em>(13 repositories)</em>"
     },
     {
+        "stars": 188,
+        "name": "zeptoforth",
+        "link": "https://github.com/tabemann/zeptoforth",
+        "lang": "Assembly",
+        "cpu": "ARM",
+        "description": "zeptoforth is a Cortex-M Forth, currently targeted at RP2040 and RP2350 boards"
+    },
+    {
         "stars": 126,
         "name": "pijFORTHos",
         "link": "https://github.com/organix/pijFORTHos",
