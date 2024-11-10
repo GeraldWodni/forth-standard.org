@@ -544,6 +544,14 @@
         "description": "A minimal Forth implemented in C, runs on the PC and development boards"
     },
     {
+        "stars": 9,
+        "name": "c4",
+        "link": "https://github.com/CCurl/c4",
+        "lang": "C",
+        "cpu": "Varied",
+        "description": "c4: a Forth system inspired by Tachyon and ColorForth"
+    },
+    {
         "stars": 1,
         "name": "eForth",
         "link": "https://github.com/fdamador/eForth",
