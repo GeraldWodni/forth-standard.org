@@ -5,6 +5,18 @@ extends layout
 block menu
     +menu
 
+mixin pagination
+    .row
+        .col-sm-12.text-center
+            - let n = 0
+            ul.pagination
+                while n * pageSize < Math.max( totalContributionsCount, totalRepliesCount )
+                    //- >
+                    - let o = n * pageSize
+                    li(class=(o==pageOffset ? "active" : null))
+                        a(href="?offset=#{o}")
+                            = n++
+
 block content
     +box.standard
         if type
@@ -39,6 +51,7 @@ block content
                     | Markdown version
                 | ).
 
+        +pagination
         .row
             .col-sm-6
                 h3 Contributions:
@@ -55,3 +68,4 @@ block content
                         li
                             +fa("li fa fa-comments-o")
                             +latestContribution( reply, "replies" )
+        +pagination

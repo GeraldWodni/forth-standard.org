@@ -601,11 +601,17 @@ module.exports = {
 
 
         /** home **/
-        function renderContributions( req, res, next, { limit, template, countOpenContributions, type, state } ) {
-            limit = limit > 0 ? " LIMIT " + limit : "";
+        function renderContributions( req, res, next, { offset, limit, template, countOpenContributions, type, state } ) {
+            const pageOffset = offset || 0;
+            offset = offset > 0 ? ` OFFSET ${offset}` : "";
+            const pageSize = limit;
+            limit = limit > 0 ? ` LIMIT ${limit} ${offset}`: "";
             const sqlType  = type  ? ` AND contributions.type='${type}'` : "";
             const sqlState = state ? ` AND contributionState(contributions.id)='${state}'` : "";
             db.query( { sql: `
+                SELECT COUNT(1) AS contributionsCount FROM contributions;
+                SELECT COUNT(1) AS repliesCount FROM replies;
+
                 SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id
                 WHERE contributions.state='visible'${sqlType}${sqlState} ORDER BY contributions.created DESC${limit};
 
@@ -621,12 +627,20 @@ module.exports = {
                 GROUP BY type`,
                 nestTables: true }, [], function( err, items ) {
                 if( err ) return next( err );
-                const contributions     = formatUserContents( "contributions",  "users", items[0] );
+                const totalContributionsCount = items[0][0][''].contributionsCount;
+                const totalRepliesCount = items[1][0][''].repliesCount;
+                const contributions     = formatUserContents( "contributions",  "users", items[2] );
                 for( const { contributions: c } of contributions )
                     c.subject = `[${c.id}] ${c.subject}`;
-                const replies           = formatUserContents( "replies",        "users", items[1] );
-                const openContributions = items[2];
-                k.jade.render( req, res, template, vals( req, { contributions, replies, openContributions, type, state } ) );
+                const replies           = formatUserContents( "replies",        "users", items[3] );
+                const openContributions = items[4];
+                k.jade.render( req, res, template, vals( req, {
+                    totalContributionsCount,
+                    totalRepliesCount,
+                    pageSize,
+                    pageOffset,
+                    contributions, replies, openContributions, type, state
+                } ) );
             });
         }
 
@@ -648,7 +662,9 @@ module.exports = {
             renderContributions( req, res, next, { limit: 0, template: "listContributionsMarkdown" } );
         });
         k.router.get("/contributions", function( req, res, next ) {
-            renderContributions( req, res, next, { limit: 0, template: "listContributions" } );
+            const offset = req.getman.uint("offset") || 0;
+            const pageSize = 250;
+            renderContributions( req, res, next, { offset, limit: pageSize, template: "listContributions" } );
         });
 
         k.router.get("/", function( req, res, next ) {
