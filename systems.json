@@ -1,14 +1,22 @@
 [
     {
-        "stars": null,
-        "name": "AmForth",
-        "link": "https://github.com/search?q=amforth&type=Repositories&s=updated",
+        "stars": 1,
+        "name": "jonesforth",
+        "link": "https://github.com/nornagon/jonesforth",
         "lang": "Assembly",
-        "cpu": "AVR, MSP430",
-        "description": "<em>(13 repositories)</em>"
+        "cpu": "x86",
+        "description": "Mirror of original(?) jonesforth"
     },
     {
-        "stars": 188,
+        "stars": 323,
+        "name": "STM8EF",
+        "link": "https://github.com/TG9541/stm8ef",
+        "lang": "Assembly",
+        "cpu": "STM8",
+        "description": "eForth with extensions for $0.20 µCs"
+    },
+    {
+        "stars": 307,
         "name": "zeptoforth",
         "link": "https://github.com/tabemann/zeptoforth",
         "lang": "Assembly",
@@ -16,7 +24,15 @@
         "description": "zeptoforth is a Cortex-M Forth, currently targeted at RP2040 and RP2350 boards"
     },
     {
-        "stars": 126,
+        "stars": 297,
+        "name": "Swapforth",
+        "link": "https://github.com/jamesbowman/swapforth",
+        "lang": "Assembly",
+        "cpu": "J1, FT900, x64",
+        "description": "Cross-platform 32-bit ANS Forth"
+    },
+    {
+        "stars": 258,
         "name": "pijFORTHos",
         "link": "https://github.com/organix/pijFORTHos",
         "lang": "Assembly",
@@ -24,12 +40,100 @@
         "description": "Bare-metal FORTH operating system for Raspberry Pi"
     },
     {
-        "stars": 53,
-        "name": "Swapforth",
-        "link": "https://github.com/jamesbowman/swapforth",
+        "stars": 252,
+        "name": "DurexForth",
+        "link": "https://github.com/jkotlinski/durexforth",
         "lang": "Assembly",
-        "cpu": "J1, FT900, x64",
-        "description": "Cross-platform 32-bit ANS Forth"
+        "cpu": "6502",
+        "description": "Modern C64 Forth"
+    },
+    {
+        "stars": 112,
+        "name": "FlashForth",
+        "link": "https://github.com/oh2aun/flashforth",
+        "lang": "Assembly",
+        "cpu": "PIC, AVR",
+        "description": "Forth system for the Microchip PIC 18, 24, 30, 33 and the Atmel Atmega"
+    },
+    {
+        "stars": 89,
+        "name": "JonesForth-arm",
+        "link": "https://github.com/M2IHP13-admin/JonesForth-arm",
+        "lang": "Assembly",
+        "cpu": "ARM",
+        "description": "ARM port of JonesForth"
+    },
+    {
+        "stars": 89,
+        "name": "FiveForths",
+        "link": "https://github.com/aw/fiveforths",
+        "lang": "Assembly",
+        "cpu": "RISC-V",
+        "description": "Tiny Forth written in hand-coded RISC-V assembly, initially designed to run on 32-bit microcontrollers"
+    },
+    {
+        "stars": 85,
+        "name": "CoreForth",
+        "link": "https://github.com/ekoeppen/CoreForth",
+        "lang": "Assembly",
+        "cpu": "ARM",
+        "description": "Forth for the Cortex-M3"
+    },
+    {
+        "stars": 79,
+        "name": "ciforth",
+        "link": "https://github.com/albertvanderhorst/ciforth",
+        "lang": "Assembly",
+        "cpu": "x86, x64",
+        "description": "Compiler factory for 16/32/64 bit msdos/Linux/Windows/OSX/standalone"
+    },
+    {
+        "stars": 79,
+        "name": "lina",
+        "link": "https://github.com/albertvanderhorst/ciforth",
+        "lang": "Assembly",
+        "cpu": "x86",
+        "description": "ciforth version for 32 bit Linux"
+    },
+    {
+        "stars": 73,
+        "name": "AmForth",
+        "link": "https://github.com/search?q=amforth&type=Repositories&s=updated",
+        "lang": "Assembly",
+        "cpu": "AVR, MSP430",
+        "description": "<em>(13 repositories)</em>"
+    },
+    {
+        "stars": 59,
+        "name": "FreeForth2",
+        "link": "https://github.com/dan4thewin/FreeForth2",
+        "lang": "Assembly",
+        "cpu": "x86 Linux",
+        "description": "FreeForth2 offers a novel, lightweight Forth for x86 Linux that deftly blends assembly and Forth"
+    },
+    {
+        "stars": 59,
+        "name": "feline",
+        "link": "https://github.com/gnooth/feline",
+        "lang": "Assembly",
+        "cpu": "x64",
+        "description": "64-bit native code Forth 200x"
+    },
+    {
+        "stars": 51,
+        "name": "Mecrisp",
+        "link": "http://mecrisp.sourceforge.net",
+        "lang": "Assembly",
+        "cpu": "MSP430",
+        "description": "Mecrisp Forth for MSP430"
+    },
+    {
+        "stars": 45,
+        "name": "Taliforth2",
+        "link": "https://github.com/SamCoVT/TaliForth2",
+        "lang": "Assembly",
+        "cpu": "65C02",
+        "description": "STC ANS Forth for 65C02 platforms"
     },
     {
         "stars": 44,
@@ -40,15 +144,63 @@
         "description": "ANS FORTH version of jonesforth"
     },
     {
-        "stars": 32,
-        "name": "STM8EF",
-        "link": "https://github.com/TG9541/stm8ef",
+        "stars": 44,
+        "name": "nop",
+        "link": "https://github.com/iru-/nopforth",
         "lang": "Assembly",
-        "cpu": "STM8",
-        "description": "eForth with extensions for $0.20 µCs"
+        "cpu": "x86-64, arm64",
+        "description": "Forth dialect for macOS, Linux, *BSD and Windows"
     },
     {
-        "stars": 30,
+        "stars": 42,
+        "name": "OSX-Forth",
+        "link": "https://github.com/vygr/OSX-Forth",
+        "lang": "Assembly",
+        "cpu": "x86",
+        "description": "Forth for OSX"
+    },
+    {
+        "stars": 38,
+        "name": "j1eforth",
+        "link": "https://github.com/samawati/j1eforth",
+        "lang": "Assembly",
+        "cpu": "J1",
+        "description": "eForth for the j1"
+    },
+    {
+        "stars": 36,
+        "name": "Forth500",
+        "link": "https://github.com/Robert-van-Engelen/Forth500",
+        "lang": "Assembly",
+        "cpu": "SC62015",
+        "description": "Standard 2012 Forth for the Sharp PC-E500"
+    },
+    {
+        "stars": 36,
+        "name": "PETTIL",
+        "link": "https://github.com/chitselb/pettil",
+        "lang": "Assembly",
+        "cpu": "6502",
+        "description": "Forth for the Commodore PET 2001"
+    },
+    {
+        "stars": 35,
+        "name": "hForth",
+        "link": "https://github.com/nealcrook/hForth",
+        "lang": "Assembly",
+        "cpu": "8086, Z80, ARM",
+        "description": "hForth for i8086, Z80 and ARM"
+    },
+    {
+        "stars": 31,
+        "name": "Forth850",
+        "link": "https://github.com/Robert-van-Engelen/Forth850",
+        "lang": "Assembly",
+        "cpu": "Z80",
+        "description": "Standard 2012 Forth for the Sharp PC-G850"
+    },
+    {
+        "stars": 28,
         "name": "DCPU",
         "link": "https://github.com/hellige/dcpu",
         "lang": "Assembly",
@@ -56,28 +208,12 @@
         "description": "Forth for Notch's DCPU-16"
     },
     {
-        "stars": 29,
-        "name": "CoreForth",
-        "link": "https://github.com/ekoeppen/CoreForth",
-        "lang": "Assembly",
-        "cpu": "ARM",
-        "description": "Forth for the Cortex-M3"
-    },
-    {
-        "stars": 23,
-        "name": "JonesForth-arm",
-        "link": "https://github.com/M2IHP13-admin/JonesForth-arm",
-        "lang": "Assembly",
-        "cpu": "ARM",
-        "description": "ARM port of JonesForth"
-    },
-    {
         "stars": 22,
-        "name": "DurexForth",
-        "link": "https://github.com/jkotlinski/durexforth",
+        "name": "Z79Forth",
+        "link": "https://github.com/frenchie68/Z79Forth",
         "lang": "Assembly",
-        "cpu": "6502",
-        "description": "Modern C64 Forth"
+        "cpu": "HD6309E",
+        "description": "A complete platform (HW and SW) supporting a 79-STANDARD subset, FORTH-83 and ANS extensions. An alternate EEPROM image provides full support for the ANS94 Core word set."
     },
     {
         "stars": 13,
@@ -88,20 +224,12 @@
         "description": "Subroutine threaded Forth for Atmega328"
     },
     {
-        "stars": 9,
-        "name": "PETTIL",
-        "link": "https://github.com/chitselb/pettil",
+        "stars": 11,
+        "name": "megaforth",
+        "link": "https://github.com/ehaliewicz/megaforth",
         "lang": "Assembly",
-        "cpu": "6502",
-        "description": "Forth for the Commodore PET 2001"
-    },
-    {
-        "stars": 8,
-        "name": "FlashForth",
-        "link": "https://github.com/oh2aun/flashforth",
-        "lang": "Assembly",
-        "cpu": "PIC, AVR",
-        "description": "Forth system for the Microchip PIC 18, 24, 30, 33 and the Atmel Atmega"
+        "cpu": "68000",
+        "description": "Forth designed for the Sega Megadrive"
     },
     {
         "stars": 8,
@@ -113,35 +241,11 @@
     },
     {
         "stars": 7,
-        "name": "feline",
-        "link": "https://github.com/gnooth/feline",
+        "name": "ForthModelT",
+        "link": "https://github.com/VasylTsv/ForthModelT",
         "lang": "Assembly",
-        "cpu": "x64",
-        "description": "64-bit native code Forth 200x"
-    },
-    {
-        "stars": 6,
-        "name": "OSX-Forth",
-        "link": "https://github.com/vygr/OSX-Forth",
-        "lang": "Assembly",
-        "cpu": "x86",
-        "description": "Forth for OSX"
-    },
-    {
-        "stars": 3,
-        "name": "j1eforth",
-        "link": "https://github.com/samawati/j1eforth",
-        "lang": "Assembly",
-        "cpu": "J1",
-        "description": "eForth for the j1"
-    },
-    {
-        "stars": 3,
-        "name": "megaforth",
-        "link": "https://github.com/ehaliewicz/megaforth",
-        "lang": "Assembly",
-        "cpu": "68000",
-        "description": "Forth designed for the Sega Megadrive"
+        "cpu": "PseudoCPU",
+        "description": "Forth system targeting a fictional CPU with VM for Windows."
     },
     {
         "stars": 2,
@@ -160,68 +264,12 @@
         "description": "CamelForth for MSP430"
     },
     {
-        "stars": 1,
-        "name": "Mecrisp",
-        "link": "http://mecrisp.sourceforge.net",
-        "lang": "Assembly",
-        "cpu": "MSP430",
-        "description": "Mecrisp Forth for MSP430"
-    },
-    {
-        "stars": 1,
-        "name": "hForth",
-        "link": "https://github.com/nealcrook/hForth",
-        "lang": "Assembly",
-        "cpu": "8086, Z80, ARM",
-        "description": "hForth for i8086, Z80 and ARM"
-    },
-    {
-        "stars": 0,
+        "stars": null,
         "name": "Mecrisp-Quintus",
         "link": "http://mecrisp.sourceforge.net",
         "lang": "Assembly",
         "cpu": "RISC-V, MIPS",
         "description": "Mecrisp Quintus Forth for RISC-V RV32IM and PIC32MX (MIPS M4K)"
-    },
-    {
-        "stars": 27,
-        "name": "ciforth",
-        "link": "https://github.com/albertvanderhorst/ciforth",
-        "lang": "Assembly",
-        "cpu": "x86, x64",
-        "description": "Compiler factory for 16/32/64 bit msdos/Linux/Windows/OSX/standalone"
-    },
-    {
-        "stars": 3,
-        "name": "lina",
-        "link": "https://github.com/albertvanderhorst/ciforth",
-        "lang": "Assembly",
-        "cpu": "x86",
-        "description": "ciforth version for 32 bit Linux"
-    },
-    {
-        "stars": null,
-        "name": "nop",
-        "link": "https://github.com/iru-/nopforth",
-        "lang": "Assembly",
-        "cpu": "x86-64, arm64",
-        "description": "Forth dialect for macOS, Linux, *BSD and Windows"
-    },
-    {
-        "stars": null,
-        "name": "ForthModelT",
-        "link": "https://github.com/VasylTsv/ForthModelT",
-        "lang": "Assembly",
-        "cpu": "PseudoCPU",
-        "description": "Forth system targeting a fictional CPU with VM for Windows."
-    },
-    {
-        "stars": 10,
-        "name": "Z79Forth",
-        "link": "https://github.com/frenchie68/Z79Forth",
-        "lang": "Assembly",
-        "cpu": "HD6309E",
-        "description": "A complete platform (HW and SW) supporting a 79-STANDARD subset, FORTH-83 and ANS extensions. An alternate EEPROM image provides full support for the ANS94 Core word set."
     },
     {
         "stars": null,
@@ -230,14 +278,6 @@
         "lang": "Assembly",
         "cpu": "UXN",
         "description": "Forth system for the UXN virtual machine"
-    },
-    {
-        "stars": 48,
-        "name": "FiveForths",
-        "link": "https://github.com/aw/fiveforths",
-        "lang": "Assembly",
-        "cpu": "RISC-V",
-        "description": "Tiny Forth written in hand-coded RISC-V assembly, initially designed to run on 32-bit microcontrollers"
     },
     {
         "stars": 262,
@@ -272,12 +312,12 @@
         "description": "Simple, non-standard, tethered Forth for the Arduino"
     },
     {
-        "stars": 28,
+        "stars": 60,
         "name": "SP-Forth",
         "link": "https://github.com/rufig/spf",
         "lang": "Forth",
         "cpu": "x86",
-        "description": "Forth-94, 32bit, native code, peephole optimization, Windows and Linux hosts, <a href=\"http://spf.sourceforge.net/docs/intro.en.html#task\" rel=\"nofollow\">multitasking</a> out of the box. The sources are also <a href=\"https://github.com/rufig/spf4-utf8\">available in utf-8</a>."
+        "description": "Forth-94, 32bit, native code, peephole optimization, Windows and Linux hosts, <a href=\"https://en.wikipedia.org/wiki/Microsoft-specific_exception_handling_mechanisms\" rel=\"nofollow\">SEH</a> and <a href=\"https://en.wikipedia.org/wiki/Segmentation_fault\" rel=\"nofollow\">SIGSEGV</a> handling, <a href=\"http://spf.sourceforge.net/docs/intro.en.html#task\" rel=\"nofollow\">multitasking</a> out of the box. Sources are also <a href=\"https://github.com/rufig/spf4-utf8\">available in utf-8</a>."
     },
     {
         "stars": 25,
@@ -357,7 +397,7 @@
         "link": "https://github.com/skilldrick/easyforth",
         "lang": "JavaScript",
         "cpu": "",
-        "description": "Small ebook for learning Forth"
+        "description": "Small ebook for learning Forth. NB: some bugs were fixed in the <a href=\"https://github.com/ruv/easyforth\">fork</a>."
     },
     {
         "stars": 42,
@@ -464,6 +504,14 @@
         "description": "Mitch Bradley's C Forth, based on One Laptop Per Child Open FirmWare"
     },
     {
+        "stars": 108,
+        "name": "Micro eForth",
+        "link": "https://github.com/flagxor/ueforth",
+        "lang": "C",
+        "cpu": "Most",
+        "description": "Brad Nelson's Micro eForth - runs on micro-controllers, Posix, Windows and web"
+    },
+    {
         "stars": 95,
         "name": "gForth",
         "link": "https://github.com/forthy42/gforth",
@@ -552,6 +600,14 @@
         "description": "c4: a Forth system inspired by Tachyon and ColorForth"
     },
     {
+        "stars": 3,
+        "name": "c4a",
+        "link": "https://github.com/CCurl/c4a",
+        "lang": "C",
+        "cpu": "Varied",
+        "description": "c4a: Arduino version of c4 - also runs on PC"
+    },
+    {
         "stars": 1,
         "name": "eForth",
         "link": "https://github.com/fdamador/eForth",
@@ -574,5 +630,13 @@
         "lang": "Lisp",
         "cpu": "Any 64-bit",
         "description": "Common Lisp implementation of the Forth 2012 Standard"
+    },
+    {
+        "stars": 1,
+        "name": "ok",
+        "link": "https://github.com/bradleyeckert/ok",
+        "lang": "C",
+        "cpu": "STM32",
+        "description": "Secure thin-client Forth for MCU systems development"
     }
 ]
