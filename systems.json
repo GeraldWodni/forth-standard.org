@@ -280,6 +280,14 @@
         "description": "Forth system for the UXN virtual machine"
     },
     {
+        "stars": null,
+        "name": "FORTH-CH32VXXX",
+        "link": "https://github.com/EBREAK/forth_ch32vxxx",
+        "lang": "Assembly",
+        "cpu": "RISCV",
+        "description": "stc forth on ch32v20x/ch32v30x"
+    },
+    {
         "stars": 262,
         "name": "lbForth",
         "link": "https://github.com/larsbrinkhoff/lbForth",
