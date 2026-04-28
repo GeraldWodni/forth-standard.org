@@ -576,6 +576,14 @@
         "description": "Very portable (embeddable) switch threaded Forth"
     },
     {
+        "stars": 13,
+        "name": "Post4",
+        "link": "https://github.com/SirWumpus/post4",
+        "lang": "C",
+        "cpu": "",
+        "description": "An indirect threaded, Forth-2012 and Forth-2019 compatible system with interface to Java (JNI)"
+    },
+    {
         "stars": 12,
         "name": "Creole Forth",
         "link": "https://github.com/tiluser/Creole-Forth",
