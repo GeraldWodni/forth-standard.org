@@ -94,16 +94,33 @@ block content
                         code ❤
                         | . It takes two c-addr/len strings, outputs the lower one first
                         | (hence the 
-                        code 2swap
+                        a(href="/standard/core/TwoSWAP")
+                            code 2swap
                         | ), followed by the heart and the 2nd string.
                         | To get closer to the image, we define the strings as constants.
                     p
                         code
-                            | : ❤ ( c-addr1 n1 caddr2 n2 -- ) 2swap type ." &nbsp;❤ " type ;
+                            a(href="/standard/core/Colon") :
+                            |  ❤ 
+                            a(href="/standard/core/Colon") (
+                            |  c-addr1 n1 caddr2 n2 -- ) 
+                            a(href="/standard/core/TwoSWAP") 2swap
+                            |  
+                            a(href="/standard/core/TYPE") type
+                            |  
+                            a(href="/standard/core/Dotq") ."
+                            |  &nbsp;❤ "
+                            a(href="/standard/core/TYPE") type
+                            |  
+                            a(href="/standard/core/Semi") ;
                             br
-                            | s" We" 2constant We
+                            | s" We" 
+                            a(href="/standard/double/TwoCONSTANT") 2constant
+                            |  We
                             br
-                            | s" xkcd/Randall Munroe" 2constant xkcd
+                            | s" xkcd/Randall Munroe" 
+                            a(href="/standard/double/TwoCONSTANT") 2constant
+                            |  xkcd
                             br
                             | We xkcd ❤
                         br
@@ -114,15 +131,16 @@ block content
                         | Note, that 
                         code FORTH I ❤
                         |  would allow us to get rid of the 
-                        code 2swap
+                        a(href="/standard/core/TwoSWAP")
+                            code 2swap
                         | . Static objects should be closer towards the top of the stack. 
                         | Then again, Randall's version is perfect for many people to love Forth, 
                         | as 
                         code Forth
-                        |  stays more static - how poetic ❤.
+                        |  stays on top - how wonderful ❤.
                     p
                         | - 
-                        a(href="https://forth-standard.org/~GeraldWodni") Gerald Wodni
+                        a(href="/~GeraldWodni") Gerald Wodni
     +box.standard
         h1 Standard
         p
