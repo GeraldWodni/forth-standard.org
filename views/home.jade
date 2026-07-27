@@ -78,35 +78,51 @@ block content
             //-     |  from EuroForth will also be put there if you cannot attend live.
     if true
         +box
+            h2 xkcd 3277
             .row
-                .col-sm-4
+                .col-sm-4.col-lg-3
                     img(src="https://imgs.xkcd.com/comics/forth.png", alt="xkcd 3277 'Forth' by Randall Munroe")
                     br
-                    a(href="https://xkcd.com/3277") CC BY-NX 2.5 xkcd
-                .col-sm-8
-                    h2 xkcd 3277
+                    a(href="https://xkcd.com/3277") CC BY-NC 2.5 xkcd
+                .col-sm-8.col-lg-9
                     p
                         | Reading xkcd for many years,
-                        | I never expected Randall to drop the F-bomb,
+                        | I never expected Randall to write about Forth,
                         | but he did - awesome :D
                     p
                         | Below is one possible implementation of 
                         code ❤
                         | . It takes two c-addr/len strings, outputs the lower one first
-                        | (hence the 2swap), followed by the heart and the 2nd string.
+                        | (hence the 
+                        code 2swap
+                        | ), followed by the heart and the 2nd string.
+                        | To get closer to the image, we define the strings as constants.
                     p
                         code
-                            | : ❤ ( c-addr1 n1 caddr2 n2 -- ) 2swap type ."  ❤ " type ;
+                            | : ❤ ( c-addr1 n1 caddr2 n2 -- ) 2swap type ." &nbsp;❤ " type ;
                             br
-                            | s" We" s" xkcd/Randall Munroe" ❤
+                            | s" We" 2constant We
+                            br
+                            | s" xkcd/Randall Munroe" 2constant xkcd
+                            br
+                            | We xkcd ❤
+                        br
+                        | output:
+                        br
+                        code We ❤ xkcd/Randall Munroe
                     p
                         | Note, that 
                         code FORTH I ❤
                         |  would allow us to get rid of the 
                         code 2swap
-                        | .
-                        | 
-                        code 2swap
+                        | . Static objects should be closer towards the top of the stack. 
+                        | Then again, Randall's version is perfect for many people to love Forth, 
+                        | as 
+                        code Forth
+                        |  stays more static - how poetic ❤.
+                    p
+                        | - 
+                        a(href="https://forth-standard.org/~GeraldWodni") Gerald Wodni
     +box.standard
         h1 Standard
         p
