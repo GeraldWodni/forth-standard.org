@@ -79,13 +79,34 @@ block content
     if true
         +box
             .row
-                .cols-sm-6
+                .col-sm-4
                     img(src="https://imgs.xkcd.com/comics/forth.png", alt="xkcd 3277 'Forth' by Randall Munroe")
                     br
-                    a(href="https://xkcd.com/3277") CC BY-NX 2.5 XKCD
-                .cols-sm-6
-                    code
-                        s" We" s" Randall Munroe" ❤
+                    a(href="https://xkcd.com/3277") CC BY-NX 2.5 xkcd
+                .col-sm-8
+                    h2 xkcd 3277
+                    p
+                        | Reading xkcd for many years,
+                        | I never expected Randall to drop the F-bomb,
+                        | but he did - awesome :D
+                    p
+                        | Below is one possible implementation of 
+                        code ❤
+                        | . It takes two c-addr/len strings, outputs the lower one first
+                        | (hence the 2swap), followed by the heart and the 2nd string.
+                    p
+                        code
+                            | : ❤ ( c-addr1 n1 caddr2 n2 -- ) 2swap type ."  ❤ " type ;
+                            br
+                            | s" We" s" xkcd/Randall Munroe" ❤
+                    p
+                        | Note, that 
+                        code FORTH I ❤
+                        |  would allow us to get rid of the 
+                        code 2swap
+                        | .
+                        | 
+                        code 2swap
     +box.standard
         h1 Standard
         p
