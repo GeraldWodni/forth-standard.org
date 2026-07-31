@@ -76,6 +76,8 @@ block content
                             = contribution.contributions.id
                             | ] 
                             = contribution.contributions.subject
+                            if contribution.contributions.aiGen
+                                abbr(title="AI generated or AI assisted")  🤖
                         h5.subject
                             | in 
                             = contribution.contributions.title

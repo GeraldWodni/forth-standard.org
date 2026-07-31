@@ -27,6 +27,7 @@ module.exports = {
                     var type    = opts.type ? opts.type : req.postman.id("type");
                     var subject = req.postman.text("subject");
                     var text    = req.postman.text("text");
+                    var aiGen   = req.postman.exists("aiGen") ? 1 : 0;
                     var state   = user.state == "moderated" ? "new" : "visible";
 
                     if( opts.url == "proposal-derived-from-subject" ) {
@@ -42,6 +43,7 @@ module.exports = {
                             type: type,
                             subject: subject,
                             text: text,
+                            aiGen,
                             user: _.extend( { emailMd5: md5( user.email.toLowerCase() ) }, user ),
                             preview: saneMarked( text ),
                             messages: messages
@@ -55,7 +57,8 @@ module.exports = {
                             state: state,
                             created: kData.sql.nowUtc(),
                             subject: subject,
-                            text: text
+                            text: text,
+                            aiGen,
                         }, function( err ) {
                             if( err ) return next( err );
 

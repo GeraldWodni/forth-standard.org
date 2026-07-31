@@ -33,6 +33,8 @@ mixin reply( contribution, reply )
                         +bracketReplyId(reply)
                     |  
                     = reply.replies.createdFormated
+                    if reply.replies.aiGen
+                        abbr(title="AI generated or AI assisted")  🤖
         .markdown
             if contribution.contributions.moved
                 +fa("share")
@@ -80,6 +82,8 @@ if contributions
                         | ]
                     |  
                     = contribution.contributions.subject
+                    if contribution.contributions.aiGen
+                        abbr(title="AI generated or AI assisted")  🤖
                     span.type
                         = contributionTypeName[ contribution.contributions.type ] || contribution.contributions.type
                     span.created(title="UTC")

@@ -65,6 +65,7 @@ module.exports = {
 
                     var newState= req.postman.id("newState") || null;
                     var text    = req.postman.text("text");
+                    var aiGen   = req.postman.exists("aiGen") ? 1 : 0;
                     var state   = user.state == "moderated" ? "new" : "visible";
 
                     const programmerVote   = req.postman.text("programmerVote");
@@ -83,6 +84,7 @@ module.exports = {
                             /* TODO: fix URL for back button */
                             //(url: getUrl( req ),
                             text: text,
+                            aiGen,
                             contribution: contribution,
                             user: _.extend( { emailMd5: md5( user.email.toLowerCase() ) }, user ),
                             preview: saneMarked( text ),
@@ -108,7 +110,8 @@ module.exports = {
                             created: kData.sql.nowUtc(),
                             newVersion: opts.newVersion ? 1 : 0,
                             newState: newState,
-                            text: text
+                            text: text,
+                            aiGen,
                         }, async function( err, result ) {
                             if( err ) return next( err );
 
