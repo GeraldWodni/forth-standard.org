@@ -609,8 +609,11 @@ module.exports = {
             const sqlType  = type  ? ` AND contributions.type='${type}'` : "";
             const sqlState = state ? ` AND contributionState(contributions.id)='${state}'` : "";
             db.query( { sql: `
-                SELECT COUNT(1) AS contributionsCount FROM contributions;
-                SELECT COUNT(1) AS repliesCount FROM replies;
+                SELECT COUNT(1) AS contributionsCount FROM contributions WHERE 1=1${sqlType}${sqlState};
+                SELECT COUNT(1) AS repliesCount
+                FROM replies
+                INNER JOIN contributions ON replies.contribution=contributions.id
+                WHERE 1=1${sqlType}${sqlState};
 
                 SELECT * FROM contributions INNER JOIN users ON contributions.user=users.id
                 WHERE contributions.state='visible'${sqlType}${sqlState} ORDER BY contributions.created DESC${limit};
@@ -654,7 +657,10 @@ module.exports = {
         k.router.get("/contributions/:type/:state", ( req, res, next ) => {
             const type  = req.requestman.id("type");
             const state = req.requestman.id("state");
-            renderContributions( req, res, next, { limit: 0, template: "listContributions", type, state } );
+
+            const offset = req.getman.uint("offset") || 0;
+            const pageSize = 250;
+            renderContributions( req, res, next, { offset, limit: pageSize, template: "listContributions", type, state } );
         });
 
         k.router.get("/contributions/markdown", function( req, res, next ) {
