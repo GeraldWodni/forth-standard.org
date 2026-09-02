@@ -166,6 +166,14 @@ block content
             a(href="/digests") daily digests
             |  of all contributions and replies.
 
+        if votingContributions.length
+            h3 Call for votes:
+            ul.fa-ul.contribution-latest
+                each contribution in votingContributions
+                    li
+                        +fa("li fa fa-pencil-square-o")
+                        +latestContribution( contribution, "contributions", { hideType: true } )
+
         .row
             .col-sm-6
                 h3 Latest contributions:

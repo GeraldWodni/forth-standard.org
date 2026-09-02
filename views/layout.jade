@@ -102,7 +102,7 @@ mixin box-word
                         block
                         include contributions
 
-mixin latestContribution( item, dataTable )
+mixin latestContribution( item, dataTable, opts={} )
     - var link = item.contributions.url;
     if dataTable == "contributions"
         - link += "#contribution-" + item.contributions.id
@@ -115,8 +115,9 @@ mixin latestContribution( item, dataTable )
             = item[dataTable].title
         h5.subject
             = item.contributions.subject
-        h6.type
-            = contributionTypeName[ item.contributions.type ]
+        if !opts.hideType
+            h6.type
+                = contributionTypeName[ item.contributions.type ]
         div.date
             = item[dataTable].createdFormated
 

@@ -627,7 +627,14 @@ module.exports = {
                 WHERE 1=${countOpenContributions?1:0}
                 AND type<>'proposal'
                 AND contributionState(id)='open'
-                GROUP BY type`,
+                GROUP BY type;
+
+                SELECT *
+                FROM contributions
+                INNER JOIN users ON contributions.user=users.id
+                WHERE contributions.state='visible'
+                AND contributionState(contributions.id)='voting'
+                ORDER BY contributions.created DESC`,
                 nestTables: true }, [], function( err, items ) {
                 if( err ) return next( err );
                 const totalContributionsCount = items[0][0][''].contributionsCount;
@@ -637,12 +644,14 @@ module.exports = {
                     c.subject = `[${c.id}] ${c.subject}`;
                 const replies           = formatUserContents( "replies",        "users", items[3] );
                 const openContributions = items[4];
+                const votingContributions = formatUserContents( "contributions",  "users", items[5] );
                 k.jade.render( req, res, template, vals( req, {
                     totalContributionsCount,
                     totalRepliesCount,
                     pageSize,
                     pageOffset,
-                    contributions, replies, openContributions, type, state
+                    contributions, replies, openContributions, type, state,
+                    votingContributions,
                 } ) );
             });
         }
