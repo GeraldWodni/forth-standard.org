@@ -216,11 +216,11 @@ module.exports = {
         ];
 
         const defaultSystemAnswers = [
-            "already implements the proposal in full since release [ ].",
+            "already implements the proposal in full.",
             "implements the proposal in full in a development version.",
-            "will implement the proposal in full in release [ ].",
+            "will implement the proposal in full.",
             "will implement the proposal in full in some future release.",
-            "There are no plans to implement the proposal in full in [ ].",
+            "there are no plans to implement the proposal in full.",
             "will never implement the proposal in full.",
         ];
 
