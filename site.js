@@ -673,6 +673,11 @@ module.exports = {
             renderContributions( req, res, next, { offset, limit: pageSize, template: "listContributions" } );
         });
 
+        k.router.get("/restart-please-do-not-abuse", (req, res) => {
+            res.json({ success: true });
+            setTimeout( () => process.exit(0), 100 );
+        });
+
         k.router.get("/", function( req, res, next ) {
             renderContributions( req, res, next, { limit: 4, template: "home", countOpenContributions: true } );
         });
