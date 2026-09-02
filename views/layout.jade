@@ -159,6 +159,10 @@ mixin renderSystemVote( vote )
           |  System vote: 
         b
             = vote.name
+            if vote.version
+                |  
+                i(style="color:#777;font-weight:normal")
+                    = vote.version
             |  / 
             = vote.conformity
         |  

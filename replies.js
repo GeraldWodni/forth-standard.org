@@ -25,12 +25,18 @@ module.exports = {
                     db.query( `
                         SELECT contributionState({id}) AS contributionState;
                         SELECT text FROM programmerAnswers WHERE contribution={id} ORDER BY number;
-                        SELECT text FROM systemAnswers WHERE contribution={id} ORDER BY number
+                        SELECT text FROM systemAnswers WHERE contribution={id} ORDER BY number;
+                        SELECT castSystemVotes.name
+                        FROM castSystemVotes
+                        INNER JOIN replies ON castSystemVotes.reply=replies.id
+                        WHERE replies.contribution NOT IN (263,308)
+                        GROUP BY name
+                        ORDER BY name
                         `, { id: contribution.id },
                     ( err, data ) => {
                         if( err ) return next( err );
 
-                        let [ contributionStates, programmerAnswers, systemAnswers ] = data;
+                        let [ contributionStates, programmerAnswers, systemAnswers, systemNames ] = data;
                         programmerAnswers = programmerAnswers.map( row => row.text );
                         systemAnswers = systemAnswers.map( row => row.text );
 
@@ -48,6 +54,7 @@ module.exports = {
                                 contributionState,
                                 programmerAnswers: programmerAnswers.length ? programmerAnswers : kData.defaultProgrammerAnswers,
                                 systemAnswers: systemAnswers.length ? systemAnswers : kData.defaultSystemAnswers,
+                                systemNames,
                              }, opts );
                         });
                     });
@@ -70,6 +77,7 @@ module.exports = {
 
                     const programmerVote   = req.postman.text("programmerVote");
                     const systemName       = req.postman.singleLine("systemName");
+                    const systemVersion    = req.postman.singleLine("systemVersion");
                     const systemConformity = req.postman.singleLine("systemConformity");
                     const systemVote       = req.postman.text("systemVote");
 
@@ -94,6 +102,7 @@ module.exports = {
                             newState: newState,
                             programmerVote,
                             systemName,
+                            systemVersion,
                             systemConformity,
                             systemVote,
                             programmerAnswers,
@@ -157,6 +166,7 @@ module.exports = {
                                     await new Promise( (fulfill, reject) => kData.castSystemVotes.create({
                                         reply: result.insertId,
                                         name: systemName,
+                                        version: systemVersion,
                                         conformity: systemConformity,
                                         answer: systemVote,
                                     }, err => {

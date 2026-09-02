@@ -12,26 +12,19 @@ mixin addVoteForm
 
     h4 Cast system's vote
 
-    .form-group
-        label System name
-        input(type="text", name="systemName", list="forth-systems", value=systemName).form-control
-        datalist(id="forth-systems")
-            option(value="")
-            option(value="CForth" )
-            option(value="Forth 7 cross compilers" )
-            option(value="Gforth" )
-            option(value="IronForth" )
-            option(value="JavaForth" )
-            option(value="MPE Forth cross compilers (all targets)" )
-            option(value="MinForth" )
-            option(value="Open Firmware" )
-            option(value="SwiftForth" )
-            option(value="SwiftX" )
-            option(value="TurboForth" )
-            option(value="VFX Forth" )
-            option(value="amForth" )
-            option(value="bigForth" )
-            option(value="iForth" )
+    .row
+        .col-md-6
+            .form-group
+                label System name
+                input(type="text", name="systemName", list="forth-systems", value=systemName).form-control
+                datalist(id="forth-systems")
+                    each systemName in systemNames
+                        option(value=systemName.name)
+
+        .col-md-6
+            .form-group
+                label System version
+                input(type="text", name="systemVersion", value=systemVersion).form-control
 
     .form-group
         label System conformity
