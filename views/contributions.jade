@@ -63,11 +63,12 @@ mixin reply( contribution, reply )
 
 if contributions
     .contributions-wrapper
-        h2
-            a(href="/profile/contribute"+urlPath).btn.btn-default
-                +fa("plus")
-                |  Contribute
-            | Contributions
+        if urlPath.indexOf( "/proposals/" ) == -1
+            h2
+                a(href="/profile/contribute"+urlPath).btn.btn-default
+                    +fa("plus")
+                    |  Contribute
+                | Contributions
         each contribution in contributions
             .contribution-wrapper(id="contribution-#{contribution.contributions.id}")
                 h2
