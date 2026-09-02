@@ -66,7 +66,7 @@ block content
                     - var contributionLink = link+"#contribution-" + contribution.contributions.id;
                     if contribution[""].newVersionsId && contribution[""].newVersionsId.length
                         - newVersions = contribution[""].newVersionsId.split(",")
-                        - contributionLink = link + "#reply-" + newVersions[ newVersions.length - 1 ]
+                        - contributionLink = link + "?hideDiff#reply-" + newVersions[ newVersions.length - 1 ]
 
                     a(href=contributionLink)
                         div.user(title=contribution.users.name)
