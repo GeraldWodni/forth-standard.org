@@ -89,6 +89,9 @@ module.exports = {
             if( !values )
                 values = {};
 
+            if( req.getman.exists( "returnUrl" ) )
+                values.returnUrl = req.getman.link( "returnUrl" );
+
             _.extend( values, {
                 loggedIn: "session" in req,
                 uniqueWordNames: uniqueWordNames,

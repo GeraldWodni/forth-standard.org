@@ -104,7 +104,7 @@ if contributions
                     each reply in contribution.replies || []
                         +reply( contribution, reply )
 
-                a(href="/profile/reply/"+contribution.contributions.id).btn.btn-default.reply
+                a(href="/profile/reply/"+contribution.contributions.id + "?returnUrl=" + encodeURIComponent( _originalUrl )).btn.btn-default.reply
                     +fa("reply")
                     if lastNewState == "voting"
                         |  Vote / Reply

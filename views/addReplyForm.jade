@@ -77,7 +77,10 @@ mixin addReplyForm( opts )
 
     if hideForm
         p
-            a.btn.btn-default.pull-right(href=url) Back
+            if returnUrl
+                a.btn.btn-default.pull-right(href=returnUrl) Back (now working!)
+            else
+                a.btn.btn-default.pull-right(href=url) Back
     else
         form(method='post',role='form')
             //if isOriginalAuthor
@@ -114,6 +117,7 @@ mixin addReplyForm( opts )
                     a(href="https://help.github.com/articles/markdown-basics/",target="_blank")  Markdown
                 textarea(name="text",rows="10").form-control= text
             +checkbox-field("aiGen", "AI generated or AI assisted", aiGen)
-            a.btn.btn-default.pull-right(href=url) Back
+            if returnUrl
+                a.btn.btn-default.pull-right(href=returnUrl) Back (now working!)
             button.btn.btn-primary(type='submit',name='create',value='yes') Submit
             button.btn.btn-default(type='submit',name='preview',value='yes') Preview
