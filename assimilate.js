@@ -1,10 +1,11 @@
+#!/usr/bin/env node
 // Assimilate latex-html into generic database format
-// (c)copyright 2015 by Gerald Wodni <gerald.wodni@gmail.com>
+// (c)copyright 2015, 2026 by Gerald Wodni <gerald.wodni@gmail.com>
 
 require("colors");
 var fs = require("fs");
 var path = require("path");
-var jsdom = require("jsdom");
+const { JSDOM } = require("jsdom");
 var jquery = require("jquery");
 var async = require("async");
 var util = require("util");
@@ -19,44 +20,40 @@ function readFile( filename, callback ) {
             callback( err );
         }
 
-        jsdom.env( data.toString(), function( errs, window ) {
-            if( err ) {
-                console.log( "ERROR creating jsenv".bold.red );
-                callback( err );
-            }
+        const document = (new JSDOM( data.toString() )).window.document;
 
-            /* parse document */
-            var $ = jquery(window);
-            var $wordHead = $(".wordHead");
-            var $wordBody = $(".wordBody");
+        /* parse document */
+        var wordHead = document.querySelector(".wordHead");
+        var wordBody = document.querySelector(".wordBody");
 
-            /* parse header */
-            var word = {
-                id:         renameWordset( $wordHead.attr("id") ),
-                number:     $wordHead.find(".wordNumber").text(),
-                name:       $wordHead.find(".wordName").text(),
-                english:    $wordHead.find(".wordEnglish").text(),
-                list:       $wordHead.find(".wordList").text(),
-                basename:   path.basename( filename, ".html" )
+        /* parse header */
+        var word = {
+            id:         renameWordset( wordHead.getAttribute("id") ),
+            number:     wordHead.querySelector(".wordNumber").textContent,
+            name:       wordHead.querySelector(".wordName").textContent,
+            english:    wordHead.querySelector(".wordEnglish").textContent,
+            list:       wordHead.querySelector(".wordList").textContent,
+            basename:   path.basename( filename, ".html" )
+        };
+
+        /* parse sections */
+        var sections = {};
+        for( const secdef of wordBody.querySelectorAll(".secdef") ) {
+            var secName = secdef.querySelector(".secname");
+            let section = secName.nextSibling;
+            while( section.nodeName == "#text" )
+                section = section.nextSibling;
+            var name = secName.textContent;
+            sections[ name ] = {
+                name: name,
+                html: adoptSection( section ).innerHTML,
             };
+        }
+        word.stackEffect = getStackEffect( sections );
+        word.sections = sections;
 
-            /* parse sections */
-            var sections = {};
-            $wordBody.children(".secdef").each( function() {
-                var $this = $(this);
-                var $secName = $this.children(".secname");
-                var name = $secName.text();
-                sections[ name ] = {
-                    name: name,
-                    html: adoptSection( $, $secName.next() ).html()
-                };
-            });
-            word.stackEffect = getStackEffect( sections );
-            word.sections = sections;
-
-            console.log( "WORD".bold.green, word.list.red, word.basename.yellow, word.name );
-            callback( null, word );
-        });
+        console.log( "WORD".bold.green, word.list.red, word.basename.yellow, word.name );
+        callback( null, word );
     });
 }
 
@@ -73,16 +70,15 @@ function rewriteSrc( opts, src ) {
     return path.join( opts.mediaHttpPrefix, src );
 }
 
-function adoptSection( $, $section ) {
+function adoptSection( section ) {
     /* replace links */
-    $section.find("a").each( function() {
-        var $this = $(this);
-        var href = $this.attr( "href" );
+    for( const a of section.querySelectorAll("a") ) {
+        let href = a.getAttribute( "href" );
         if( href && href.indexOf( "http" ) != 0 )
-            $this.attr( "href", rewriteLink( href ) );
-    });
+            a.setAttribute( "href", rewriteLink( href ) );
+    }
 
-    return $section;
+    return section;
 }
 
 function readDir( dirname, reader, callback ) {
@@ -202,59 +198,50 @@ function readDocument( opts, filename, callback ) {
         if( filename.indexOf(".html") < 0 )
             return callback( null, null );
 
-        jsdom.env( data.toString(), function( errs, window ) {
-            if( err ) {
-                console.log( "ERROR creating jsenv".bold.red );
-                callback( err );
-            }
+        const document = (new JSDOM( data.toString() )).window.document;
 
-            /* parse document */
-            var $ = jquery(window);
-            var $body = $("body");
+        /* parse document */
+        var body = document.body;
+        for( const a of body.querySelectorAll("a") ) {
+            let href = a.getAttribute( "href" );
+            if( href && href.indexOf( "http" ) != 0 )
+                a.setAttribute( "href", rewriteLink( href ) );
 
-            $body.find("a").each( function() {
-                var $this = $(this);
-                var href = $this.attr( "href" );
-                if( href && href.indexOf( "http" ) != 0 )
-                    $this.attr( "href", rewriteLink( href ) );
+            let name = a.getAttribute( "name" );
+            if( name && name.indexOf( "rat:" ) >= 0 )
+                a.setAttribute("name", rewriteLink( name ) );
+        }
 
-                var name = $this.attr( "name" );
-                if( name && name.indexOf( "rat:" ) >= 0 )
-                    $this.attr("name", rewriteLink( name ) );
-            });
+        for( const img of body.querySelectorAll("img") ) {
+            let src = img.getAttribute("src");
+            console.log( "ADD IMAGE:", src );
+            if( opts.mediaFiles.indexOf( src ) < 0 )
+                opts.mediaFiles.push( src );
 
-            $body.find("img").each( function() {
-                var $this = $(this);
-                var src = $this.attr("src");
-                if( !_.contains( opts.mediaFiles, src ) )
-                    opts.mediaFiles.push( src );
+            img.setAttribute("src", rewriteSrc( opts, src ) );
+        }
 
-                $this.attr("src", rewriteSrc( opts, src ) );
-            });
+        /* rename wordsets */
+        for( const wordset of body.querySelectorAll("[id]") ) {
+            var id = wordset.getAttribute("id");
+            if( id && id.indexOf( "rat:" ) >= 0 )
+                wordset.setAttribute( "id", rewriteLink( id ) );
+        }
 
-            /* rename wordsets */
-            $body.find("[id]").each( function() {
-                var $this = $(this);
-                var id = $this.attr("id");
-                if( id && id.indexOf( "rat:" ) >= 0 )
-                    $this.attr( "id", rewriteLink( id ) );
-            });
+        /* parse header */
+        const doc = {
+            basename: path.basename( filename, ".html" ),
+            name: body.querySelector("h1")?.textContent || "",
+            html: body.innerHTML,
+        };
 
-            /* parse header */
-            var doc = {
-                basename: path.basename( filename, ".html" ),
-                name: $body.find("h1").text(),
-                html: $body.html()
-            };
-
-            console.log( "DOCUMENT".bold.green, filename.yellow );
-            callback( null, doc );
-        });
+        console.log( "DOCUMENT".bold.green, filename.yellow );
+        callback( null, doc );
     });
 }
 
 function readDocuments( opts, callback ) {
-    readDir( "latex-html", _.partial( readDocument, opts ), function( err, data ) {
+    readDir( opts.prefix, _.partial( readDocument, opts ), function( err, data ) {
         if( err )
             return callback( err );
     
@@ -272,12 +259,11 @@ function readDocuments( opts, callback ) {
 }
 
 
-function assimilateAll( filename ) {
+function assimilateAll( filename, prefix ) {
     if( typeof filename  == "unknown" )
         throw new Error( "specify filename" );
 
     /* read all wordsets */
-    var prefix = "latex-html";
     readWordsets( prefix, function( err, wordSetArray ) {
         if( err )
             throw err;
@@ -297,7 +283,8 @@ function assimilateAll( filename ) {
         var docOpts = {
             mediaHttpPrefix: path.join( "/images/standards/", filename ),
             mediaFilePrefix: path.join(  "images/standards/", filename ),
-            mediaFiles: []
+            mediaFiles: [],
+            prefix,
         };
         readDocuments( docOpts, function( err, documents ) {
             if( err )
@@ -312,9 +299,10 @@ function assimilateAll( filename ) {
             var extensions = JSON.parse( fs.readFileSync( "standards/" + filename + ".ext.json" ) );
             _.extend( standard, extensions );
 
-            fs.writeFile( "standards/" + filename + ".json", JSON.stringify( standard, null, 4 ) );
+            fs.writeFileSync( "standards/" + filename + ".json", JSON.stringify( standard, null, 4 ) );
 
             /* copy media files */
+            /* TODO_2026: fix media path */
             if( docOpts.mediaFiles.length > 0 ) {
                 mkdirp( docOpts.mediaFilePrefix, function( err ) {
                     if( err )
@@ -323,6 +311,7 @@ function assimilateAll( filename ) {
                     async.map( docOpts.mediaFiles, function( mediaFile, done ) {
                         var src  = path.join( prefix, mediaFile );
                         var dest = path.join( docOpts.mediaFilePrefix, mediaFile );
+                        console.log( "MEDIA".bold.green, src, '-> ', dest );
                         fs.createReadStream( src )
                             .pipe( fs.createWriteStream( dest ) )
                             .on( "close", done );
@@ -336,7 +325,7 @@ function assimilateAll( filename ) {
 }
 
 function assimilateDocuments() {
-    readDocuments( {}, function( err, documents ) {
+    readDocuments( { prefix: "latex-html" }, function( err, documents ) {
         if( err )
             return console.log( err );
 
@@ -398,4 +387,16 @@ function parseHtml( filename ) {
 //assimilateSingleWord();
 //assimilateSelection();
 //assimilateDocuments();
-assimilateAll( process.argv[2] );
+//
+function main() {
+    if( process.argv.length != 4 ) {
+        console.log( "usage: ./assimilate.js <name> <latex-html-dir>" );
+        console.log( "    name: name of standard i.e. '2021' or '2021.1'" );
+        console.log( "    latex-html-dir: location of the output of Forth2HTML" );
+        process.exit(1);
+    }
+
+    assimilateAll( process.argv[2], process.argv[3] );
+}
+
+main();
