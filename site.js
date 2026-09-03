@@ -602,6 +602,7 @@ module.exports = {
 
         /** home **/
         function renderContributions( req, res, next, { offset, limit, template, countOpenContributions, type, state } ) {
+            /* TODO: check if contribution has ever bin in voting */
             const pageOffset = offset || 0;
             offset = offset > 0 ? ` OFFSET ${offset}` : "";
             const pageSize = limit;
@@ -629,8 +630,20 @@ module.exports = {
                 AND contributionState(id)='open'
                 GROUP BY type;
 
-                SELECT *
+                WITH maxDates AS (
+                        SELECT
+                                contributions.id,
+                                MAX( replies.created ) AS maxTime
+                        FROM contributions
+                        INNER JOIN replies
+                        ON replies.contribution=contributions.id
+                        WHERE replies.newState='voting'
+                        GROUP BY contributions.id
+                )
+                SELECT contributions.*, users.*, maxDates.maxTime AS votingTime
                 FROM contributions
+                INNER JOIN maxDates
+                ON maxDates.id=contributions.id
                 INNER JOIN users ON contributions.user=users.id
                 WHERE contributions.state='visible'
                 AND contributionState(contributions.id)='voting'
@@ -641,8 +654,10 @@ module.exports = {
                 const totalRepliesCount = items[1][0][''].repliesCount;
                 const contributions     = formatUserContents( "contributions",  "users", items[2] );
                 for( const { contributions: c } of contributions )
-                    c.subject = `[${c.id}] ${c.subject}`;
+                    c.subject = `CCC[${c.id}] ${c.subject}`;
                 const replies           = formatUserContents( "replies",        "users", items[3] );
+                for( const r of replies )
+                    r.contributions.subject = `[r${r.replies.id}] ${r.contributions.subject}`;
                 const openContributions = items[4];
                 const votingContributions = formatUserContents( "contributions",  "users", items[5] );
                 k.jade.render( req, res, template, vals( req, {

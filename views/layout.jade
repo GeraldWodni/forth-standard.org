@@ -102,7 +102,19 @@ mixin box-word
                         block
                         include contributions
 
-mixin latestContribution( item, dataTable, opts={} )
+mixin votingContributions( item )
+    a(href=item.contributions.url + "#contribution-" + item.contributions.id)
+        div.user(title=item.users.name)
+            +gravatar(item.users.emailMd5, item.users.name, 40)
+        h5.document
+            | [
+            = item.contributions.id
+            | ] 
+            = item.contributions.subject
+        div.date
+            = item.maxDates.votingTime
+
+mixin latestContribution( item, dataTable )
     - var link = item.contributions.url;
     if dataTable == "contributions"
         - link += "#contribution-" + item.contributions.id
@@ -115,9 +127,8 @@ mixin latestContribution( item, dataTable, opts={} )
             = item[dataTable].title
         h5.subject
             = item.contributions.subject
-        if !opts.hideType
-            h6.type
-                = contributionTypeName[ item.contributions.type ]
+        h6.type
+            = contributionTypeName[ item.contributions.type ]
         div.date
             = item[dataTable].createdFormated
 
