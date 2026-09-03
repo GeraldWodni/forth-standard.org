@@ -62,7 +62,7 @@ module.exports = {
             };
         }
 
-        function postReply( req, res, next, { contribution, isOriginalAuthor, isCommitteeMember, contributionState }, opts ) {
+        function postReply( req, res, next, { contribution, isOriginalAuthor, isCommitteeMember, contributionState, systemAnswers, programmerAnswers }, opts ) {
             kData.users.readWhere("name", [req.session.loggedInUsername], function( err, user ) {
                 if( err ) return next( err );
                 user = user[0];
@@ -81,8 +81,8 @@ module.exports = {
                     const systemConformity = req.postman.singleLine("systemConformity");
                     const systemVote       = req.postman.text("systemVote");
 
-                    const programmerAnswers = req.postman.text("programmerAnswers");
-                    const systemAnswers = req.postman.text("systemAnswers");
+                    const textProgrammerAnswers = req.postman.text("textProgrammerAnswers");
+                    const textSystemAnswers = req.postman.text("textSystemAnswers");
 
                     if( contribution.user != user.id && !user.committeeMember && opts.newVersion )
                         messages.push({ type: "danger", title: "Error", text: "Currently only the original author can submit a new version" });
@@ -106,7 +106,9 @@ module.exports = {
                             systemConformity,
                             systemVote,
                             programmerAnswers,
+                            textProgrammerAnswers,
                             systemAnswers,
+                            textSystemAnswers,
                             messages: messages
                         } ));
                     }
@@ -125,11 +127,11 @@ module.exports = {
                             if( err ) return next( err );
 
                             if( req.postman.exists("createAnswers") && req.postman.uint("createAnswers") == 1 ) {
-                                let programmerAnswers = req.postman.text("programmerAnswers").trim().split("\n");
+                                let textProgrammerAnswers = req.postman.text("textProgrammerAnswers").trim().split("\n");
                                 let number = 0;
-                                for( let line of programmerAnswers )
+                                for( let line of textProgrammerAnswers )
                                     if( line.trim() != "" )
-                                        await new Promise( (fulfill, reject) => kData.programmerAnswers.create({
+                                        await new Promise( (fulfill, reject) => kData.textProgrammerAnswers.create({
                                             contribution: contribution.id,
                                             number: number++,
                                             text: line.trim(),
@@ -138,11 +140,11 @@ module.exports = {
                                             fulfill();
                                         }));
 
-                                let systemAnswers = req.postman.text("systemAnswers").trim().split("\n");
+                                let textSystemAnswers = req.postman.text("textSystemAnswers").trim().split("\n");
                                 number = 0;
-                                for( let line of systemAnswers )
+                                for( let line of textSystemAnswers )
                                     if( line.trim() != "" )
-                                        await new Promise( (fulfill, reject) => kData.systemAnswers.create({
+                                        await new Promise( (fulfill, reject) => kData.textSystemAnswers.create({
                                             contribution: contribution.id,
                                             number: number++,
                                             text: line.trim(),
