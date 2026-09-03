@@ -15,6 +15,7 @@
         "xchar"
     ],
     "sortedDocuments": [
+        "index",
         "foreword",
         "process",
         "members-2x",
@@ -46,7 +47,6 @@
         "alpha"
     ],
     "unusedDocuments": [
-        "index",
         "right-bracket"
     ]
 }
