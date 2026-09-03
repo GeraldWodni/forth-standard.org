@@ -235,6 +235,10 @@ function readDocument( opts, filename, callback ) {
             html: body.innerHTML,
         };
 
+        /* manual patches */
+        if( doc.name == "" && doc.basename == "index" )
+            doc.name = "Titlepage";
+
         console.log( "DOCUMENT".bold.green, filename.yellow );
         callback( null, doc );
     });
