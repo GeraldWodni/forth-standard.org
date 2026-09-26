@@ -281,11 +281,11 @@
     },
     {
         "stars": null,
-        "name": "FORTH-CH32VXXX",
-        "link": "https://github.com/EBREAK/forth_ch32vxxx",
+        "name": "ch32x035-forth",
+        "link": "https://github.com/EBREAK/ch32x035-forth",
         "lang": "Assembly",
         "cpu": "RISCV",
-        "description": "stc forth on ch32v20x/ch32v30x"
+        "description": "optimized stc forth on CH32X035"
     },
     {
         "stars": 262,
